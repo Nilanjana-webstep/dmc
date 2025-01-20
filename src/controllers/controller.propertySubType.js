@@ -146,3 +146,42 @@ export const deletePropertySubTypeById = async (req, res, next) => {
         return next(new CustomError("Cannot delete property sub-type.", 500));
     }
 };
+
+
+
+export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).send('No file selected!');
+        }
+
+        console.log('The file is here:', req.file);
+
+        const results = [];
+
+        await new Promise((resolve, reject) => {
+            fs.createReadStream(req.file.path)
+                .pipe(csv())
+                .on('data', (data) => results.push(data))
+                .on('end', resolve)
+                .on('error', reject);
+        });
+
+        console.log("Parsed data:", results);
+
+        const wardData = await PropertySubType.bulkCreate(results);
+
+        console.log("Ward data is:", wardData);
+
+        return res.json({
+            success: true,
+            message: "Uploaded CSV successfully",
+        });
+    } catch (error) {
+        console.error("Error uploading CSV:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to upload CSV",
+        });
+    }
+};

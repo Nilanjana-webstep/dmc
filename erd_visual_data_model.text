@@ -1,17 +1,15 @@
-// eraser.io
-// more to be added
-
-Consumer [icon: user, color: blue] {
+Customer [icon: user, color: blue] {
   id string pk
+  customer_id string (unique)
   full_name string
-  mobile_number string
+  mobile_number number
   email string
   date_of_birth date
   sex enum
   is_active boolean (def:true)
   created_at date
   updated_at date
-  delated_at date
+  
 }
 
 Property [icon: home, color: blue] {
@@ -21,39 +19,54 @@ Property [icon: home, color: blue] {
   street_2 string
   pincode string
   ward_no foreign_key string
-  consumer_id foreign_key string
+  customer_id foreign_key string
+  consumer_id string (unique)
   property_type foreign_key string
+  property_sub_type foreign_key string
   is_active boolean (def:true)
   created_at date
   updated_at date
-  delated_at date
+  
 }
 
 Ward [icon: home,color:blue] {
-  ward_no string pk
+  id string pk
+  ward_no string 
   boroghs_no string
-  property_id foreign_key string
   is_active boolean (def:true)
   created_at date
   updated_at date
-  delated_at date
+ 
 }
 
 Property Type [icon: folder , color:blue] {
   id string pk
-  type string
-  sub_type string
-  property_id foreign_key string
+  type_name string
   is_active boolean (def:true)
   created_at date
   updated_at date
-  delated_at date
+  
+}
+
+Property Sub Type [icon: folder , color:blue] {
+  id string pk
+  sub_type_name string
+  property_type_id foreign_key 
+  is_active boolean (def:true)
+  created_at date
+  updated_at date
+  
 }
 
 
 
 
 
-Consumer.id < Property.consumer_id
+Customer.id < Property.customer_id
 Property.ward_no - Ward.ward_no
 Property.property_type - Property Type.id
+Property.property_sub_type - Property Sub Type.id
+
+
+Property Sub Type.property_type_id - Property Type.id
+

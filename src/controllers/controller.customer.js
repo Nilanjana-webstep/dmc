@@ -1,6 +1,14 @@
-import Customer from "../models/model.customer.js";
+import Customer from '../models/model.customer.js';
+import Property from '../models/model.property.js';
+import Ward from '../models/model.ward.js';
+import PropertyType from '../models/model.propertyType.js';
+import PropertySubType from '../models/model.propertySubType.js';
+import Varification from "../models/model.varification.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
+import { generateToken } from "../utils/utis.jwt.js";
+import csv  from 'csv-parser';
+import fs from 'fs';
 
 export const createCustomer = async (req, res, next) => {
 
@@ -15,7 +23,7 @@ export const createCustomer = async (req, res, next) => {
         }
 
         const customer = await Customer.create(req.body);
-        customer.customer_id = customer.id+Date.now().toString();
+        customer.consumer_id = customer.id+Date.now().toString();
         await customer.save();
         
         return res.status(201).json({
@@ -46,11 +54,15 @@ export const getAllCustomer = async (req, res, next) => {
     }
 };
 
-export const getParticularCustomerByCustomerId = async (req, res, next) => {
+export const getParticularCustomerByConsumer_id2 = async (req, res, next) => {
 
-    const { customer_id } = req.params;
+    const { consumer_id } = req.params;
+
+    console.log("the consumer id is : ",consumer_id);
+    
+    
     try {
-        const customer = await Customer.findOne({where:{customer_id}});
+        const customer = await Customer.findOne({where:{consumer_id}});
         if (!customer) {
             return res.status(404).json({
                 success: false,
@@ -67,6 +79,58 @@ export const getParticularCustomerByCustomerId = async (req, res, next) => {
         return next(new CustomError("Cannot fetch customer.", 500));
     }
 };
+
+
+
+
+
+export const getParticularCustomerByConsumer_id = async (req, res, next) => {
+    const { consumer_id } = req.params;
+
+    console.log("The consumer ID is:", consumer_id);
+
+    try {
+        const customer = await Customer.findOne({
+            where: { consumer_id },
+            include: [
+                {
+                    model: Property,
+                    include: [
+                        {
+                            model: Ward,
+                            attributes: ['ward_no'] // Include only the ward_no field
+                        },
+                        {
+                            model: PropertyType,
+                            attributes: ['type_name'] // Include only the type_name field
+                        },
+                        {
+                            model: PropertySubType,
+                            attributes: ['sub_type_name'] // Include only the subtype_name field
+                        }
+                    ]
+                }
+            ]
+        });
+
+        if (!customer) {
+            return res.status(404).json({
+                success: false,
+                message: "No customer found."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Fetched customer successfully.",
+            data: customer
+        });
+    } catch (error) {
+        console.log("Error:", error);
+        return next(new CustomError("Cannot fetch customer.", 500));
+    }
+};
+
 
 
 export const updateCustomerById = async (req, res, next) => {
@@ -118,3 +182,143 @@ export const deleteCustomerById = async (req, res, next) => {
         return next(new CustomError("Cannot delete customer.", 500));
     }
 };
+
+
+export const customerLogin = async(req,res,next)=>{
+
+    const { mobile_number } = req.body;
+
+
+    try {
+        
+        if ( !mobile_number ){
+
+            return next( new CustomError("mobile number is required.",401));
+            
+        }
+
+        if ( mobile_number.toString().length != 10 ){
+
+            return next( new CustomError("please provide a valid number.",401)); 
+        }
+
+        const existCustomer = await Customer.findOne({where : {mobile_number}})
+
+
+        if ( !existCustomer ){
+            return res.json({
+                success : false,
+                message : "No user exist with this mobile number."
+            })
+        }
+
+        //send otp to this number
+
+        return res.json({
+            success : true,
+            message : "successfully logged in."
+        })
+
+    } catch (error) {
+
+        console.log("error is : ",error);
+        
+    }
+}
+
+export const varification = async ( req,res,next)=>{
+
+    try {
+        
+        const { mobile_number , otp } = req.body;
+
+        const customer = await Customer.findOne({where : {mobile_number}})
+
+
+        if ( !customer ){
+            return res.json({
+                success : false,
+                message : "No user exist with this mobile number."
+            })
+        }
+
+        console.log("the customer is : ",customer.dataValues);
+        
+
+        // if ( otp !== customer.otp ){
+            
+        //     return res.json({
+        //         success : false,
+        //         message : "Incorrect otp"
+        //     })
+        // }
+
+
+        const token = await generateToken(customer.dataValues); // token should be generate
+        
+        return res.json({
+            success : true,
+            message : "successfully varified customer",
+            data : customer,
+            token : token
+        })
+
+
+    } catch (error) {
+
+        console.log("error is : ",error);
+        
+        
+    }
+}
+
+export const getMyProfile = async(req,res,next)=>{
+    try {
+        return res.json({
+            success : true,
+            message : "successfully fetched data",
+            data : req.user
+        })
+    } catch (error) {
+        
+    }
+}
+
+
+export const uploadCsv = async ( req,res,next)=>{
+    try {
+
+        if (!req.file) {
+            return res.status(400).send('No file selected!');
+        }
+
+        console.log('the file is here : ',req.file);
+        
+
+        const results = [];
+        fs.createReadStream(req.file.path)
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+                console.log("the result value is : ",typeof results);
+                
+                // Insert data into database
+                // results.forEach(row => {
+                //     const query = 'INSERT INTO your_table SET ?';
+                //     db.query(query, row, (err, result) => {
+                //         if (err) throw err;
+                //     });
+                // });
+                // res.send('File uploaded and data inserted into database');
+            });
+
+
+        return res.json({
+            success : true,
+            message : "upload csv successfully"
+        })
+
+    } catch (error) {
+        
+    }
+}

@@ -6,7 +6,7 @@ const Customer = sequelize.define(
   'customer',
   { 
    
-    customer_id : {
+    consumer_id : {
       type: DataTypes.STRING,
       allowNull : true,
       unique : true,

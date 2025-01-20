@@ -6,6 +6,8 @@ export const CustomerCreationValidationModel = Joi.object({
     .required(),
   
   mobile_number: Joi.string()
+    .max(10)
+    .min(10)
     .required(),
   
   email: Joi.string()
