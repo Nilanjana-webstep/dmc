@@ -18,13 +18,10 @@ export const createCustomerWithProperty = async (req, res, next) => {
     const {   property ,customer } = req.body;
 
     const { ward_no , property_type_name, property_sub_type_name} = property;
-
-    console.log("ward no is : ",ward_no);
-    console.log("property type  is : ",property_type_name);
-    console.log("property sub type  is : ",property_sub_type_name);
     
-
     try {
+
+        let customer_id = null;
 
         const { mobile_number } = customer;
 
@@ -35,28 +32,34 @@ export const createCustomerWithProperty = async (req, res, next) => {
         const existCustomer = await Customer.findOne({where:{mobile_number:mobile_number}})
 
         if( existCustomer){
-            return next(new CustomError("User already exist with this phone number.",400));
+            
+            customer_id = existCustomer.dataValues.id;
         }
 
         const customerData = await Customer.create(customer);
 
-        const customer_id = customerData.dataValues;
-        console.log("customer data is : ",customer_id);
-        
+        customer_id = customerData.dataValues.id;
 
-        customerData.consumer_id = (customer_id+Date.now()).toString();
+        customerData.customer_id = (customer_id+Date.now()).toString();
 
         await customerData.save();
 
         const wardData = await Ward.findOne({where:{ward_no}});
 
+        const ward_id = wardData.dataValues.id;
+
         const propertyTypeData = await PropertyType.findOne({where:{property_type_name}});
 
+        const property_type_id = propertyTypeData.dataValues.id;
+
         const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}});
-
-
-        const propertyData = await Property.create({...req.body,wardId:wardData.id,propertyId:propertyTypeData.id,propertySubTypeId:propertySubTypeData.id});
+        console.log("property sub type is : ",propertySubTypeData);
         
+        const property_sub_type_id = propertySubTypeData.dataValues.id;
+        const propertyData = await Property.create({...property,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id});
+        const property_id = propertyData.dataValues.id;
+        propertyData.consumer_id = (property_id+Date.now()).toString();
+        await propertyData.save();
         
 
         return res.status(201).json({
@@ -75,7 +78,9 @@ export const createCustomerWithProperty = async (req, res, next) => {
 
 export const getAllCustomer = async (req, res, next) => {
     try {
+
         const allCustomers = await Customer.findAll();
+        
         return res.status(200).json({
             success: true,
             message: "Fetched all customers successfully.",
@@ -146,7 +151,26 @@ export const getParticularCustomerByMobileNumber = async (req, res, next) => {
 
     try {
         const customer = await Customer.findOne({
-            where: { mobile_number }
+            where: { mobile_number },
+            include: [
+                {
+                    model: Property,
+                    include: [
+                        {
+                            model: Ward,
+                            attributes: ['ward_no'] 
+                        },
+                        {
+                            model: PropertyType,
+                            attributes: ['type_name'] 
+                        },
+                        {
+                            model: PropertySubType,
+                            attributes: ['sub_type_name'] 
+                        }
+                    ]
+                }
+            ]
         });
 
         if (!customer) {

@@ -1,4 +1,8 @@
+import Customer from "../models/model.customer.js";
 import Property from "../models/model.property.js";
+import PropertySubType from "../models/model.propertySubType.js";
+import PropertyType from "../models/model.propertyType.js";
+import Ward from "../models/model.ward.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 
@@ -22,7 +26,25 @@ export const createProperty = async (req, res, next) => {
 
 export const getAllProperty = async (req, res, next) => {
     try {
-        const allProperties = await Property.findAll();
+        const allProperties = await Property.findAll({
+            include: [
+                {
+                    model : Customer,
+                },
+                {
+                    model: Ward,
+                    attributes: ['ward_no'] 
+                },
+                {
+                    model: PropertyType,
+                    attributes: ['property_type_name'] 
+                },
+                {
+                    model: PropertySubType,
+                    attributes: ['property_sub_type_name'] 
+                }
+            ]
+        });
         return res.status(200).json({
             success: true,
             message: "Fetched all properties successfully.",

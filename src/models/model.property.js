@@ -12,7 +12,7 @@ const Property = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    customer_id : {
+    consumer_id : {
       type : DataTypes.STRING,
       allowNull : true,
       unique : true,

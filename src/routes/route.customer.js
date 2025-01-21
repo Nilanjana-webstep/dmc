@@ -31,7 +31,7 @@ const customerRoute = Router();
 
 customerRoute.post('/',customerCreationWithPropertyValidation,createCustomerWithProperty)
 // customerRoute.post('/',customerCreationValidation,createCustomer)
-// customerRoute.get('/',getAllCustomer)
+customerRoute.get('/',getAllCustomer)
 // customerRoute.get('/my-profile',authenticationMiddleware,getMyProfile);
 // customerRoute.get('/:mobile_number',getParticularCustomerByMobileNumber)
 // customerRoute.get('/:consumer_id',getParticularCustomerByConsumer_id)
