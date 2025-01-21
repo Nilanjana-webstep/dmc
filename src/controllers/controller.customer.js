@@ -12,6 +12,10 @@ import fs from 'fs';
 import { customerCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.customer.js';
 import { propertyCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.property.js';
 import sequelize from '../config/db.js';
+import { convertCsvToObject } from '../utils/utils.csv.js';
+import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
+import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
+import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
 
 
 export const createCustomerWithProperty = async (req, res, next) => {
@@ -338,41 +342,122 @@ export const getMyProfile = async(req,res,next)=>{
 }
 
 
-export const uploadCsv = async ( req,res,next)=>{
-    try {
+const validateData = (data) => {
+    const { error } = CustomerPropertyCombinModel.validate(data);
+    if (error) return error;
 
+    const { 
+        full_name, 
+        mobile_number, 
+        email, 
+        date_of_birth, 
+        sex,
+        property_no, 
+        street_1, 
+        street_2, 
+        property_type_name, 
+        property_sub_type_name, 
+        ward_no, 
+        pincode 
+    } = data;
+
+    const customer = { full_name, mobile_number, email, date_of_birth, sex };
+    const property = { property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode };
+
+    const customerError = CustomerCreationValidationModel.validate(customer).error;
+    if (customerError) return customerError;
+
+    const propertyError = PropertyCreationValidationModel.validate(property).error;
+    if (propertyError) return propertyError;
+
+    if (mobile_number.toString().length !== 10) {
+        return new CustomError("Invalid phone number length", 400);
+    }
+
+    return null;
+};
+
+const processCustomerAndProperty = async (data, t) => {
+    const { 
+        full_name, 
+        mobile_number, 
+        email, 
+        date_of_birth, 
+        sex,
+        property_no, 
+        street_1, 
+        street_2, 
+        property_type_name, 
+        property_sub_type_name, 
+        ward_no, 
+        pincode 
+    } = data;
+
+    let customer_id = null;
+
+    const existCustomer = await Customer.findOne({ where: { mobile_number } }, { transaction: t });
+
+    if (existCustomer) {
+        customer_id = existCustomer.dataValues.id;
+    } else {
+        const customerData = await Customer.create({ full_name, mobile_number, email, date_of_birth, sex }, { transaction: t });
+        customerData.customer_id = (customer_id + Date.now()).toString();
+        customer_id = customerData.dataValues.id;
+        await customerData.save({ transaction: t });
+    }
+
+    const wardData = await Ward.findOne({ where: { ward_no } }, { transaction: t });
+    const ward_id = wardData.dataValues.id;
+
+    const propertyTypeData = await PropertyType.findOne({ where: { property_type_name } }, { transaction: t });
+    const property_type_id = propertyTypeData.dataValues.id;
+
+    const propertySubTypeData = await PropertySubType.findOne({ where: { property_sub_type_name } }, { transaction: t });
+    const property_sub_type_id = propertySubTypeData.dataValues.id;
+
+    const propertyData = await Property.create({
+        property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode,
+        customerId: customer_id, wardId: ward_id, propertyTypeId: property_type_id, propertySubTypeId: property_sub_type_id
+    }, { transaction: t });
+
+    const property_id = propertyData.dataValues.id;
+    propertyData.consumer_id = (property_id + Date.now()).toString();
+    await propertyData.save({ transaction: t });
+};
+
+export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
+    try {
         if (!req.file) {
             return res.status(400).send('No file selected!');
         }
 
-        console.log('the file is here : ',req.file);
-        
+        const results = await convertCsvToObject(req.file, next);
 
-        const results = [];
-        
-        fs.createReadStream(req.file.path)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-                console.log("the result value is : ", results);
-                
-                // Insert data into database
-                // results.forEach(row => {
-                //     const query = 'INSERT INTO your_table SET ?';
-                //     db.query(query, row, (err, result) => {
-                //         if (err) throw err;
-                //     });
-                // });
-                // res.send('File uploaded and data inserted into database');
+        console.log('The result is:', results);
+
+        const errorData = [];
+
+        for (const data of results) {
+            const error = validateData(data);
+            if (error) {
+                errorData.push(data);
+                continue;
+            }
+
+            await sequelize.transaction(async (t) => {
+                await processCustomerAndProperty(data, t);
             });
-
+        }
 
         return res.json({
-            success : true,
-            message : "upload csv successfully"
-        })
+            success: true,
+            message: "Uploaded CSV successfully",
+            unuploadedData: errorData
+        });
 
     } catch (error) {
-        
+        console.log("the error : ",error);
+        return next( new CustomError(error.message,401));
     }
-}
+};
+

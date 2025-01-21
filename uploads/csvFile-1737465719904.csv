@@ -1,0 +1,5 @@
+full_name,mobile_number,email,date_of_birth,sex,property_no,street_1,street_2,property_type_name,property_sub_type_name,ward_no,pincode
+pritam Sarkar,1617109118,pritam@gmail.com,1990-01-01,male,dlf1,new town 1,new town 4B,commercial,house,5,123456
+pritam Sarkar,1617109118,pritam@gmail.com,1990-01-01,male,dlf2,new town 2,new town 4C,commercial,restaurant,6,123457
+sourab Sarkar,1617109119,sourab@gmail.com,1990-01-01,male,dlf3,new town 3,new town 4D,residential,rent house,7,123458
+16171091,sourab@gmail.com,1990-01-01,male,dlf3,new town 3,new town 4D,residential,rent house,7,123458

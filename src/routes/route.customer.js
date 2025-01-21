@@ -9,9 +9,10 @@ import {
     customerLogin,
     varification,
     getMyProfile,
-    uploadCsv,
+  
     getParticularCustomerByMobileNumber,
-    createCustomerWithProperty
+    createCustomerWithProperty,
+    uploadCustomerWithPropertyFromCsv
 } from "../controllers/controller.customer.js";
 
 import { 
@@ -39,6 +40,6 @@ customerRoute.get('/',getAllCustomer)
 // customerRoute.delete('/:customer_id',deleteCustomerById)
 // customerRoute.post('/login',customerLogin);
 // customerRoute.post('/varify',varification);
-// customerRoute.post('/upload-csv',upload.single('csvFile'),uploadCsv);
+customerRoute.post('/upload-csv',upload.single('csvFile'),uploadCustomerWithPropertyFromCsv);
 
 export default customerRoute;
