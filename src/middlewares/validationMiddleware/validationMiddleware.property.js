@@ -11,7 +11,7 @@ export const propertyCreationValidation = (req,res,next)=>{
     
     
 
-    const  { error } =  PropertyCreationValidationModel.validate(req.body);
+    const  { error } =  PropertyCreationValidationModel.validate(req.body.property);
 
     console.log("the error is : ",error);
     

@@ -9,12 +9,23 @@ import { updateDatabaseObject } from "../utils/util.database.js";
 import { generateToken } from "../utils/utis.jwt.js";
 import csv  from 'csv-parser';
 import fs from 'fs';
+import { customerCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.customer.js';
+import { propertyCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.property.js';
 
-export const createCustomer = async (req, res, next) => {
 
-    const { mobile_number  } = req.body;
+export const createCustomerWithProperty = async (req, res, next) => {
+
+    const {   property ,customer } = req.body;
+
+    const { ward_no , property_type, property_sub_type} = property;
 
     try {
+
+        const { mobile_number } = customer;
+
+        if ( mobile_number.toString().length != 10 ){
+            return next(new CustomError("phone number should be 10 digit.",400));
+        }
 
         const existCustomer = await Customer.findOne({where:{mobile_number:mobile_number}})
 
@@ -22,14 +33,27 @@ export const createCustomer = async (req, res, next) => {
             return next(new CustomError("User already exist with this phone number.",400));
         }
 
-        const customer = await Customer.create(req.body);
-        customer.consumer_id = customer.id+Date.now().toString();
-        await customer.save();
+        const customerData = await Customer.create(customer);
+
+        customerData.consumer_id = customerData.id+Date.now().toString();
+
+        await customerData.save();
+
+        const wardData = await Ward.findOne({where:{ward_no}});
+
+        const propertyTypeData = await PropertyType.findOne({where:{property_type_name}});
+
+        const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}});
+
+
+        const propertyData = await Property.create({...req.body,wardId:wardData.id,propertyId:propertyTypeData.id,propertySubTypeId:propertySubTypeData.id});
         
+        
+
         return res.status(201).json({
             success: true,
-            message: "Customer created successfully.",
-            data: customer
+            message: "Customer created successfully with property.",
+            // data: customerData
         });
 
     } catch (error) {
@@ -54,31 +78,6 @@ export const getAllCustomer = async (req, res, next) => {
     }
 };
 
-export const getParticularCustomerByConsumer_id2 = async (req, res, next) => {
-
-    const { consumer_id } = req.params;
-
-    console.log("the consumer id is : ",consumer_id);
-    
-    
-    try {
-        const customer = await Customer.findOne({where:{consumer_id}});
-        if (!customer) {
-            return res.status(404).json({
-                success: false,
-                message: "No customer found."
-            });
-        }
-        return res.status(200).json({
-            success: true,
-            message: "Fetched customer successfully.",
-            data: customer
-        });
-    } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch customer.", 500));
-    }
-};
 
 
 
@@ -98,19 +97,47 @@ export const getParticularCustomerByConsumer_id = async (req, res, next) => {
                     include: [
                         {
                             model: Ward,
-                            attributes: ['ward_no'] // Include only the ward_no field
+                            attributes: ['ward_no'] 
                         },
                         {
                             model: PropertyType,
-                            attributes: ['type_name'] // Include only the type_name field
+                            attributes: ['type_name'] 
                         },
                         {
                             model: PropertySubType,
-                            attributes: ['sub_type_name'] // Include only the subtype_name field
+                            attributes: ['sub_type_name'] 
                         }
                     ]
                 }
             ]
+        });
+
+        if (!customer) {
+            return res.status(404).json({
+                success: false,
+                message: "No customer found."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Fetched customer successfully.",
+            data: customer
+        });
+    } catch (error) {
+        console.log("Error:", error);
+        return next(new CustomError("Cannot fetch customer.", 500));
+    }
+};
+
+export const getParticularCustomerByMobileNumber = async (req, res, next) => {
+    const { mobile_number} = req.params;
+
+    console.log("The consumer ID is:", mobile_number);
+
+    try {
+        const customer = await Customer.findOne({
+            where: { mobile_number }
         });
 
         if (!customer) {

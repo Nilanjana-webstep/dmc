@@ -1,6 +1,8 @@
 import PropertyType from "../models/model.propertyType.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
+import csv  from 'csv-parser';
+import fs from 'fs';
 
 export const createPropertyType = async (req, res, next) => {
     try {
@@ -102,6 +104,9 @@ export const deletePropertyTypeById = async (req, res, next) => {
 
 
 
+
+
+
 export const uploadPropertyTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
@@ -122,9 +127,9 @@ export const uploadPropertyTypeFromCsv = async (req, res, next) => {
 
         console.log("Parsed data:", results);
 
-        const wardData = await PropertyType.bulkCreate(results);
+        const propertyData = await PropertyType.bulkCreate(results);
 
-        console.log("Ward data is:", wardData);
+        // console.log("Ward data is:", propertyData);
 
         return res.json({
             success: true,
@@ -138,3 +143,6 @@ export const uploadPropertyTypeFromCsv = async (req, res, next) => {
         });
     }
 };
+
+
+

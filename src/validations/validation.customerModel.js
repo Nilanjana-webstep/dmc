@@ -1,13 +1,12 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const CustomerCreationValidationModel = Joi.object({
-  
   full_name: Joi.string()
     .required(),
   
-  mobile_number: Joi.string()
-    .max(10)
-    .min(10)
+  mobile_number: Joi.number() 
+    .positive()
+    .message("invalid phone number") 
     .required(),
   
   email: Joi.string()
@@ -20,9 +19,8 @@ export const CustomerCreationValidationModel = Joi.object({
   sex: Joi.string()
     .valid('male', 'female', 'other')
     .required(),
-  
-
 });
+
 
 
 

@@ -2,11 +2,7 @@ import Joi from "joi";
 
 export const WardCreationValidationModel = Joi.object({
   ward_no: Joi.number()
-    .required(),
-  
-  boroghs_no: Joi.number()
-    .required(),
-  
+    .required(), 
 
 });
 

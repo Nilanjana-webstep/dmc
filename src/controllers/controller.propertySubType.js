@@ -2,6 +2,8 @@ import PropertySubType from "../models/model.propertySubType.js";
 import PropertyType from "../models/model.propertyType.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
+import csv  from 'csv-parser';
+import fs from 'fs';
 
 export const createPropertySubType = async (req, res, next) => {
 
@@ -169,9 +171,11 @@ export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
 
         console.log("Parsed data:", results);
 
-        const wardData = await PropertySubType.bulkCreate(results);
+        // const arrayOfResult = ArrayFrom
 
-        console.log("Ward data is:", wardData);
+        const propertySubTypeData = await PropertySubType.bulkCreate(results);
+
+        console.log(" data is:", propertySubTypeData);
 
         return res.json({
             success: true,

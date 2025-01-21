@@ -12,18 +12,18 @@ export const PropertyCreationValidationModel = Joi.object({
     .optional(),
   
   customer_id : Joi.number()
-    .required(),
-
-  property_type_id : Joi.number()
-    .required(),
-
-  property_sub_type_id : Joi.number()
     .optional(),
 
-  ward_id : Joi.number()
+  property_type : Joi.string()
+    .required(),
+
+  property_sub_type : Joi.string()
+    .optional(),
+
+  ward_no : Joi.number()
     .required(),
   
-  pincode: Joi.string()
+  pincode: Joi.number()
     .required(),
   
  

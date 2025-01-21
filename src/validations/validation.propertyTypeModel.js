@@ -2,7 +2,7 @@ import Joi from "joi";
 
 export const PropertyTypeCreationValidationModel = Joi.object({
 
-  type_name: Joi.string()
+  property_type_name: Joi.string()
     .required(),
   
 });

@@ -16,7 +16,7 @@ const Customer = sequelize.define(
       allowNull: false,
     },
     mobile_number: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false,
       unique : true,
     },
@@ -41,16 +41,6 @@ const Customer = sequelize.define(
   {
     freezeTableName: true,
     timestamps: true,
-    // hooks: {
-    //   afterSave :  (customer, options) => {
-
-    //     const id = customer.id;
-    //     console.log("the id is : ",id);
-        
-    //     customer.customer_id = id.toString();
-    //     customer.save()
-    //   },
-    // }
   }  
 );
 

@@ -25,7 +25,7 @@ const Property = sequelize.define(
       type: DataTypes.STRING,
     },
     pincode: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
     is_active: {

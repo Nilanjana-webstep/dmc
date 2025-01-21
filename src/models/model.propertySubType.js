@@ -7,7 +7,7 @@ const PropertySubType = sequelize.define(
   'property_sub_type',
   {
    
-    sub_type_name: {
+    property_sub_type_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
