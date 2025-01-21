@@ -11,70 +11,66 @@ import csv  from 'csv-parser';
 import fs from 'fs';
 import { customerCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.customer.js';
 import { propertyCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.property.js';
+import sequelize from '../config/db.js';
 
 
 export const createCustomerWithProperty = async (req, res, next) => {
 
     const {   property ,customer } = req.body;
-
     const { ward_no , property_type_name, property_sub_type_name} = property;
-    
+
     try {
+        const result = await sequelize.transaction(async t => {
 
-        let customer_id = null;
+            let customer_id = null;
 
-        const { mobile_number } = customer;
+            const { mobile_number } = customer;
 
-        if ( mobile_number.toString().length != 10 ){
-            return next(new CustomError("phone number should be 10 digit.",400));
-        }
+            if ( mobile_number.toString().length != 10 ){
+                return next(new CustomError("phone number should be 10 digit.",400));
+            }    
 
-        const existCustomer = await Customer.findOne({where:{mobile_number:mobile_number}})
+            const existCustomer = await Customer.findOne({where:{mobile_number:mobile_number}})
 
-        if( existCustomer){
-            
-            customer_id = existCustomer.dataValues.id;
-        }
+            if( existCustomer){
+                customer_id = existCustomer.dataValues.id;
+            }else{
+                const customerData = await Customer.create(customer,{ transaction: t });
+                customerData.customer_id = (customer_id+Date.now()).toString();
+                customer_id = customerData.dataValues.id;
+                await customerData.save({ transaction: t });
+            }
 
-        const customerData = await Customer.create(customer);
+            const wardData = await Ward.findOne({where:{ward_no}},{ transaction: t });
+            const ward_id = wardData.dataValues.id;
 
-        customer_id = customerData.dataValues.id;
+            const propertyTypeData = await PropertyType.findOne({where:{property_type_name}},{ transaction: t });
+            const property_type_id = propertyTypeData.dataValues.id;
 
-        customerData.customer_id = (customer_id+Date.now()).toString();
+            const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}},{ transaction: t });
+            const property_sub_type_id = propertySubTypeData.dataValues.id;
 
-        await customerData.save();
+            const propertyData = await Property.create({...property,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id},{ transaction: t });
+            const property_id = propertyData.dataValues.id;
+            propertyData.consumer_id = (property_id+Date.now()).toString();
+            await propertyData.save({ transaction: t });
 
-        const wardData = await Ward.findOne({where:{ward_no}});
-
-        const ward_id = wardData.dataValues.id;
-
-        const propertyTypeData = await PropertyType.findOne({where:{property_type_name}});
-
-        const property_type_id = propertyTypeData.dataValues.id;
-
-        const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}});
-        console.log("property sub type is : ",propertySubTypeData);
-        
-        const property_sub_type_id = propertySubTypeData.dataValues.id;
-        const propertyData = await Property.create({...property,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id});
-        const property_id = propertyData.dataValues.id;
-        propertyData.consumer_id = (property_id+Date.now()).toString();
-        await propertyData.save();
-        
-
-        return res.status(201).json({
-            success: true,
-            message: "Customer created successfully with property.",
-            // data: customerData
+            return res.status(201).json({
+                success: true,
+                message: "created successfully.",
+            });
+           
         });
-
-    } catch (error) {
+      
+      } catch (error) {
 
         console.log("Error: ", error);
         return next(new CustomError("Customer is not created. Please try again.", 500));
-        
-    }
+      }
+
 };
+
+
 
 export const getAllCustomer = async (req, res, next) => {
     try {
@@ -91,10 +87,6 @@ export const getAllCustomer = async (req, res, next) => {
         return next(new CustomError("Cannot fetch all customers.", 500));
     }
 };
-
-
-
-
 
 
 export const getParticularCustomerByConsumer_id = async (req, res, next) => {
@@ -145,6 +137,7 @@ export const getParticularCustomerByConsumer_id = async (req, res, next) => {
 };
 
 export const getParticularCustomerByMobileNumber = async (req, res, next) => {
+    
     const { mobile_number} = req.params;
 
     console.log("The consumer ID is:", mobile_number);
@@ -356,11 +349,12 @@ export const uploadCsv = async ( req,res,next)=>{
         
 
         const results = [];
+        
         fs.createReadStream(req.file.path)
             .pipe(csv())
             .on('data', (data) => results.push(data))
             .on('end', () => {
-                console.log("the result value is : ",typeof results);
+                console.log("the result value is : ", results);
                 
                 // Insert data into database
                 // results.forEach(row => {
