@@ -7,9 +7,11 @@ import propertyTypeRoute from './routes/route.propertyType.js';
 import wardRoute from './routes/route.ward.js';
 import propertySubTypeRoute from './routes/route.propertySubType.js';
 import captchaRoute from './routes/route.captcha.js';
+import cors from 'cors'
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 

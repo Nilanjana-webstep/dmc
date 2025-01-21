@@ -17,7 +17,12 @@ export const createCustomerWithProperty = async (req, res, next) => {
 
     const {   property ,customer } = req.body;
 
-    const { ward_no , property_type, property_sub_type} = property;
+    const { ward_no , property_type_name, property_sub_type_name} = property;
+
+    console.log("ward no is : ",ward_no);
+    console.log("property type  is : ",property_type_name);
+    console.log("property sub type  is : ",property_sub_type_name);
+    
 
     try {
 
@@ -35,7 +40,11 @@ export const createCustomerWithProperty = async (req, res, next) => {
 
         const customerData = await Customer.create(customer);
 
-        customerData.consumer_id = customerData.id+Date.now().toString();
+        const customer_id = customerData.dataValues;
+        console.log("customer data is : ",customer_id);
+        
+
+        customerData.consumer_id = (customer_id+Date.now()).toString();
 
         await customerData.save();
 
