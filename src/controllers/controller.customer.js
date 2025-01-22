@@ -462,7 +462,20 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
 };
 
 
-
+function jsonToCsv(jsonData) {
+    
+    let csv = '';
+    
+    const headers = Object.keys(jsonData[0]);
+    csv += headers.join(',') + '\n';
+    
+    jsonData.forEach(obj => {
+        const values = headers.map(header => obj[header]);
+        csv += values.join(',') + '\n';
+    });
+    
+    return csv;
+}
 
 
 export const exportCustomerWithPropertyIntoCsv = async (req, res, next) => {
@@ -479,13 +492,11 @@ export const exportCustomerWithPropertyIntoCsv = async (req, res, next) => {
         const fields = ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt'];
 
         
-        const csvData = parse(plainData, { fields, quote: '' });
+        const csvData = jsonToCsv(plainData);
 
-       
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="exported_data.csv"');
 
-        
         res.send(csvData);
 
     } catch (error) {
@@ -493,6 +504,32 @@ export const exportCustomerWithPropertyIntoCsv = async (req, res, next) => {
         next( new CustomError("not exporting csv file , something went wrong",500));
     }
 };
+
+
+
+// frontend function to download csv
+
+// const exportToExcel = () => {
+//     console.log("got hit");
+
+//     axios.get('http://localhost:8080/api/customer/export-csv', {
+//         responseType: 'blob' 
+//     })
+//     .then((response) => {
+        
+//         const blob = new Blob([response.data], { type: 'text/csv' });
+//         const link = document.createElement('a');
+//         link.href = window.URL.createObjectURL(blob);
+//         link.download = 'exported_customer_data.csv';
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//         console.log("File downloaded successfully");
+//     })
+//     .catch((error) => {
+//         console.error('Error downloading the CSV file:', error);
+//     });
+// };
 
 
 
