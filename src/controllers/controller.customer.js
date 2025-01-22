@@ -3,20 +3,15 @@ import Property from '../models/model.property.js';
 import Ward from '../models/model.ward.js';
 import PropertyType from '../models/model.propertyType.js';
 import PropertySubType from '../models/model.propertySubType.js';
-import Varification from "../models/model.varification.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
-import { generateToken } from "../utils/utis.jwt.js";
-import csv  from 'csv-parser';
-import fs from 'fs';
-import { customerCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.customer.js';
-import { propertyCreationValidation } from '../middlewares/validationMiddleware/validationMiddleware.property.js';
 import sequelize from '../config/db.js';
-import { convertCsvToObject } from '../utils/utils.csv.js';
+import { convertCsvToObject, jsonToCsv } from '../utils/utils.csv.js';
 import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
 import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
-import { parse } from 'json2csv';
+
+
 
 export const createCustomerWithProperty = async (req, res, next) => {
 
@@ -75,11 +70,12 @@ export const createCustomerWithProperty = async (req, res, next) => {
 };
 
 
-
 export const getAllCustomer = async (req, res, next) => {
     try {
 
-        const allCustomers = await Customer.findAll();
+        const allCustomers = await Customer.findAll({
+             where : {is_active:true},
+        });
         
         return res.status(200).json({
             success: true,
@@ -93,33 +89,13 @@ export const getAllCustomer = async (req, res, next) => {
 };
 
 
-export const getParticularCustomerByConsumer_id = async (req, res, next) => {
-    const { consumer_id } = req.params;
+export const getParticularCustomerByCustomerId = async (req, res, next) => {
 
-    console.log("The consumer ID is:", consumer_id);
+    const { customer_id } = req.params;
 
     try {
         const customer = await Customer.findOne({
-            where: { consumer_id },
-            include: [
-                {
-                    model: Property,
-                    include: [
-                        {
-                            model: Ward,
-                            attributes: ['ward_no'] 
-                        },
-                        {
-                            model: PropertyType,
-                            attributes: ['type_name'] 
-                        },
-                        {
-                            model: PropertySubType,
-                            attributes: ['sub_type_name'] 
-                        }
-                    ]
-                }
-            ]
+            where: { customer_id },
         });
 
         if (!customer) {
@@ -139,6 +115,7 @@ export const getParticularCustomerByConsumer_id = async (req, res, next) => {
         return next(new CustomError("Cannot fetch customer.", 500));
     }
 };
+
 
 export const getParticularCustomerByMobileNumber = async (req, res, next) => {
     
@@ -149,25 +126,6 @@ export const getParticularCustomerByMobileNumber = async (req, res, next) => {
     try {
         const customer = await Customer.findOne({
             where: { mobile_number },
-            include: [
-                {
-                    model: Property,
-                    include: [
-                        {
-                            model: Ward,
-                            attributes: ['ward_no'] 
-                        },
-                        {
-                            model: PropertyType,
-                            attributes: ['type_name'] 
-                        },
-                        {
-                            model: PropertySubType,
-                            attributes: ['sub_type_name'] 
-                        }
-                    ]
-                }
-            ]
         });
 
         if (!customer) {
@@ -189,12 +147,12 @@ export const getParticularCustomerByMobileNumber = async (req, res, next) => {
 };
 
 
-
 export const updateCustomerById = async (req, res, next) => {
 
     const { customer_id } = req.params;
 
     try {
+
         const customer = await Customer.findByPk(customer_id);
 
         if (!customer) {
@@ -220,16 +178,23 @@ export const updateCustomerById = async (req, res, next) => {
 
 
 export const deleteCustomerById = async (req, res, next) => {
+
     const { customer_id } = req.params;
+
     try {
         const customer = await Customer.findByPk(customer_id);
+
         if (!customer) {
             return res.status(404).json({
                 success: false,
                 message: "No customer found for this ID."
             });
         }
-        await customer.destroy();
+
+        customer.is_active = false;
+
+        await customer.save();
+
         return res.status(200).json({
             success: true,
             message: "Customer deleted successfully."
@@ -240,109 +205,8 @@ export const deleteCustomerById = async (req, res, next) => {
     }
 };
 
-
-export const customerLogin = async(req,res,next)=>{
-
-    const { mobile_number } = req.body;
-
-
-    try {
-        
-        if ( !mobile_number ){
-
-            return next( new CustomError("mobile number is required.",401));
-            
-        }
-
-        if ( mobile_number.toString().length != 10 ){
-
-            return next( new CustomError("please provide a valid number.",401)); 
-        }
-
-        const existCustomer = await Customer.findOne({where : {mobile_number}})
-
-
-        if ( !existCustomer ){
-            return res.json({
-                success : false,
-                message : "No user exist with this mobile number."
-            })
-        }
-
-        //send otp to this number
-
-        return res.json({
-            success : true,
-            message : "successfully logged in."
-        })
-
-    } catch (error) {
-
-        console.log("error is : ",error);
-        
-    }
-}
-
-export const varification = async ( req,res,next)=>{
-
-    try {
-        
-        const { mobile_number , otp } = req.body;
-
-        const customer = await Customer.findOne({where : {mobile_number}})
-
-
-        if ( !customer ){
-            return res.json({
-                success : false,
-                message : "No user exist with this mobile number."
-            })
-        }
-
-        console.log("the customer is : ",customer.dataValues);
-        
-
-        // if ( otp !== customer.otp ){
-            
-        //     return res.json({
-        //         success : false,
-        //         message : "Incorrect otp"
-        //     })
-        // }
-
-
-        const token = await generateToken(customer.dataValues); // token should be generate
-        
-        return res.json({
-            success : true,
-            message : "successfully varified customer",
-            data : customer,
-            token : token
-        })
-
-
-    } catch (error) {
-
-        console.log("error is : ",error);
-        
-        
-    }
-}
-
-export const getMyProfile = async(req,res,next)=>{
-    try {
-        return res.json({
-            success : true,
-            message : "successfully fetched data",
-            data : req.user
-        })
-    } catch (error) {
-        
-    }
-}
-
-
 const validateData = (data) => {
+
     const { error } = CustomerPropertyCombinModel.validate(data);
     if (error) return error;
 
@@ -461,36 +325,15 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
     }
 };
 
-
-function jsonToCsv(jsonData) {
+export const exportCustomerIntoCsv = async (req, res, next) => {
+    console.log('got hit');
     
-    let csv = '';
-    
-    const headers = Object.keys(jsonData[0]);
-    csv += headers.join(',') + '\n';
-    
-    jsonData.forEach(obj => {
-        const values = headers.map(header => obj[header]);
-        csv += values.join(',') + '\n';
-    });
-    
-    return csv;
-}
-
-
-export const exportCustomerWithPropertyIntoCsv = async (req, res, next) => {
-    
-
     try {
         const data = await Customer.findAll({
             attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
         });
 
-        
         const plainData = data.map(customer => customer.get({ plain:true }));
-        
-        const fields = ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt'];
-
         
         const csvData = jsonToCsv(plainData);
 
@@ -530,6 +373,8 @@ export const exportCustomerWithPropertyIntoCsv = async (req, res, next) => {
 //         console.error('Error downloading the CSV file:', error);
 //     });
 // };
+
+
 
 
 

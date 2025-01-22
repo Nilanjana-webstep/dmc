@@ -19,3 +19,19 @@ export const convertCsvToObject = async (csvFile, next) => {
 
     return results;
 };
+
+
+export const  jsonToCsv = async(jsonData)=> {
+    
+    let csv = '';
+    
+    const headers = Object.keys(jsonData[0]);
+    csv += headers.join(',') + '\n';
+    
+    jsonData.forEach(obj => {
+        const values = headers.map(header => obj[header]);
+        csv += values.join(',') + '\n';
+    });
+    
+    return csv;
+}

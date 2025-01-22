@@ -7,17 +7,10 @@ import fs from 'fs';
 
 export const createPropertySubType = async (req, res, next) => {
 
-   
-    
-
     const { property_type_id } = req.body;
 
     try {
-
         
-
-        
-
             const propertyType = await PropertyType.findByPk(property_type_id);
 
             if ( !propertyType ){
@@ -80,10 +73,10 @@ export const getParticularPropertySubTypeById = async (req, res, next) => {
 };
 
 
-export const getAllPropertiesOfParticularPropertyType = async (req, res, next) => {
+export const getAllPropertySubTypeOfParticularPropertyType = async (req, res, next) => {
 
     const { property_type } = req.params;
-    property_type
+    
     try {
         const allSubProperties = await PropertySubType.findAll({where:{propertyTypeId : property_type}});
         if (!allSubProperties) {
@@ -128,29 +121,6 @@ export const updatePropertySubTypeById = async (req, res, next) => {
     }
 };
 
-export const deletePropertySubTypeById = async (req, res, next) => {
-    const { propertySubType_id } = req.params;
-    try {
-        const propertySubType = await PropertySubType.findByPk(propertySubType_id);
-        if (!propertySubType) {
-            return res.status(404).json({
-                success: false,
-                message: "No property sub-type found for this ID."
-            });
-        }
-        await propertySubType.destroy();
-        return res.status(200).json({
-            success: true,
-            message: "Property sub-type deleted successfully."
-        });
-    } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot delete property sub-type.", 500));
-    }
-};
-
-
-
 export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
@@ -171,11 +141,11 @@ export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
 
         console.log("Parsed data:", results);
 
-        // const arrayOfResult = ArrayFrom
+        
 
         const propertySubTypeData = await PropertySubType.bulkCreate(results);
 
-        console.log(" data is:", propertySubTypeData);
+        
 
         return res.json({
             success: true,

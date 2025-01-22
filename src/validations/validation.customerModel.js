@@ -19,6 +19,10 @@ export const CustomerCreationValidationModel = Joi.object({
   sex: Joi.string()
     .valid('male', 'female', 'other')
     .required(),
+
+  address : Joi.string()
+    .required()
+
 });
 
 
@@ -39,6 +43,9 @@ export const CustomerUpdationValidationModel = Joi.object({
   sex: Joi.string()
     .valid('male', 'female', 'other')
     .optional(),
+
+  address : Joi.string()
+    .optional()
   
 
 });

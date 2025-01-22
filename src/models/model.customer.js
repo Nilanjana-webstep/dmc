@@ -32,6 +32,10 @@ const Customer = sequelize.define(
       type: DataTypes.ENUM('male', 'female', 'other'),
       allowNull: false,
     },
+    address : {
+      type : DataTypes.STRING,
+      allowNull : false,
+    },
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

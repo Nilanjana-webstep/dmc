@@ -4,8 +4,7 @@ import {
     getAllPropertySubType,
     getParticularPropertySubTypeById,
     updatePropertySubTypeById,
-    deletePropertySubTypeById,
-    getAllPropertiesOfParticularPropertyType,
+    getAllPropertySubTypeOfParticularPropertyType,
     uploadPropertySubTypeFromCsv
 } from "../controllers/controller.propertySubType.js";
 
@@ -24,9 +23,8 @@ const propertySubTypeRoute = Router();
 propertySubTypeRoute.post('/',propertySubTypeCreationValidation,createPropertySubType)
 propertySubTypeRoute.get('/',getAllPropertySubType)
 propertySubTypeRoute.get('/:property_sub_type',getParticularPropertySubTypeById)
-propertySubTypeRoute.get('/property-type/:property_type',getAllPropertiesOfParticularPropertyType)
+propertySubTypeRoute.get('/property-type/:property_type',getAllPropertySubTypeOfParticularPropertyType)
 propertySubTypeRoute.put('/:property_sub_type',propertySubTypeUpdationValidation,updatePropertySubTypeById)
-// propertySubTypeRoute.delete('/:property_sub_type',deletePropertySubType)
 propertySubTypeRoute.post('/upload-csv',upload.single('csvFile'),uploadPropertySubTypeFromCsv);
 
 export default propertySubTypeRoute;

@@ -3,7 +3,6 @@ import {
     createPropertyType,
     getAllPropertyType,
     getParticularPropertyTypeById,
-    deletePropertyTypeById,
     updatePropertyTypeById,
     uploadPropertyTypeFromCsv
 } from "../controllers/controller.propertyType.js";
@@ -23,7 +22,6 @@ propertyTypeRoute.get('/',getAllPropertyType)
 propertyTypeRoute.get('/:property_type_id',getParticularPropertyTypeById)
 propertyTypeRoute.put('/:property_type_id',propertyTypeUpdationValidation,updatePropertyTypeById)
 propertyTypeRoute.post('/upload-csv',upload.single('csvFile'),uploadPropertyTypeFromCsv);
-// propertyTypeRoute.delete('/:property_type_id',deletePropertyTypeById)
 
 
 export default propertyTypeRoute;

@@ -9,7 +9,7 @@ export const PropertyTypeCreationValidationModel = Joi.object({
 
 export const PropertyTypeUpdationValidationModel = Joi.object({
 
-  type_name: Joi.string()
-    .required(),
+  property_type_name: Joi.string()
+    .optional(),
   
 });

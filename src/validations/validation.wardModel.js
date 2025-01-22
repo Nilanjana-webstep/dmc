@@ -12,9 +12,4 @@ export const WardUpdationValidationModel = Joi.object({
   ward_no: Joi.number()
     .optional(),
   
-  boroghs_no: Joi.number()
-    .optional(),
-  
-  is_active: Joi.boolean()
-    .default(true)
 });

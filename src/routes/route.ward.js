@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { 
     createWard,
-    deleteWardById,
     getAllWard,
     getParticularWardById,
     updateWardById,
