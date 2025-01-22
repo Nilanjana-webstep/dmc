@@ -16,7 +16,7 @@ import { convertCsvToObject } from '../utils/utils.csv.js';
 import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
 import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
-
+import { parse } from 'json2csv';
 
 export const createCustomerWithProperty = async (req, res, next) => {
 
@@ -460,4 +460,54 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
         return next( new CustomError(error.message,401));
     }
 };
+
+
+
+
+
+export const exportCustomerWithPropertyIntoCsv = async (req, res, next) => {
+    
+
+    try {
+        const data = await Customer.findAll({
+            attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
+        });
+
+        
+        const plainData = data.map(customer => customer.get({ plain:true }));
+        
+        const fields = ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt'];
+
+        
+        const csvData = parse(plainData, { fields, quote: '' });
+
+       
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="exported_data.csv"');
+
+        
+        res.send(csvData);
+
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        next( new CustomError("not exporting csv file , something went wrong",500));
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
 

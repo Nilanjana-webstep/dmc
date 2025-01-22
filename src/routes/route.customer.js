@@ -9,7 +9,7 @@ import {
     customerLogin,
     varification,
     getMyProfile,
-  
+    exportCustomerWithPropertyIntoCsv,
     getParticularCustomerByMobileNumber,
     createCustomerWithProperty,
     uploadCustomerWithPropertyFromCsv
@@ -41,5 +41,6 @@ customerRoute.get('/',getAllCustomer)
 // customerRoute.post('/login',customerLogin);
 // customerRoute.post('/varify',varification);
 customerRoute.post('/upload-csv',upload.single('csvFile'),uploadCustomerWithPropertyFromCsv);
+customerRoute.get('/export-csv',exportCustomerWithPropertyIntoCsv);
 
 export default customerRoute;
