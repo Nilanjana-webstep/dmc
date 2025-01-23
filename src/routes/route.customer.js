@@ -8,7 +8,8 @@ import {
     getParticularCustomerByMobileNumber,
     createCustomerWithProperty,
     uploadCustomerWithPropertyFromCsv,
-    getParticularCustomerByCustomerId
+    getParticularCustomerByCustomerId,
+    exportCustomerIntoExcel
 } from "../controllers/controller.customer.js";
 
 import { 
@@ -25,6 +26,7 @@ const customerRoute = Router();
 customerRoute.post('/',customerCreationWithPropertyValidation,createCustomerWithProperty)
 customerRoute.get('/',getAllCustomer)
 customerRoute.get('/export-csv',exportCustomerIntoCsv);
+customerRoute.get('/export-xl',exportCustomerIntoExcel);
 customerRoute.get('/:customer_id',getParticularCustomerByCustomerId)
 customerRoute.put('/:customer_id',customerUpdationValidation,updateCustomerById)
 customerRoute.delete('/:customer_id',deleteCustomerById)

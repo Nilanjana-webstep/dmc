@@ -9,6 +9,7 @@ import propertySubTypeRoute from './routes/route.propertySubType.js';
 
 import cors from 'cors'
 import customerRoute from './routes/route.customer.js';
+import serviceTypeRoute from './routes/route.serviceType.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(morgan('dev'));
 
 
 app.use('/api/customer',customerRoute);
+app.use('/api/serviceType',serviceTypeRoute);
 app.use('/api/property',propertyRoute);
 app.use('/api/property-type',propertyTypeRoute);
 app.use('/api/property-sub-type',propertySubTypeRoute);

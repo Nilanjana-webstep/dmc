@@ -18,6 +18,7 @@ export const PropertyCreationValidationModel = Joi.object({
     .required(),
 
   property_sub_type_name : Joi.string()
+    .allow(null,'')
     .optional(),
 
   ward_no : Joi.number()

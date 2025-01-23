@@ -19,6 +19,9 @@ export const CustomerPropertyCombinModel = Joi.object({
     sex: Joi.string()
       .valid('male', 'female', 'other')
       .required(),
+
+    address : Joi.string()
+      .required(),
   
     property_no: Joi.string()
       .required(),
@@ -33,6 +36,7 @@ export const CustomerPropertyCombinModel = Joi.object({
       .required(),
   
     property_sub_type_name : Joi.string()
+      .allow(null,'')
       .optional(),
   
     ward_no : Joi.number()

@@ -21,7 +21,7 @@ export const convertCsvToObject = async (csvFile, next) => {
 };
 
 
-export const  jsonToCsv = async(jsonData)=> {
+export const  jsonToCsv = (jsonData)=> {
     
     let csv = '';
     

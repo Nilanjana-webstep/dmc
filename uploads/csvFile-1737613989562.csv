@@ -1,0 +1,101 @@
+full_name,mobile_number,email,date_of_birth,address,sex,property_no,street_1,street_2,property_type_name,property_sub_type_name,ward_no,pincode
+Bhanumati Murthy,2442712979,dhriti37@example.net,1986-04-08,"22, Varty Nagar, Thiruvananthapuram 981651",male,43338,Om Road,Sandhu,industrial,,38,571508
+Shivani Nigam,5638184360,gadeishaan@example.com,1918-10-25,"98, Sood Road, Gurgaon-660644",female,85869,Ganesan Zila,Mukherjee Circle,residential,rent house,18,819049
+Gagan Sodhi,2409307250,aarna69@example.com,1999-02-18,"H.No. 17, Raval Zila, Gaya 294163",male,83926,Doctor Zila,Suresh Path,commercial,restaurant,6,493654
+Tanvi Cherian,0664148432,tripathiforum@example.org,1917-09-09,"H.No. 04, Chowdhury Chowk, Patiala-163248",female,42102,Lal Path,Lalla Circle,residential,rent house,20,039283
+Dakshesh Manne,7082882432,sbhatnagar@example.com,1950-10-31,"H.No. 680, Krish Path, Madurai-792791",male,22095,Pau Zila,Kakar Street,residential,rent house,2,235366
+Bhavini Saha,7504029089,basujai@example.org,1949-07-17,"03/983, Choudhury Path, Naihati-722561",female,91967,Wagle Road,Tara Path,industrial,,11,089613
+Yashasvi Chopra,4398019156,eesha23@example.net,1951-12-25,"25/58, Chada Path, Allahabad 008837",female,12014,Wadhwa Path,Kale Zila,industrial,,22,595191
+Zehaan Wali,7026839071,benoviya@example.org,1945-09-05,"H.No. 645, Bal Path, Jehanabad 387199",female,22397,Reddy Zila,Suri Path,industrial,,11,723005
+Lakshit Chhabra,1962905967,quincy84@example.com,2019-07-24,"14, Lanka Chowk, Bongaigaon 229291",male,89386,Gulati Street,Sidhu Marg,residential,rent house,29,120107
+Ishita Srinivasan,8264551602,dbains@example.net,1986-03-24,"053, Date Circle, Asansol 927740",female,33319,Basu Chowk,Nagarajan Marg,residential,rent house,22,232401
+Vihaan Bhatia,9446679237,prabhuharish@example.org,1980-05-28,"810, Kant Nagar, Gangtok 910496",male,32961,Chaudhuri Path,Golla,industrial,,31,161357
+Frado Lall,6241835595,jagatshankar@example.com,2016-10-23,"75/940, Handa Chowk, Unnao-397511",female,20084,Oommen Path,Chanda Zila,industrial,,13,845135
+Ijaya Choudhury,6464795794,dayalaadhya@example.org,2017-04-07,"05/60, Bhat Ganj, Srinagar 252047",female,55819,Mahal Path,Khosla,industrial,,36,666926
+Raagini Swamy,3636719358,urishilla11@example.com,2007-10-22,"68/86, Patil Street, Ballia 540958",female,68018,Chacko Zila,Pandit,industrial,,4,591043
+Ayush Mannan,5226228292,fbatra@example.com,2018-08-24,"11/967, Natt Circle, Shimoga-367371",female,52108,Sha Marg,Kar Street,industrial,,21,400998
+Krishna Om,9024713557,tristandixit@example.org,1918-07-28,"71/581, Deep Ganj, Pali 854770",female,99792,Basu Nagar,Mital Marg,commercial,restaurant,43,405689
+Wakeeta Palla,3802856404,simonkonda@example.net,1930-11-03,"H.No. 72, Narayan Nagar, Rampur-607866",male,95023,Bhat Nagar,Mahajan Marg,industrial,,12,482623
+Wridesh Char,6641885697,widishabandi@example.net,1914-09-16,"47/855, Nanda Circle, Guntur 402774",female,13309,Parikh Street,Chad,commercial,restaurant,4,675605
+Chaaya Sidhu,7163466168,warjasshetty@example.net,1954-08-28,"H.No. 670, Sundaram, Anantapur-337360",female,63831,Halder Marg,Hayre Chowk,industrial,,10,040770
+Nachiket Sampath,2993081898,yahvi64@example.com,2016-03-07,"36/90, Gola Circle, Rewa 668525",female,98810,Nagy Chowk,Shroff Zila,commercial,wedding hall,3,158234
+Kevin Malhotra,5611930384,eagate@example.net,1927-11-14,"628, Pandya Chowk, Chittoor-068736",female,77284,Sem Street,Rastogi Marg,residential,rent house,34,533192
+Samuel Patil,5102900967,liamminhas@example.org,1952-06-05,"64/638, Shere Chowk, Gwalior 571893",female,42273,Sodhi Marg,Rajagopal Ganj,commercial,hotel,39,352113
+Sachi Gill,9617992485,faqid91@example.com,1971-12-25,"05/61, Vasa Road, Bareilly-824368",male,79037,Kade Marg,Amble Street,commercial,wedding hall,21,280110
+Baljiwan Sathe,7774623260,annewridesh@example.com,1929-10-19,"H.No. 862, Raghavan Path, Ujjain-602001",male,15288,Sathe Zila,Dewan Path,industrial,,23,008426
+Hiral Gulati,2188870570,adityadoctor@example.net,1985-05-20,"H.No. 071, Bajwa Path, Silchar 375197",female,12647,Patil Zila,Joshi Chowk,industrial,,14,422310
+Omkaar Sekhon,6298770856,gandhiekbal@example.com,1910-01-31,"95/647, Kade Road, Aizawl-536292",male,32838,Madan Chowk,Deshmukh Marg,industrial,,20,902641
+Lohit Madan,8095145551,aarush99@example.net,1914-06-04,"70/92, Subramanian Path, Junagadh-749364",female,53901,Deol Ganj,Mahal Chowk,commercial,restaurant,40,848318
+Ishita Thaker,6744409249,chaudhryekantika@example.net,1996-02-21,"H.No. 44, Dhar Nagar, Mehsana 242595",female,42750,Ramanathan Marg,Dhawan Path,industrial,,14,921229
+Abhiram Gill,9773081332,narangomkaar@example.net,1955-12-20,"11/871, Grewal Nagar, Rampur-453606",male,93685,Kumar Nagar,Chaudhary Ganj,residential,rent house,40,234396
+Abdul Krishnamurthy,6122450765,benjamin93@example.net,1975-08-07,"10/60, Mahal Path, Jhansi-445345",female,96881,Jayaraman,Dhaliwal Chowk,commercial,school,36,125327
+Bhavya Brar,4464691310,rehaanmuni@example.com,1972-06-13,"62/55, Bhattacharyya Zila, Khammam 883979",male,36751,Bajaj Nagar,Kala Path,residential,rent house,37,638667
+Jeremiah Chander,4609971982,krishnawagle@example.org,1990-04-21,"47, Bala Zila, Gandhidham 306846",male,75562,Korpal,Ram Zila,residential,house,23,082800
+Zarna Dubey,3763422048,chaudryvanya@example.com,1937-04-14,"H.No. 33, Gala Road, Jaunpur-375635",female,65018,Dani Nagar,Sem Ganj,residential,rent house,36,275415
+Wriddhish Suri,9100362779,nbassi@example.net,1926-07-11,"73/554, Badal, Vasai-Virar-037447",male,99811,Jaggi Path,Din Chowk,industrial,,20,572529
+Daksha Pandit,6785882428,bbail@example.org,1973-04-04,"19/09, Bandi Street, Hindupur 776248",female,19227,Dhillon Circle,Garde Street,residential,rent house,25,905693
+Qasim Agate,4125127273,raaginidyal@example.com,1910-03-04,"391, Kant, Durg-551072",female,31821,Thakkar Zila,Chauhan Marg,industrial,,43,069860
+Vincent Barman,5900201735,valapranit@example.org,1927-12-13,"118, Radhakrishnan Chowk, Maheshtala 185274",male,42879,Comar Road,Subramanian Zila,industrial,,10,935686
+Ekaja Thaman,0355808557,gchakraborty@example.com,1938-01-31,"902, Garg Circle, Jorhat-473967",female,82385,Dugar Zila,Yadav Path,commercial,restaurant,17,786930
+Advik Ganesan,2689910699,sameshsant@example.org,1980-05-06,"H.No. 481, Wable Nagar, Asansol-845847",male,87435,Borra Chowk,Jha Street,commercial,school,21,597608
+Abhiram Rama,7330237043,sameshnaik@example.org,1977-07-01,"29, Kumer, Bettiah 971812",female,53280,Nadig Street,Seth Path,industrial,,26,385039
+Ranveer Memon,1598408094,hpillay@example.net,1978-07-14,"10/99, Bhattacharyya Road, Kakinada-779780",male,41086,Mital Nagar,Savant Ganj,commercial,school,13,461127
+Jeet Maharaj,0963710817,vdutt@example.com,1941-07-18,"40, Balakrishnan Chowk, Latur-551834",male,66126,Pau Ganj,Deep Street,industrial,,3,101148
+Geetika Narayan,9220633316,gpadmanabhan@example.com,1951-08-07,"H.No. 239, Nigam Zila, Mira-Bhayandar 166079",female,10237,Palan Zila,Borah Ganj,industrial,,18,850139
+Devika Handa,3963001935,yashbhattacharyya@example.org,1937-12-05,"H.No. 955, Kale Ganj, Jorhat 064772",male,54583,Vala Road,Goda Marg,industrial,,36,253512
+Oviya Misra,4480720359,hemangvaidya@example.net,1956-10-02,"866, Barad Road, Latur 012676",male,70989,Seth Chowk,Randhawa Circle,commercial,wedding hall,28,376528
+Charan Behl,4229628485,vanshashenoy@example.com,1998-10-03,"999, Narang Nagar, Hazaribagh-519411",male,94263,Chokshi Nagar,Narula Circle,commercial,restaurant,38,247959
+Hamsini Cheema,1339748101,tandonpushti@example.com,1971-02-23,"H.No. 19, Choudhry Street, Sultan Pur Majra 071225",male,16824,Manda Zila,Kakar Zila,commercial,school,28,734065
+Ati Malhotra,9655056965,omani@example.org,2012-09-06,"H.No. 963, Dar Marg, Bhiwani-407219",male,69015,Sabharwal Nagar,Murthy Circle,commercial,hotel,30,806663
+Prisha Hegde,8865542728,lekhapau@example.com,1947-07-09,"270, Naik Road, Kalyan-Dombivli-541929",male,21877,Sama Nagar,Kibe,residential,rent house,18,841266
+Ubika Basu,3238980481,pahal88@example.org,2020-04-04,"39/30, Kota Path, Jamshedpur 440761",male,94223,Kant Zila,Balay Circle,industrial,,4,708722
+Aradhana Bal,4867616999,goak@example.net,2020-05-03,"69, Dutta Ganj, Barasat 214474",male,62956,Dewan Circle,Dugar Road,commercial,wedding hall,13,403006
+Harinakshi Sundaram,8576174805,cpant@example.com,1927-10-29,"587, Bhagat Marg, Bareilly 771105",male,84424,Magar Marg,Krishna Chowk,commercial,wedding hall,5,550171
+Ekaraj Bora,8936495532,handafalak@example.org,1942-11-13,"21/006, Karnik Road, Gopalpur-391698",male,16817,Agarwal Chowk,Mohan Nagar,commercial,hotel,37,296099
+Aarush Bala,3046752043,mahalarjun@example.org,1916-10-16,"05/84, Dugar Zila, Guntakal-126313",female,20722,Khanna Ganj,Guha Road,residential,house,13,325712
+Vrinda Parikh,3526937964,gargpratyush@example.com,2014-12-23,"13/81, Nayar Nagar, Tiruvottiyur-651524",male,19468,Sethi Road,Choudhury Zila,residential,house,32,521970
+Mitesh Din,9785449074,sarafgayathri@example.org,1923-04-09,"H.No. 899, Parikh Street, Thrissur 453982",female,52527,Basu,Tank,residential,house,41,416600
+Edhitha Konda,2861739267,victor78@example.org,1922-08-17,"31/56, Krishna, Kadapa 165639",female,76717,Goswami Chowk,Bhattacharyya Nagar,industrial,,4,404383
+Yuvraj Brahmbhatt,7550689825,samarthmittal@example.com,2018-08-05,"H.No. 402, Sandal Path, Tenali 385384",female,97500,Gole Path,Setty Nagar,industrial,,39,968809
+Jacob Seshadri,5975573616,dhritiiyengar@example.net,1987-05-04,"H.No. 642, Mistry Zila, Jammu-317484",female,78012,Rana,Talwar Path,industrial,,31,905615
+Manbir Ranganathan,5825586077,rmane@example.org,1999-10-09,"05/835, Sen Path, Satara-485978",male,17544,Bhatia Ganj,Khurana Chowk,residential,rent house,35,118741
+Oni Kakar,8533503624,rohan33@example.com,1955-08-20,"H.No. 188, Kothari Circle, Chittoor-132184",female,12809,Prakash Path,Anand Ganj,industrial,,20,268856
+Nidhi Koshy,5080710347,rehaan73@example.net,1909-03-12,"67, Dhar Zila, Chandigarh 486917",female,63178,Sha Marg,Bahl Ganj,commercial,hotel,9,975670
+Isaac Bava,4368400227,ramjonathan@example.com,1994-09-21,"28/030, Taneja, Aizawl 750270",female,84382,Bhalla Zila,Pandit Ganj,commercial,restaurant,10,640455
+Ati Chawla,4863194443,guneet29@example.net,1931-04-23,"H.No. 850, Batra Circle, Jalna 087154",female,41889,Borra Path,Bhakta Marg,residential,rent house,30,093767
+Wazir Bhatt,1492529179,qvig@example.org,1950-06-03,"20, Dutta Circle, Jabalpur-633170",female,31291,Salvi Circle,Kuruvilla Circle,commercial,hotel,34,989465
+Brinda Zachariah,0769207902,maya97@example.com,1943-06-08,"99, Savant Zila, Anantapuram 764433",male,45156,Lanka Marg,Maharaj Nagar,industrial,,43,003143
+Unnati Pradhan,2655882613,hardikgoswami@example.org,1912-08-18,"36/32, Das Road, Jamnagar 635632",female,15093,Tailor Circle,Buch Zila,residential,rent house,22,184160
+Dalbir Kala,8161176996,hiral11@example.org,1989-08-22,"54/250, Choudhury Marg, Mira-Bhayandar 186205",male,39874,Mittal,Sankaran Circle,residential,rent house,36,670668
+Siya Ramakrishnan,8278791870,amaralad@example.com,1925-12-20,"H.No. 937, Shah Street, Nizamabad-776222",male,25054,Dora Ganj,Warrior Zila,commercial,hotel,9,728788
+Samuel Parikh,9108728609,psubramaniam@example.net,1952-12-13,"068, Kakar Path, Dindigul 436270",male,25056,Mukherjee Ganj,Parmar,commercial,restaurant,5,062002
+Eta Som,9085562681,bhattdipta@example.org,1935-12-03,"581, Dua, Panipat-851564",male,81276,Dixit Path,Mall Road,commercial,wedding hall,35,991165
+Ishanvi Memon,8795735220,qdhawan@example.net,1932-01-24,"167, Ganesh Path, Bidar-178672",female,31980,Chahal Circle,Wali Chowk,residential,house,21,974659
+Tanvi Rastogi,2065851849,meghanasheth@example.com,1964-06-19,"87/49, Karpe Marg, Durgapur-882440",male,40843,Handa Marg,Doshi Zila,residential,rent house,4,795176
+Daksha Atwal,9860537154,chadharudra@example.net,1909-02-11,"47/98, Ravi Nagar, Shimoga 151204",male,46946,Banerjee Chowk,Vig Marg,industrial,,27,784322
+Harini Rajagopal,0954502865,jai20@example.org,2023-03-16,"87/508, Karnik Chowk, Bihar Sharif-536616",male,50848,Kata Marg,Mody,residential,house,35,144896
+Yutika Narang,0901815914,bnayak@example.net,1974-10-05,"H.No. 05, Bir Road, Dharmavaram-429016",female,71740,Lanka Circle,Mishra Street,commercial,school,31,204412
+Quincy Dixit,6181959683,girik69@example.org,1963-11-20,"H.No. 44, Krishna, Shahjahanpur 345471",female,55805,Varghese Road,Merchant Zila,commercial,hotel,43,502664
+Isaac Dutt,1733622658,riyachadha@example.org,1977-11-08,"H.No. 48, Sangha Marg, Giridih-902726",female,22540,Chauhan Marg,Chaudhary Road,commercial,hotel,13,241159
+Zashil Vora,8087436810,shankerqabil@example.net,1916-04-20,"H.No. 16, Sharaf Path, Karimnagar-566830",female,86579,Nayar,Ganesh Chowk,residential,house,16,816589
+Harish Arora,0276256631,vanshasarkar@example.org,2013-06-12,"H.No. 366, Narasimhan, Bhiwandi 052780",male,53381,Walla Road,Mohanty Chowk,residential,rent house,34,690683
+Kashvi Bhagat,5459679621,ganeshvarenya@example.com,1974-08-17,"349, Sur Path, Anantapur 604866",female,64013,Kadakia Circle,Bath Path,commercial,hotel,19,672552
+Sara Nayak,5692045133,quincymukhopadhyay@example.net,1979-06-01,"H.No. 256, Mitra Circle, Bhatpara 667787",male,23390,Sane,Choudhury Nagar,commercial,restaurant,35,586140
+Warda Kalla,1912123677,pbarman@example.org,1940-01-09,"H.No. 058, Narasimhan Nagar, Pune-769963",female,56347,Krish Chowk,Chaudhary Street,residential,house,11,479558
+Harinakshi Mangal,3433746423,petersur@example.com,1987-06-23,"11/22, Deep Marg, Muzaffarpur 305833",male,61735,Mutti Zila,Pall Marg,industrial,,33,991412
+Inaya Sawhney,4043282224,chakrikashenoy@example.net,1962-03-25,"H.No. 91, Hayer Path, Proddatur 887693",female,14029,Pingle Road,Hari Street,residential,rent house,4,510396
+Jairaj Pall,8170314484,gaurangisaran@example.net,2014-07-09,"80/071, Brahmbhatt Circle, Jodhpur-408593",female,36712,Sankar Marg,Raman,residential,house,20,899133
+Kavya Kapoor,1572541426,sprabhakar@example.org,1997-07-11,"21/852, Bhagat Nagar, Purnia 986226",male,60782,Wable,Bobal Chowk,commercial,hotel,32,001272
+Vidhi Lanka,7448391623,finn78@example.com,1935-10-08,"H.No. 97, Kurian Path, Baranagar 303562",female,32994,Palan Road,Mahajan Road,residential,house,32,642299
+Max Solanki,8331997605,chawlanilima@example.org,1951-09-24,"81/69, Kala Ganj, Kalyan-Dombivli 773447",male,89430,Rama Chowk,Raju Path,industrial,,16,858223
+Amruta Edwin,5755486581,ganesantriveni@example.org,1946-06-23,"H.No. 97, Rastogi Street, Etawah 486220",male,20091,Chopra Circle,Jhaveri Street,industrial,,6,393724
+Vedhika Aggarwal,1079941389,qtella@example.com,1995-10-28,"H.No. 540, Bakshi Nagar, Bangalore-912614",female,17039,Rama Chowk,Goyal Path,residential,rent house,43,622339
+Aayush Dugar,7646583222,cheemaaadhya@example.net,1938-04-04,"61/26, Kannan Zila, Rajahmundry-447350",female,79596,Ramaswamy Circle,Dave Street,residential,house,30,180621
+Teerth Rai,0702756239,ekansh32@example.com,1939-09-14,"12, Keer Ganj, Korba 442963",female,32402,Rege Circle,Mishra Nagar,residential,rent house,35,599136
+Waida Srivastava,2317535297,nborra@example.org,1964-06-04,"13/18, Gala Marg, Allahabad 333826",female,18898,Amble,Mane Road,residential,house,25,734379
+Lakshmi Peri,0857311322,krish95@example.org,1923-07-12,"08/207, Oak, Gudivada-790177",female,96232,Bath Road,Kata Zila,residential,house,25,612839
+Dev Kumer,1072576236,yashasvi92@example.org,1969-11-08,"H.No. 738, Kadakia Chowk, Ballia 435635",male,33722,Ranganathan Marg,Deo Circle,residential,house,19,768209
+Anita Anand,4082380551,sthakkar@example.org,1963-11-21,"20/36, Cheema Ganj, Vadodara 738587",female,33659,Mane Nagar,Borah,residential,rent house,31,999553
+Rishi Hayre,4564916361,hritiksuresh@example.org,1966-04-18,"H.No. 20, Mital Path, Hospet-742620",female,74836,Oommen Ganj,Mohan Marg,residential,rent house,16,622169
+Zilmil Bumb,0993097643,patlachakradev@example.org,1941-06-27,"H.No. 56, Kade Ganj, Ongole-972452",male,18237,Sankaran Circle,Dugar Ganj,industrial,,18,080591
+Wyatt Memon,4233040399,farasbhasin@example.net,1979-04-17,"261, Cheema Marg, Durg 486205",female,69740,Natarajan Ganj,Parikh Nagar,residential,rent house,34,476810

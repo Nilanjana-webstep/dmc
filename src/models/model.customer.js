@@ -25,7 +25,7 @@ const Customer = sequelize.define(
       allowNull: true,
     },
     date_of_birth: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     sex: {
@@ -54,3 +54,6 @@ Property.belongsTo(Customer)
 
 
 export default Customer;
+
+
+

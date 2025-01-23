@@ -85,6 +85,8 @@ export const getParticularPropertyById = async (req, res, next) => {
 
 export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
     const { id } = req.params;
+    console.log("the id is : ",id);
+    
     try {
         const property = await Property.findAll({customerId:id},
             {

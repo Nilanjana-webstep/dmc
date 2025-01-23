@@ -10,7 +10,7 @@ import { convertCsvToObject, jsonToCsv } from '../utils/utils.csv.js';
 import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
 import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
-
+import { AsyncParser } from '@json2csv/node';
 
 
 export const createCustomerWithProperty = async (req, res, next) => {
@@ -46,8 +46,13 @@ export const createCustomerWithProperty = async (req, res, next) => {
             const propertyTypeData = await PropertyType.findOne({where:{property_type_name}},{ transaction: t });
             const property_type_id = propertyTypeData.dataValues.id;
 
-            const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}},{ transaction: t });
-            const property_sub_type_id = propertySubTypeData.dataValues.id;
+            let property_sub_type_id = null;
+
+            if ( property_sub_type_name ){
+
+                const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}},{ transaction: t });
+                property_sub_type_id = propertySubTypeData.dataValues.id;
+            }
 
             const propertyData = await Property.create({...property,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id},{ transaction: t });
             const property_id = propertyData.dataValues.id;
@@ -76,6 +81,11 @@ export const getAllCustomer = async (req, res, next) => {
         const allCustomers = await Customer.findAll({
              where : {is_active:true},
         });
+
+        const plainData = allCustomers.map(customer => customer.get({ plain: true }));
+
+        console.log("the all customer : ",plainData);
+        
         
         return res.status(200).json({
             success: true,
@@ -215,6 +225,7 @@ const validateData = (data) => {
         mobile_number, 
         email, 
         date_of_birth, 
+        address,
         sex,
         property_no, 
         street_1, 
@@ -225,9 +236,11 @@ const validateData = (data) => {
         pincode 
     } = data;
 
-    const customer = { full_name, mobile_number, email, date_of_birth, sex };
+    const customer = { full_name, mobile_number, email, date_of_birth,address,sex };
     const property = { property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode };
 
+    console.log("customer is : ",customer);
+    
     const customerError = CustomerCreationValidationModel.validate(customer).error;
     if (customerError) return customerError;
 
@@ -247,6 +260,7 @@ const processCustomerAndProperty = async (data, t) => {
         mobile_number, 
         email, 
         date_of_birth, 
+        address,
         sex,
         property_no, 
         street_1, 
@@ -257,6 +271,9 @@ const processCustomerAndProperty = async (data, t) => {
         pincode 
     } = data;
 
+    const customer = { full_name, mobile_number, email, date_of_birth,address,sex };
+    const property = { property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode };
+
     let customer_id = null;
 
     const existCustomer = await Customer.findOne({ where: { mobile_number } }, { transaction: t });
@@ -264,7 +281,7 @@ const processCustomerAndProperty = async (data, t) => {
     if (existCustomer) {
         customer_id = existCustomer.dataValues.id;
     } else {
-        const customerData = await Customer.create({ full_name, mobile_number, email, date_of_birth, sex }, { transaction: t });
+        const customerData = await Customer.create(customer, { transaction: t });
         customerData.customer_id = (customer_id + Date.now()).toString();
         customer_id = customerData.dataValues.id;
         await customerData.save({ transaction: t });
@@ -276,9 +293,13 @@ const processCustomerAndProperty = async (data, t) => {
     const propertyTypeData = await PropertyType.findOne({ where: { property_type_name } }, { transaction: t });
     const property_type_id = propertyTypeData.dataValues.id;
 
-    const propertySubTypeData = await PropertySubType.findOne({ where: { property_sub_type_name } }, { transaction: t });
-    const property_sub_type_id = propertySubTypeData.dataValues.id;
+    let property_sub_type_id = null;
 
+    if ( property_sub_type_name ){
+
+        const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}},{ transaction: t });
+        property_sub_type_id = propertySubTypeData.dataValues.id;
+    }
     const propertyData = await Property.create({
         property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode,
         customerId: customer_id, wardId: ward_id, propertyTypeId: property_type_id, propertySubTypeId: property_sub_type_id
@@ -297,13 +318,17 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
 
         const results = await convertCsvToObject(req.file, next);
 
-        console.log('The result is:', results);
+        // console.log('The result is:', results);
 
         const errorData = [];
 
         for (const data of results) {
+            // console.log("the data is : ",data);
+            
             const error = validateData(data);
             if (error) {
+                console.log("the error is : ",error);
+                
                 errorData.push(data);
                 continue;
             }
@@ -316,7 +341,9 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
         return res.json({
             success: true,
             message: "Uploaded CSV successfully",
-            unuploadedData: errorData
+            unuploadedData_length : errorData.length,
+            unuploadData : errorData
+            
         });
 
     } catch (error) {
@@ -325,18 +352,18 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
     }
 };
 
-export const exportCustomerIntoCsv = async (req, res, next) => {
+export const exportCustomerIntoCsv2 = async (req, res, next) => {
     console.log('got hit');
     
     try {
         const data = await Customer.findAll({
             attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
         });
-
-        const plainData = data.map(customer => customer.get({ plain:true }));
         
-        const csvData = jsonToCsv(plainData);
+        const plainData = data.map(customer => customer.get({ plain:true }));
 
+        const csvData = jsonToCsv(plainData);        
+        
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="exported_data.csv"');
 
@@ -347,6 +374,104 @@ export const exportCustomerIntoCsv = async (req, res, next) => {
         next( new CustomError("not exporting csv file , something went wrong",500));
     }
 };
+
+
+import xlsx from 'json-as-xlsx';
+
+export const exportCustomerIntoExcel = async (req, res, next) => {
+    console.log('got hit');
+    
+    try {
+        const data = await Customer.findAll({
+            attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email','address', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
+        });
+        
+        const plainData = data.map(customer => customer.get({ plain: true }));
+
+        console.log("the plain data is : ",plainData);
+        
+
+        let excelData = [
+            {
+                sheet: 'Customers',
+                columns: [
+                    { label: 'ID', value: 'id' },
+                    { label: 'Customer ID', value: 'customer_id' },
+                    { label: 'Full Name', value: 'full_name' },
+                    { label: 'Mobile Number', value: 'mobile_number' },
+                    { label: 'Email', value: 'email' },
+                    { label: 'Address', value: 'address' },
+                    { label: 'Date of Birth', value: 'date_of_birth' },
+                    { label: 'Sex', value: 'sex' },
+                    { label: 'Is Active', value: 'is_active' },
+                    { label: 'Created At', value: 'createdAt' },
+                    { label: 'Updated At', value: 'updatedAt' },
+                ],
+                content: plainData,
+            },
+        ];
+
+        let settings = {
+            fileName: 'exported_data',
+            extraLength: 3,
+            writeMode: 'buffer',
+        };
+
+        const buffer = xlsx(excelData, settings);
+        console.log("the xl is : ",buffer);
+        
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename="exported_data.xlsx"');
+
+        res.send(buffer);
+
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        next(new CustomError("Not exporting Excel file, something went wrong", 500));
+    }
+};
+
+
+
+
+
+
+export const exportCustomerIntoCsv = async (req, res, next) => {
+    console.log('got hit');
+    
+    try {
+        const data = await Customer.findAll({
+            attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
+        });
+        
+        const plainData = data.map(customer => customer.get({ plain: true }));
+        console.log("the plain data is : ",plainData)
+        
+
+        const opts = {};
+        const transformOpts = {};
+        const asyncOpts = {};
+        const parser = new AsyncParser(opts, asyncOpts, transformOpts);
+
+        const csv = await parser.parse(plainData).promise();
+        // Create a JSON2CSV transform stream
+        // const parser = new Transform(opts, asyncOpts, transformOpts);
+
+        // Set response headers for CSV download
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="exported_data.csv"');
+        // console.log('the csv is : ',csv);
+        
+       res.send(csv)
+
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        next(new CustomError("not exporting csv file, something went wrong", 500));
+    }
+};
+
+
 
 
 

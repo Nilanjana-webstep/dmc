@@ -4,7 +4,7 @@ import {
     deletePropertyById,
     getAllProperty,
     getParticularPropertyById, 
-    getAllPropertyByPartucularCustomerId
+    getAllPropertyByPartucularCustomerId,
 } from "../controllers/controller.property.js";
 import {
     propertyUpdationValidation,
