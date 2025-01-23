@@ -12,7 +12,6 @@ import customerRoute from './routes/route.customer.js';
 import serviceTypeRoute from './routes/route.serviceType.js';
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));

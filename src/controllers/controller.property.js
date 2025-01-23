@@ -84,33 +84,34 @@ export const getParticularPropertyById = async (req, res, next) => {
 
 
 export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
+    
+    
     const { id } = req.params;
-    console.log("the id is : ",id);
+    
     
     try {
-        const property = await Property.findAll({customerId:id},
-            {
-                include: [
-                    {
-                        model : Customer,
-                    },
-                    {
-                        model: Ward,
-                        attributes: ['ward_no'] 
-                    },
-                    {
-                        model: PropertyType,
-                        attributes: ['property_type_name'] 
-                    },
-                    {
-                        model: PropertySubType,
-                        attributes: ['property_sub_type_name'] 
-                    }
-                ]
-            }
-        );
+        const allProperties = await Property.findAll({
+            where: { customerId: id },
+            attributes:{exclude:['wardId','propertyTypeId','propertySubTypeId']},
+             
+            include: [
+              {
+                model: Ward,
+                attributes: ['ward_no']
+              },
+              {
+                model: PropertyType,
+                attributes: ['property_type_name']
+              },
+              {
+                model: PropertySubType,
+                attributes: ['property_sub_type_name']
+              }
+            ],
+            
+          });
 
-        if (!property) {
+        if (allProperties.length == 0) {
             return res.status(404).json({
                 success: false,
                 message: "No property found."
@@ -119,7 +120,7 @@ export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
         return res.status(200).json({
             success: true,
             message: "Fetched property successfully.",
-            data: property
+            data: allProperties
         });
     } catch (error) {
         console.log("Error: ", error);

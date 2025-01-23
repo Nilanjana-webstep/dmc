@@ -10,8 +10,7 @@ import { convertCsvToObject, jsonToCsv } from '../utils/utils.csv.js';
 import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
 import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
-import { AsyncParser } from '@json2csv/node';
-
+import ExcelJS from 'exceljs';
 
 export const createCustomerWithProperty = async (req, res, next) => {
 
@@ -215,6 +214,7 @@ export const deleteCustomerById = async (req, res, next) => {
     }
 };
 
+
 const validateData = (data) => {
 
     const { error } = CustomerPropertyCombinModel.validate(data);
@@ -253,6 +253,7 @@ const validateData = (data) => {
 
     return null;
 };
+
 
 const processCustomerAndProperty = async (data, t) => {
     const { 
@@ -310,6 +311,7 @@ const processCustomerAndProperty = async (data, t) => {
     await propertyData.save({ transaction: t });
 };
 
+
 export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
@@ -352,84 +354,50 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
     }
 };
 
-export const exportCustomerIntoCsv2 = async (req, res, next) => {
-    console.log('got hit');
-    
-    try {
-        const data = await Customer.findAll({
-            attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
-        });
-        
-        const plainData = data.map(customer => customer.get({ plain:true }));
-
-        const csvData = jsonToCsv(plainData);        
-        
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename="exported_data.csv"');
-
-        res.send(csvData);
-
-    } catch (error) {
-        console.error('Error exporting data:', error);
-        next( new CustomError("not exporting csv file , something went wrong",500));
-    }
-};
-
-
-import xlsx from 'json-as-xlsx';
 
 export const exportCustomerIntoExcel = async (req, res, next) => {
-    console.log('got hit');
+  try {
+
     
-    try {
-        const data = await Customer.findAll({
-            attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email','address', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
-        });
-        
-        const plainData = data.map(customer => customer.get({ plain: true }));
+    const data = await Customer.findAll({
+      attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'address', 'is_active', 'createdAt', 'updatedAt']
+    });
 
-        console.log("the plain data is : ",plainData);
-        
+    const plainData = data.map(customer => customer.get({ plain: true }));
 
-        let excelData = [
-            {
-                sheet: 'Customers',
-                columns: [
-                    { label: 'ID', value: 'id' },
-                    { label: 'Customer ID', value: 'customer_id' },
-                    { label: 'Full Name', value: 'full_name' },
-                    { label: 'Mobile Number', value: 'mobile_number' },
-                    { label: 'Email', value: 'email' },
-                    { label: 'Address', value: 'address' },
-                    { label: 'Date of Birth', value: 'date_of_birth' },
-                    { label: 'Sex', value: 'sex' },
-                    { label: 'Is Active', value: 'is_active' },
-                    { label: 'Created At', value: 'createdAt' },
-                    { label: 'Updated At', value: 'updatedAt' },
-                ],
-                content: plainData,
-            },
-        ];
+    
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Customers');
 
-        let settings = {
-            fileName: 'exported_data',
-            extraLength: 3,
-            writeMode: 'buffer',
-        };
+    
+    worksheet.columns = [
+      { header: 'ID', key: 'id', width: 10 },
+      { header: 'Customer ID', key: 'customer_id', width: 20 },
+      { header: 'Full Name', key: 'full_name', width: 30 },
+      { header: 'Mobile Number', key: 'mobile_number', width: 15 },
+      { header: 'Email', key: 'email', width: 25 },
+      { header: 'Date of Birth', key: 'date_of_birth', width: 15 },
+      { header: 'Sex', key: 'sex', width: 10 },
+      { header: 'Address', key: 'address', width: 30 },
+      { header: 'Is Active', key: 'is_active', width: 10 },
+      { header: 'Created At', key: 'createdAt', width: 20 },
+      { header: 'Updated At', key: 'updatedAt', width: 20 }
+    ];
 
-        const buffer = xlsx(excelData, settings);
-        console.log("the xl is : ",buffer);
-        
+    
+    plainData.forEach(data => { worksheet.addRow(data); });
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="exported_data.xlsx"');
+    
+    await workbook.xlsx.write(res);
+   
+    res.end();
 
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename="exported_data.xlsx"');
-
-        res.send(buffer);
-
-    } catch (error) {
-        console.error('Error exporting data:', error);
-        next(new CustomError("Not exporting Excel file, something went wrong", 500));
-    }
+  } catch (error) {
+    console.error('Error exporting data:', error);
+    res.status(500).send('Error exporting data');
+  }
 };
 
 
@@ -437,67 +405,6 @@ export const exportCustomerIntoExcel = async (req, res, next) => {
 
 
 
-export const exportCustomerIntoCsv = async (req, res, next) => {
-    console.log('got hit');
-    
-    try {
-        const data = await Customer.findAll({
-            attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'is_active', 'createdAt', 'updatedAt']
-        });
-        
-        const plainData = data.map(customer => customer.get({ plain: true }));
-        console.log("the plain data is : ",plainData)
-        
-
-        const opts = {};
-        const transformOpts = {};
-        const asyncOpts = {};
-        const parser = new AsyncParser(opts, asyncOpts, transformOpts);
-
-        const csv = await parser.parse(plainData).promise();
-        // Create a JSON2CSV transform stream
-        // const parser = new Transform(opts, asyncOpts, transformOpts);
-
-        // Set response headers for CSV download
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename="exported_data.csv"');
-        // console.log('the csv is : ',csv);
-        
-       res.send(csv)
-
-    } catch (error) {
-        console.error('Error exporting data:', error);
-        next(new CustomError("not exporting csv file, something went wrong", 500));
-    }
-};
-
-
-
-
-
-// frontend function to download csv
-
-// const exportToExcel = () => {
-//     console.log("got hit");
-
-//     axios.get('http://localhost:8080/api/customer/export-csv', {
-//         responseType: 'blob' 
-//     })
-//     .then((response) => {
-        
-//         const blob = new Blob([response.data], { type: 'text/csv' });
-//         const link = document.createElement('a');
-//         link.href = window.URL.createObjectURL(blob);
-//         link.download = 'exported_customer_data.csv';
-//         document.body.appendChild(link);
-//         link.click();
-//         document.body.removeChild(link);
-//         console.log("File downloaded successfully");
-//     })
-//     .catch((error) => {
-//         console.error('Error downloading the CSV file:', error);
-//     });
-// };
 
 
 
