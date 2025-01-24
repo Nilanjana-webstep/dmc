@@ -10,14 +10,17 @@ import propertySubTypeRoute from './routes/route.propertySubType.js';
 import cors from 'cors'
 import customerRoute from './routes/route.customer.js';
 import serviceTypeRoute from './routes/route.serviceType.js';
+import nirmalBandhuRoute from './routes/route.nirmalBandhu.js';
 
 const app = express();
 app.use(cors());
+
 app.use(express.json());
 app.use(morgan('dev'));
 
 
 app.use('/api/customer',customerRoute);
+app.use('/api/nirmal-bandhu',nirmalBandhuRoute);
 app.use('/api/serviceType',serviceTypeRoute);
 app.use('/api/property',propertyRoute);
 app.use('/api/property-type',propertyTypeRoute);

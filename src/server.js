@@ -9,7 +9,6 @@ sequelize.sync().then(()=>{
     console.log("database is connected successfully...");
     app.listen(PORT,()=>{
         console.log(`server is running at ${PORT} 🚀 `);
-        
     })
     
 }).catch((err)=>{

@@ -13,7 +13,7 @@ import {
     propertySubTypeUpdationValidation,
 } from "../middlewares/validationMiddleware/validationMiddleware.propertySubType.js";
 
-import upload from "../middlewares/upload.js";
+import  { uploadCsv } from "../middlewares/upload.js";
 
 
 
@@ -25,6 +25,6 @@ propertySubTypeRoute.get('/',getAllPropertySubType)
 propertySubTypeRoute.get('/:property_sub_type',getParticularPropertySubTypeById)
 propertySubTypeRoute.get('/property-type/:property_type',getAllPropertySubTypeOfParticularPropertyType)
 propertySubTypeRoute.put('/:property_sub_type',propertySubTypeUpdationValidation,updatePropertySubTypeById)
-propertySubTypeRoute.post('/upload-csv',upload.single('csvFile'),uploadPropertySubTypeFromCsv);
+propertySubTypeRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadPropertySubTypeFromCsv);
 
 export default propertySubTypeRoute;

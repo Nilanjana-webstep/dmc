@@ -9,15 +9,7 @@ import {
     PropertyCreationValidationModel,
 } from "../../validations/validation.propertyModel.js";
 
-import { 
-    PropertyTypeCreationValidationModel,
-} from "../../validations/validation.propertyTypeModel.js";
 
-import { 
-    PropertySubTypeCreationValidationModel,
-} from "../../validations/validation.propertySubTypeModel.js";
-
-import { WardCreationValidationModel } from "../../validations/validation.wardModel.js";
 
 export const customerCreationWithPropertyValidation = async(req,res,next)=>{
 

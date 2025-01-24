@@ -1,11 +1,6 @@
 import { Router } from "express";
 
-import { 
-    propertyTypeCreationValidation,
-    propertyTypeUpdationValidation,
-} from "../middlewares/validationMiddleware/validationMiddleware.propertyType.js";
 
-import upload from "../middlewares/upload.js";
 import { createServiceType } from "../controllers/controller.serviceType.js";
 
 const serviceTypeRoute = Router();

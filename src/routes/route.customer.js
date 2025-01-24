@@ -17,7 +17,7 @@ import {
     customerCreationWithPropertyValidation
 } from "../middlewares/validationMiddleware/validationMiddleware.customer.js";
 
-import upload from "../middlewares/upload.js";
+import { uploadCsv } from "../middlewares/upload.js";
 
 
 const customerRoute = Router();
@@ -31,6 +31,6 @@ customerRoute.get('/:customer_id',getParticularCustomerByCustomerId)
 customerRoute.put('/:customer_id',customerUpdationValidation,updateCustomerById)
 customerRoute.delete('/:customer_id',deleteCustomerById)
 customerRoute.get('/mobile-number/:mobile_number',getParticularCustomerByMobileNumber)
-customerRoute.post('/upload-csv',upload.single('csvFile'),uploadCustomerWithPropertyFromCsv);
+customerRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadCustomerWithPropertyFromCsv);
 
 export default customerRoute;

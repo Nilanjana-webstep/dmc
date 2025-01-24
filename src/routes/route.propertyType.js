@@ -12,7 +12,7 @@ import {
     propertyTypeUpdationValidation,
 } from "../middlewares/validationMiddleware/validationMiddleware.propertyType.js";
 
-import upload from "../middlewares/upload.js";
+import  { uploadCsv } from "../middlewares/upload.js";
 
 const propertyTypeRoute = Router();
 
@@ -21,7 +21,7 @@ propertyTypeRoute.post('/',propertyTypeCreationValidation,createPropertyType)
 propertyTypeRoute.get('/',getAllPropertyType)
 propertyTypeRoute.get('/:property_type_id',getParticularPropertyTypeById)
 propertyTypeRoute.put('/:property_type_id',propertyTypeUpdationValidation,updatePropertyTypeById)
-propertyTypeRoute.post('/upload-csv',upload.single('csvFile'),uploadPropertyTypeFromCsv);
+propertyTypeRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadPropertyTypeFromCsv);
 
 
 export default propertyTypeRoute;

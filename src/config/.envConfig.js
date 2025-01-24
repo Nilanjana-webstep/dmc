@@ -9,4 +9,7 @@ export const ENV_VARIALBE = {
     DB_USER: process.env.DB_USER,
     DB_PASSWORD: process.env.DB_PASSWORD,
     SECRET_KEY : process.env.SECRET_KEY,
+    CLOUDINARY_API_KEY:process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET:process.env.CLOUDINARY_API_SECRET,
+    CLOUDINARY_ClOUD_NAME:process.env.CLOUDINARY_ClOUD_NAME,
 }

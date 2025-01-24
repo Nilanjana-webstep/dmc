@@ -34,7 +34,7 @@ export const createCustomerWithProperty = async (req, res, next) => {
                 customer_id = existCustomer.dataValues.id;
             }else{
                 const customerData = await Customer.create(customer,{ transaction: t });
-                customerData.customer_id = (customer_id+Date.now()).toString();
+                customerData.customer_id = (customer_id+100000).toString();
                 customer_id = customerData.dataValues.id;
                 await customerData.save({ transaction: t });
             }
@@ -55,7 +55,7 @@ export const createCustomerWithProperty = async (req, res, next) => {
 
             const propertyData = await Property.create({...property,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id},{ transaction: t });
             const property_id = propertyData.dataValues.id;
-            propertyData.consumer_id = (property_id+Date.now()).toString();
+            propertyData.consumer_id = (property_id+100000).toString();
             await propertyData.save({ transaction: t });
 
             return res.status(201).json({
