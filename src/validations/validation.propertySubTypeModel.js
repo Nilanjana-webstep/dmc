@@ -4,17 +4,17 @@ export const PropertySubTypeCreationValidationModel = Joi.object({
   property_sub_type_name: Joi.string()
     .required(),
 
-  property_type_id: Joi.number()
+  property_type_name: Joi.string()
     .required(),
   
 });
 
 
 export const PropertySubTypeUpdationValidationModel = Joi.object({
-  sub_type_name: Joi.string()
+  property_sub_type_name: Joi.string()
     .optional(),
 
-  property_type_id: Joi.number()
+  property_type_name: Joi.number()
     .optional(),
   
   is_active: Joi.boolean()

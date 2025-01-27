@@ -7,15 +7,14 @@ import PropertySubType from './model.propertySubType.js';
 const Property = sequelize.define(
   'property',
   {
-
-    property_no: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     consumer_id : {
       type : DataTypes.STRING,
       allowNull : true,
       unique : true,
+    },
+    property_no: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     street_1: {
       type: DataTypes.STRING,
@@ -27,6 +26,10 @@ const Property = sequelize.define(
     pincode: {
       type: DataTypes.BIGINT,
       allowNull: false,
+    },
+    billing_address : {
+      type : DataTypes.STRING,
+      allowNull : false,
     },
     is_active: {
       type: DataTypes.BOOLEAN,

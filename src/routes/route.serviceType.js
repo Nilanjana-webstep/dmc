@@ -1,15 +1,22 @@
 import { Router } from "express";
 
 
-import { createServiceType } from "../controllers/controller.serviceType.js";
+import { 
+    createServiceType,
+    updateServiceTypeById,
+    getAllServiceType,
+} from "../controllers/controller.serviceType.js";
+import { 
+    serviceTypeCreationValidation,
+    serviceTypeUpdationValidation,
+} from "../middlewares/validationMiddleware/validationMiddleware.serviceType.js";
 
 const serviceTypeRoute = Router();
 
 
-serviceTypeRoute.post('/',createServiceType)
-// serviceTypeRoute.get('/',getAllPropertyType)
-// serviceTypeRoute.get('/:property_type_id',getParticularPropertyTypeById)
-// serviceTypeRoute.put('/:property_type_id',propertyTypeUpdationValidation,updatePropertyTypeById)
+serviceTypeRoute.post('/',serviceTypeCreationValidation,createServiceType)
+serviceTypeRoute.get('/',getAllServiceType)
+serviceTypeRoute.put('/:id',serviceTypeUpdationValidation,updateServiceTypeById)
 // serviceTypeRoute.post('/upload-csv',upload.single('csvFile'),uploadPropertyTypeFromCsv);
 
 

@@ -1,21 +1,16 @@
 import NirmalBandhu from "../models/model.nirmalBandhu.js";
-import { cloudinary } from "../config/cloudinary.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
-import fs from 'fs';
-import csvParser from "csv-parser";
-import { PdfReader } from "pdfreader";
-import PDFParser from "pdf2json"; 
 import CustomError from "../utils/util.customError.js";
-import { resolveObjectURL } from "buffer";
+
+
 
 export const createNirmalBandhu = async (req,res,next)=>{
-    try {
 
-        const { public_id , secure_url } = await cloudinary.uploader.upload(req.file.path,{
-            folder : 'adhar_card'
-        })
-               
-        const nirmalBandhu = await NirmalBandhu.create({...req.body,adhar_card_url:secure_url,adhar_card_public_id:public_id});
+    try {
+    
+        const nirmalBandhu = await NirmalBandhu.create({...req.body,adhar_card:req.file.path});
+        nirmalBandhu.nirmal_bandhu_id = 100000 + nirmalBandhu.id;
+        await nirmalBandhu.save();
         
         return res.json({
             success : true,

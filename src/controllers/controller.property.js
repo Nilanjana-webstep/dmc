@@ -40,10 +40,10 @@ export const getAllProperty = async (req, res, next) => {
 };
 
 
-export const getParticularPropertyById = async (req, res, next) => {
-    const { property_id } = req.params;
+export const getParticularPropertyByConsumerId = async (req, res, next) => {
+    const { consumer_id } = req.params;
     try {
-        const property = await Property.findByPk(property_id,
+        const property = await Property.findByPk(consumer_id,
             {
                 include: [
                     {
@@ -130,9 +130,12 @@ export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
 
 
 export const updatePropertyById = async (req, res, next) => {
-    const { property_id } = req.params;
+    
+    const { id } = req.params;
+    
     try {
-        const property = await Property.findByPk(property_id);
+        const property = await Property.findByPk(id);
+
         if (!property) {
             return res.status(404).json({
                 success: false,
@@ -158,10 +161,10 @@ export const updatePropertyById = async (req, res, next) => {
 
 export const deletePropertyById = async (req, res, next) => {
 
-    const { property_id } = req.params;
+    const { id } = req.params;
 
     try {
-        const property = await Property.findByPk(property_id);
+        const property = await Property.findByPk(id);
 
         if (!property) {
             return res.status(404).json({

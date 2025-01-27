@@ -4,11 +4,22 @@ import CustomError from '../utils/util.customError.js';
 
 const adharStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './uploads/adhar/')
+      cb(null, './public/upload/adhar/')
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
       cb(null, file.fieldname + '-' + uniqueSuffix+'.pdf')
+    }
+})
+
+
+const grievanceStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/upload/grievance/')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.originalname + '-' + uniqueSuffix+'.jpg')
     }
 })
 
@@ -18,10 +29,18 @@ const fileFilter = (req, file, cb) => {
 
     const extName = path.extname(file.originalname); 
     
+    if (extName == '.pdf' || extName == '.jpg' ) {
+        cb(null, true);
+    } else {
+        cb(new CustomError('Unsupported file type',401), false); 
+    }
+};
 
-    // console.log("the ext name is : ",extName);
+const grievanceFileFilter = (req, file, cb) => {
+
+    const extName = path.extname(file.originalname); 
     
-    if (extName == '.pdf' || extName == '.jpg' || extName == '.jpeg' ) {
+    if (extName == '.pdf' || extName == '.jpg' ) {
         cb(null, true);
     } else {
         cb(new CustomError('Unsupported file type',401), false); 
@@ -30,9 +49,9 @@ const fileFilter = (req, file, cb) => {
 
 
 const csvStorage = multer.diskStorage({
-    destination: './uploads/',
+    destination: './public/upload/csv/',
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + '.csv');
+        cb(null, file.originalname + '-' + Date.now() + '.csv');
     }
 });
 
@@ -40,6 +59,8 @@ const csvStorage = multer.diskStorage({
 export const uploadCsv = multer({ storage: csvStorage });
 
 export const uploadAdhar = multer({ storage: adharStorage, fileFilter:fileFilter,limits: { fileSize : 1 * 1024 * 1024} });
+
+export const uploadGrievancePhoto = multer({ storage: grievanceStorage, fileFilter:grievanceFileFilter,limits: { fileSize : 1 * 1024 * 1024} });
 
 
 

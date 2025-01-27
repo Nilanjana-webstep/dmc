@@ -1,13 +1,13 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import GrievanceSubType from './model.grievanceSubType.js';
 
 
-
-const PropertySubType = sequelize.define(
-  'property_sub_type',
+const GrievanceType = sequelize.define(
+  'grievance_type',
   {
    
-    property_sub_type_name : {
+    grievance_type_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -21,11 +21,10 @@ const PropertySubType = sequelize.define(
     freezeTableName: true,
     timestamps: true,
   },
-
-  
 );
 
 
+GrievanceType.hasMany(GrievanceSubType);
+GrievanceSubType.belongsTo(GrievanceType);
 
-
-export default PropertySubType;
+export default GrievanceType;

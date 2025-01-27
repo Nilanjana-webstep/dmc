@@ -6,7 +6,7 @@ import PropertySubType from '../models/model.propertySubType.js';
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import sequelize from '../config/db.js';
-import { convertCsvToObject, jsonToCsv } from '../utils/utils.csv.js';
+import { convertCsvToObject } from '../utils/utils.csv.js';
 import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
 import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
@@ -81,9 +81,12 @@ export const getAllCustomer = async (req, res, next) => {
              where : {is_active:true},
         });
 
-        const plainData = allCustomers.map(customer => customer.get({ plain: true }));
-
-        console.log("the all customer : ",plainData);
+       if ( allCustomers.length < 1 ){
+            return res.status(200).json({
+                success : true,
+                message : "No customer found!"
+            })
+       }
         
         
         return res.status(200).json({
@@ -130,16 +133,14 @@ export const getParticularCustomerByMobileNumber = async (req, res, next) => {
     
     const { mobile_number} = req.params;
 
-    console.log("The consumer ID is:", mobile_number);
-
     try {
         const customer = await Customer.findOne({
             where: { mobile_number },
         });
 
         if (!customer) {
-            return res.status(404).json({
-                success: false,
+            return res.status(200).json({
+                success: true,
                 message: "No customer found."
             });
         }
@@ -158,11 +159,11 @@ export const getParticularCustomerByMobileNumber = async (req, res, next) => {
 
 export const updateCustomerById = async (req, res, next) => {
 
-    const { customer_id } = req.params;
+    const { id } = req.params;
 
     try {
 
-        const customer = await Customer.findByPk(customer_id);
+        const customer = await Customer.findByPk(id);
 
         if (!customer) {
             return res.status(404).json({
@@ -356,7 +357,8 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
 
 
 export const exportCustomerIntoExcel = async (req, res, next) => {
-  try {
+  
+    try {
 
     
     const data = await Customer.findAll({

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 import Property from './model.property.js';
+import Grievance from './model.grievance.js';
 
 const Customer = sequelize.define(
   'customer',
@@ -20,15 +21,11 @@ const Customer = sequelize.define(
       allowNull: false,
       unique : true,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     date_of_birth: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    sex: {
+    gender: {
       type: DataTypes.ENUM('male', 'female', 'other'),
       allowNull: false,
     },
@@ -52,6 +49,8 @@ const Customer = sequelize.define(
 Customer.hasMany(Property)
 Property.belongsTo(Customer)
 
+Customer.hasMany(Grievance);
+Grievance.belongsTo(Customer);
 
 export default Customer;
 

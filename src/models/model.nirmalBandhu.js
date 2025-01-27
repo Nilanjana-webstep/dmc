@@ -9,6 +9,10 @@ const NirmalBandhu = sequelize.define(
             type : DataTypes.STRING,
             allowNull : true,
         },
+        nirmal_bandhu_id : {
+            type : DataTypes.STRING,
+            unique : true,
+        },
         date_of_birth : {
             type : DataTypes.DATEONLY,
             allowNull : false,
@@ -33,13 +37,9 @@ const NirmalBandhu = sequelize.define(
             type : DataTypes.BIGINT,
             allowNull : false
         },
-        adhar_card_url : {
+        adhar_card : {
             type : DataTypes.STRING,
             allowNull : false
-        },
-        adhar_card_public_id : {
-            type : DataTypes.STRING,
-            allowNull:false,
         },
         start_date : {
             type : DataTypes.DATEONLY,

@@ -1,6 +1,7 @@
 import Joi from 'joi';
 
 export const CustomerCreationValidationModel = Joi.object({
+
   full_name: Joi.string()
     .required(),
   
@@ -9,14 +10,10 @@ export const CustomerCreationValidationModel = Joi.object({
     .message("invalid phone number") 
     .required(),
   
-  email: Joi.string()
-    .email()
-    .optional(),
-  
   date_of_birth: Joi.date()
     .required(),
   
-  sex: Joi.string()
+  gender: Joi.string()
     .valid('male', 'female', 'other')
     .required(),
 
@@ -45,6 +42,9 @@ export const CustomerUpdationValidationModel = Joi.object({
     .optional(),
 
   address : Joi.string()
+    .optional(),
+
+  is_active : Joi.boolean()
     .optional()
   
 

@@ -3,11 +3,11 @@ import sequelize from '../config/db.js';
 
 
 
-const PropertySubType = sequelize.define(
-  'property_sub_type',
+const GrievanceSubType = sequelize.define(
+  'grievance_sub_type',
   {
    
-    property_sub_type_name : {
+    grievance_sub_type_name : {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -28,4 +28,4 @@ const PropertySubType = sequelize.define(
 
 
 
-export default PropertySubType;
+export default GrievanceSubType;

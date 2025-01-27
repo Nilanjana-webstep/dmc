@@ -11,5 +11,8 @@ export const PropertyTypeUpdationValidationModel = Joi.object({
 
   property_type_name: Joi.string()
     .optional(),
+
+  is_active : Joi.boolean()
+    .optional()
   
 });

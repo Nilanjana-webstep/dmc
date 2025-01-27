@@ -3,7 +3,7 @@ import {
     updatePropertyById,
     deletePropertyById,
     getAllProperty,
-    getParticularPropertyById, 
+    getParticularPropertyByConsumerId, 
     getAllPropertyByPartucularCustomerId,
 } from "../controllers/controller.property.js";
 import {
@@ -15,9 +15,9 @@ const propertyRoute = Router();
 
 propertyRoute.get('/',getAllProperty)
 propertyRoute.get('/customer-id/:id',getAllPropertyByPartucularCustomerId)
-propertyRoute.get('/:property_id',getParticularPropertyById)
-propertyRoute.put('/:property_id',propertyUpdationValidation,updatePropertyById)
-propertyRoute.delete('/:property_id',deletePropertyById)
+propertyRoute.get('/:consumer_id',getParticularPropertyByConsumerId)
+propertyRoute.put('/:id',propertyUpdationValidation,updatePropertyById)
+propertyRoute.delete('/:id',deletePropertyById)
 
 
 export default propertyRoute;

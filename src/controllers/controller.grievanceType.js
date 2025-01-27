@@ -1,75 +1,63 @@
-import ServiceType from "../models/model.serviceType.js";
+import GrievanceType from "../models/model.grievanceType.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import csv  from 'csv-parser';
 import fs from 'fs';
 
-export const createServiceType = async (req, res, next) => {
+export const createGrievanceType = async (req, res, next) => {
     try {
-        const propertyType = await ServiceType.create(req.body);
+        const grievanceType = await GrievanceType.create(req.body);
         return res.status(201).json({
             success: true,
-            message: "service type created successfully.",
-            data: propertyType
+            message: "Grievance type created successfully.",
+            data: grievanceType
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Service type is not created. Please try again.", 500));
+        return next(new CustomError("Grievance type is not created. Please try again.", 500));
     }
 };
 
-
-export const getAllServiceType = async (req, res, next) => {
+export const getAllGrievanceType = async (req, res, next) => {
     try {
-        const allServiceType = await ServiceType.findAll();
-
-        if ( allServiceType.length < 1 ){
-
-            return res.status(200).json({
-                success: true,
-                message: "No service found.",
-            });
-        }
-
+        const allGrievance = await GrievanceType.findAll();
         return res.status(200).json({
             success: true,
-            message: "Fetched all service types successfully.",
-            data: allServiceType
+            message: "Fetched all grievance types successfully.",
+            data: allGrievance
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch all property types.", 500));
+        return next(new CustomError("Cannot fetch all grievance types.", 500));
     }
 };
 
-
-export const updateServiceTypeById = async (req, res, next) => {
+export const updateGrievanceTypeById = async (req, res, next) => {
     const { id } = req.params;
     try {
-        const serviceType = await ServiceType.findByPk(id);
-        if (!serviceType) {
+        const grievanceType = await GrievanceType.findByPk(id);
+        if (!grievanceType) {
             return res.status(404).json({
                 success: false,
-                message: "No service type found for this ID."
+                message: "No grievance type found for this ID."
             });
         }
-        const updatedServiceType = updateDatabaseObject(req.body, serviceType);
+        const updatedGrievanceType = updateDatabaseObject(req.body, grievanceType);
 
-        await updatedServiceType.save();
+        await updatedGrievanceType.save();
 
         return res.status(200).json({
             success: true,
-            message: "Service type updated successfully.",
-            data: updatedServiceType
+            message: "grievance type updated successfully.",
+            data: updatedGrievanceType
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot update service type.", 500));
+        return next(new CustomError("Cannot update grievance type.", 500));
     }
 };
 
-
-export const uploadServiceTypeFromCsv = async (req, res, next) => {
+export const uploadGrievanceTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(400).send('No file selected!');
@@ -85,9 +73,7 @@ export const uploadServiceTypeFromCsv = async (req, res, next) => {
                 .on('error', reject);
         });
 
-        
-
-        const serviceTypes = await ServiceType.bulkCreate(results);
+        await GrievanceType.bulkCreate(results);
 
         return res.json({
             success: true,

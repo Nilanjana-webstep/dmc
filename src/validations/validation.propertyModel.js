@@ -10,14 +10,14 @@ export const PropertyCreationValidationModel = Joi.object({
   
   street_2: Joi.string()
     .optional(),
-  
-  customer_id : Joi.number()
-    .optional(),
 
-  property_type_name : Joi.string()
+  billing_address : Joi.string()
     .required(),
 
-  property_sub_type_name : Joi.string()
+  property_type : Joi.string()
+    .required(),
+
+  property_sub_type : Joi.string()
     .allow(null,'')
     .optional(),
 
@@ -42,20 +42,22 @@ export const PropertyUpdationValidationModel = Joi.object({
   street_2: Joi.string()
     .optional(),
   
-  customer_id : Joi.number()
+  billing_address : Joi.string()
     .optional(),
 
-  property_type_id : Joi.number()
+  property_type : Joi.string()
     .optional(),
 
-  property_sub_type_id : Joi.number()
+  property_sub_type : Joi.string()
     .optional(),
 
-  ward_id : Joi.number()
+  ward_no : Joi.string()
     .optional(),
   
-  pincode: Joi.string()
+  pincode: Joi.number()
+    .positive()
     .optional(),
+
   is_active : Joi.boolean()
     .optional()
  

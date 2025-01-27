@@ -8,13 +8,7 @@ import {
 
 export const propertyCreationValidation = (req,res,next)=>{
 
-    
-    
-
-    const  { error } =  PropertyCreationValidationModel.validate(req.body.property);
-
-    console.log("the error is : ",error);
-    
+    const  { error } =  PropertyCreationValidationModel.validate(req.body.property); 
 
     if ( error ){
         

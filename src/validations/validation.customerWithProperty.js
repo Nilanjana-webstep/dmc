@@ -32,10 +32,10 @@ export const CustomerPropertyCombinModel = Joi.object({
     street_2: Joi.string()
       .optional(),
   
-    property_type_name : Joi.string()
+    property_type : Joi.string()
       .required(),
   
-    property_sub_type_name : Joi.string()
+    property_sub_type : Joi.string()
       .allow(null,'')
       .optional(),
   
@@ -43,6 +43,9 @@ export const CustomerPropertyCombinModel = Joi.object({
       .required(),
     
     pincode: Joi.number()
+      .required(),
+    
+    billing_address : Joi.string()
       .required(),
     
 });
