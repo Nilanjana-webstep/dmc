@@ -20,11 +20,11 @@ export const getAllProperty = async (req, res, next) => {
                 },
                 {
                     model: PropertyType,
-                    attributes: ['property_type_name'] 
+                    attributes: ['property_type'] 
                 },
                 {
                     model: PropertySubType,
-                    attributes: ['property_sub_type_name'] 
+                    attributes: ['property_sub_type'] 
                 }
             ]
         });
@@ -55,11 +55,11 @@ export const getParticularPropertyByConsumerId = async (req, res, next) => {
                     },
                     {
                         model: PropertyType,
-                        attributes: ['property_type_name'] 
+                        attributes: ['property_type'] 
                     },
                     {
                         model: PropertySubType,
-                        attributes: ['property_sub_type_name'] 
+                        attributes: ['property_sub_type'] 
                     }
                 ]
             }
@@ -101,11 +101,11 @@ export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
               },
               {
                 model: PropertyType,
-                attributes: ['property_type_name']
+                attributes: ['property_type']
               },
               {
                 model: PropertySubType,
-                attributes: ['property_sub_type_name']
+                attributes: ['property_sub_type']
               }
             ],
             

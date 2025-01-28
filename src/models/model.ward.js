@@ -3,7 +3,7 @@ import sequelize from '../config/db.js';
 
 
 const Ward = sequelize.define(
-  'ward',
+  'wards',
   {
     ward_no: {
       type: DataTypes.INTEGER,

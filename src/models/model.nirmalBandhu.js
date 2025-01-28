@@ -3,7 +3,7 @@ import sequelize from "../config/db.js";
 
 
 const NirmalBandhu = sequelize.define(
-    'nirmal_bandhu',
+    'nirmal_bandhus',
     {
         full_name : {
             type : DataTypes.STRING,
@@ -11,6 +11,11 @@ const NirmalBandhu = sequelize.define(
         },
         nirmal_bandhu_id : {
             type : DataTypes.STRING,
+            unique : true,
+        },
+        mobile_number: {
+            type: DataTypes.BIGINT,
+            allowNull: false,
             unique : true,
         },
         date_of_birth : {

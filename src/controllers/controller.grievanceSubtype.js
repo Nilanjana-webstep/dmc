@@ -4,13 +4,14 @@ import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import csv  from 'csv-parser';
 import fs from 'fs';
+import { GrievanceSubTypeCreationValidationModel } from "../validations/validation.grievanceModel.js";
 
 export const createGrievanceSubType = async (req, res, next) => {
 
-    const { grievance_type_name } = req.body;
+    const { grievance_type } = req.body;
 
     try {
-            const grievanceType = await GrievanceType.findOne({where:{grievance_type_name}});
+            const grievanceType = await GrievanceType.findOne({where:{grievance_type}});
 
             if ( !grievanceType ){
 
@@ -99,13 +100,38 @@ export const updateGrievanceSubTypeById = async (req, res, next) => {
     }
 };
 
+
+const validateData =  (data,grievanceTypesSet) => {
+
+    const { error } = GrievanceSubTypeCreationValidationModel.validate(data);
+    if (error) return error;
+
+    const { grievance_type } = data;
+
+    if ( !grievanceTypesSet.has(grievance_type.trim())){
+        return  new CustomError("no grievance type found",401);
+    }
+
+    return null;
+};
+
+const processGrievanceSubType = async ( data )=>{
+    try {
+        
+        const { grievance_type , grievance_sub_type } = data;
+        const grievanceType = await GrievanceType.findOne({where:{grievance_type}});
+        await GrievanceSubType.create({grievanceTypeId:grievanceType.dataValues.id,grievance_sub_type});
+
+    } catch (error) {
+        
+    }
+}
+
 export const uploadGrievanceSubTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(400).send('No file selected!');
         }
-
-        console.log('The file is here:', req.file);
 
         const results = [];
 
@@ -117,21 +143,44 @@ export const uploadGrievanceSubTypeFromCsv = async (req, res, next) => {
                 .on('error', reject);
         });
 
-        console.log("Parsed data:", results);
+        let grievanceTypes = await GrievanceType.findAll({
+            attributes : ['grievance_type']
+        })
 
+        const grievanceTypesSet = new Set();
         
+        grievanceTypes.map((data)=>{
+            grievanceTypesSet.add(data.dataValues.grievance_type.trim());
+        });
 
-        // await GrievanceSubType.bulkCreate(results);
+        const errorData = [];
+        
+        for (const data of results) {
+            
+            const error =  validateData(data,grievanceTypesSet);
+
+            if (error) {
+                console.log("the error is : ",error);
+                errorData.push(data);
+                continue;
+            }
+
+            await processGrievanceSubType(data);
+        }
 
         return res.json({
             success: true,
             message: "Uploaded CSV successfully",
+            error_data_length : errorData.length,
+            error_data : errorData
+
         });
     } catch (error) {
         console.error("Error uploading CSV:", error);
         return res.status(500).json({
             success: false,
             message: "Failed to upload CSV",
+
         });
     }
 };

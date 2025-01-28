@@ -3,10 +3,10 @@ import sequelize from '../config/db.js';
 
 
 const ServiceType = sequelize.define(
-  'service_type',
+  'service_types',
   {
    
-    service_type: {
+    service_type : {
       type: DataTypes.STRING,
       allowNull: false,
     },

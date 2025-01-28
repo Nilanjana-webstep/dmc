@@ -4,6 +4,7 @@ import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import csv  from 'csv-parser';
 import fs from 'fs';
+import { PropertySubTypeCreationValidationModel } from "../validations/validation.propertySubTypeModel.js";
 
 export const createPropertySubType = async (req, res, next) => {
 
@@ -121,13 +122,37 @@ export const updatePropertySubTypeById = async (req, res, next) => {
     }
 };
 
+const validateData =  (data,propertyTypesSet) => {
+
+    const { error } = PropertySubTypeCreationValidationModel.validate(data);
+    if (error) return error;
+
+    const { property_type } = data;
+
+    if ( !propertyTypesSet.has(property_type.trim())){
+        return  new CustomError("no grievance type found",401);
+    }
+
+    return null;
+};
+
+const processPropertySubType = async ( data )=>{
+    try {
+        
+        const { property_type , property_sub_type } = data;
+        const propertyType = await GrievanceType.findOne({where:{property_type}});
+        await PropertySubType.create({propertyTypeId:propertyType.dataValues.id,property_sub_type});
+
+    } catch (error) {
+        
+    }
+}
+
 export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(400).send('No file selected!');
         }
-
-        console.log('The file is here:', req.file);
 
         const results = [];
 
@@ -139,23 +164,44 @@ export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
                 .on('error', reject);
         });
 
-        console.log("Parsed data:", results);
+        let propertyTypes = await PropertyType.findAll({
+            attributes : ['property_type']
+        })
 
+        const propertyTypesSet = new Set();
         
+        propertyTypes.map((data)=>{
+            propertyTypesSet.add(data.dataValues.property_type.trim());
+        });
 
-        const propertySubTypeData = await PropertySubType.bulkCreate(results);
-
+        const errorData = [];
         
+        for (const data of results) {
+            
+            const error =  validateData(data,propertyTypesSet);
+
+            if (error) {
+                console.log("the error is : ",error);
+                errorData.push(data);
+                continue;
+            }
+
+            await processPropertySubType(data);
+        }
 
         return res.json({
             success: true,
             message: "Uploaded CSV successfully",
+            error_data_length : errorData.length,
+            error_data : errorData
+
         });
     } catch (error) {
         console.error("Error uploading CSV:", error);
         return res.status(500).json({
             success: false,
             message: "Failed to upload CSV",
+
         });
     }
 };

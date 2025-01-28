@@ -4,10 +4,10 @@ import sequelize from '../config/db.js';
 
 
 const GrievanceSubType = sequelize.define(
-  'grievance_sub_type',
+  'grievance_sub_types',
   {
    
-    grievance_sub_type_name : {
+    grievance_sub_type : {
       type: DataTypes.STRING,
       allowNull: false,
     },

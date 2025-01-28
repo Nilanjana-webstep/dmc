@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'url';
 import express from 'express'
 import morgan from 'morgan';
 import errorMiddleware from './middlewares/ErrorHandler.js';
@@ -12,18 +13,19 @@ import nirmalBandhuRoute from './routes/route.nirmalBandhu.js';
 import grievanceTypeRoute from './routes/route.grievanceType.js';
 import grievanceSubTypeRoute from './routes/route.grievanceSubType.js';
 import grievanceRoute from './routes/route.grievance.js';
+import bookServiceRoute from './routes/route.bookService.js';
 
 
 const app = express();
 
-
 app.use(cors());
-app.use(express.static('public'));
+app.use('/public',express.static('public'));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use('/api/customer',customerRoute);
 app.use('/api/nirmal-bandhu',nirmalBandhuRoute);
 app.use('/api/service-type',serviceTypeRoute);
+app.use('/api/book-service',bookServiceRoute);
 app.use('/api/property',propertyRoute);
 app.use('/api/property-type',propertyTypeRoute);
 app.use('/api/property-sub-type',propertySubTypeRoute);

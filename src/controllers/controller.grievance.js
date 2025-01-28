@@ -9,15 +9,22 @@ import GrievanceSubType from "../models/model.grievanceSubType.js";
 export const createGrievance = async (req,res,next)=>{
 
     try {
+
+        const filePath =  req.file?req.file.path:null;
+
         
-        const { type , sub_type } = req.body;
 
-        const grievanceType = await GrievanceType.findOne({where:{type:type}});
+        console.log('the file path is : ',filePath);
+        
+        
+        const { grievance_type , grievance_sub_type } = req.body;
+
+        const grievanceType = await GrievanceType.findOne({where:{grievance_type:grievance_type}});
         const grievanceTypeId = grievanceType.dataValues.id;
-        const grievanceSubType = await GrievanceSubType.findOne({where:{sub_type:sub_type}});
+        const grievanceSubType = await GrievanceSubType.findOne({where:{grievance_sub_type:grievance_sub_type}});
         const grievanceSubTypeId = grievanceSubType.dataValues.id;
-
-        const grievance = await Grievance.create({...req.body,customerId:customer_id,grievance_photo:req.file.path});
+        // customer id will be added 
+        const grievance = await Grievance.create({...req.body,grievanceTypeId,grievanceSubTypeId,grievance_photo:filePath});
        
         
         return res.json({

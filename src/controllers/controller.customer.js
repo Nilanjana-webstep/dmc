@@ -15,7 +15,7 @@ import ExcelJS from 'exceljs';
 export const createCustomerWithProperty = async (req, res, next) => {
 
     const {   property ,customer } = req.body;
-    const { ward_no , property_type_name, property_sub_type_name} = property;
+    const { ward_no , property_type, property_sub_type} = property;
 
     try {
         const result = await sequelize.transaction(async t => {
@@ -42,14 +42,14 @@ export const createCustomerWithProperty = async (req, res, next) => {
             const wardData = await Ward.findOne({where:{ward_no}},{ transaction: t });
             const ward_id = wardData.dataValues.id;
 
-            const propertyTypeData = await PropertyType.findOne({where:{property_type_name}},{ transaction: t });
+            const propertyTypeData = await PropertyType.findOne({where:{property_type}},{ transaction: t });
             const property_type_id = propertyTypeData.dataValues.id;
 
             let property_sub_type_id = null;
 
-            if ( property_sub_type_name ){
+            if ( property_sub_type ){
 
-                const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}},{ transaction: t });
+                const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
                 property_sub_type_id = propertySubTypeData.dataValues.id;
             }
 
@@ -231,14 +231,14 @@ const validateData = (data) => {
         property_no, 
         street_1, 
         street_2, 
-        property_type_name, 
-        property_sub_type_name, 
+        property_type, 
+        property_sub_type, 
         ward_no, 
         pincode 
     } = data;
 
     const customer = { full_name, mobile_number, email, date_of_birth,address,sex };
-    const property = { property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode };
+    const property = { property_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode };
 
     console.log("customer is : ",customer);
     
@@ -267,14 +267,14 @@ const processCustomerAndProperty = async (data, t) => {
         property_no, 
         street_1, 
         street_2, 
-        property_type_name, 
-        property_sub_type_name, 
+        property_type, 
+        property_sub_type, 
         ward_no, 
         pincode 
     } = data;
 
     const customer = { full_name, mobile_number, email, date_of_birth,address,sex };
-    const property = { property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode };
+    const property = { property_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode };
 
     let customer_id = null;
 
@@ -292,18 +292,18 @@ const processCustomerAndProperty = async (data, t) => {
     const wardData = await Ward.findOne({ where: { ward_no } }, { transaction: t });
     const ward_id = wardData.dataValues.id;
 
-    const propertyTypeData = await PropertyType.findOne({ where: { property_type_name } }, { transaction: t });
+    const propertyTypeData = await PropertyType.findOne({ where: { property_type } }, { transaction: t });
     const property_type_id = propertyTypeData.dataValues.id;
 
     let property_sub_type_id = null;
 
-    if ( property_sub_type_name ){
+    if ( property_sub_type ){
 
-        const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type_name}},{ transaction: t });
+        const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
         property_sub_type_id = propertySubTypeData.dataValues.id;
     }
     const propertyData = await Property.create({
-        property_no, street_1, street_2, property_type_name, property_sub_type_name, ward_no, pincode,
+        property_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode,
         customerId: customer_id, wardId: ward_id, propertyTypeId: property_type_id, propertySubTypeId: property_sub_type_id
     }, { transaction: t });
 

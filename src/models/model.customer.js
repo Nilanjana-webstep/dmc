@@ -2,9 +2,10 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 import Property from './model.property.js';
 import Grievance from './model.grievance.js';
+import BookService from './model.bookService.js';
 
 const Customer = sequelize.define(
-  'customer',
+  'customers',
   { 
    
     customer_id : {
@@ -49,8 +50,12 @@ const Customer = sequelize.define(
 Customer.hasMany(Property)
 Property.belongsTo(Customer)
 
+
 Customer.hasMany(Grievance);
 Grievance.belongsTo(Customer);
+
+Customer.hasMany(BookService);
+BookService.belongsTo(Customer);
 
 export default Customer;
 

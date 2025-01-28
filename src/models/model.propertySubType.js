@@ -4,10 +4,10 @@ import sequelize from '../config/db.js';
 
 
 const PropertySubType = sequelize.define(
-  'property_sub_type',
+  'property_sub_types',
   {
    
-    property_sub_type_name : {
+    property_sub_type : {
       type: DataTypes.STRING,
       allowNull: false,
     },

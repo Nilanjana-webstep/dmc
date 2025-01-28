@@ -5,7 +5,7 @@ import Ward from './model.ward.js';
 import PropertySubType from './model.propertySubType.js';
 
 const Property = sequelize.define(
-  'property',
+  'properties',
   {
     consumer_id : {
       type : DataTypes.STRING,

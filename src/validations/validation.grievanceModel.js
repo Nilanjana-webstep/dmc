@@ -7,11 +7,14 @@ export const GrievanceCreationValidationModel = Joi.object({
     message : Joi.string()
         .required(),
 
-    type : Joi.string()
+    grievance_type : Joi.string()
         .required(),
 
-    sub_type : Joi.string()
-        .required()
+    grievance_sub_type : Joi.string()
+        .required(),
+
+    address : Joi.string()
+        .required(),
 })
 
 
@@ -20,23 +23,26 @@ export const GrievanceUpdationValidationModel = Joi.object({
     message : Joi.string()
         .optional(),
 
-    type : Joi.string()
+    grievance_type : Joi.string()
         .optional(),
 
-    sub_type : Joi.string()
-        .optional()
+    grievance_sub_type : Joi.string()
+        .optional(),
+
+    address : Joi.string()
+        .optional(),
 })
 
 export const GrievanceTypeCreationValidationModel = Joi.object({
 
-  grievance_type_name: Joi.string()
+  grievance_type: Joi.string()
     .required(),
   
 });
 
 export const GrievanceTypeUpdationValidationModel = Joi.object({
 
-  grievance_type_name: Joi.string()
+  grievance_type: Joi.string()
     .optional(),
 
   is_active : Joi.boolean()
@@ -46,10 +52,10 @@ export const GrievanceTypeUpdationValidationModel = Joi.object({
 
 
 export const GrievanceSubTypeCreationValidationModel = Joi.object({
-    grievance_sub_type_name: Joi.string()
+    grievance_sub_type: Joi.string()
         .required(),
 
-    grievance_type_name: Joi.string()
+    grievance_type: Joi.string()
         .required(),
   
 });
@@ -57,10 +63,10 @@ export const GrievanceSubTypeCreationValidationModel = Joi.object({
 
 export const GrievanceSubTypeUpdationValidationModel = Joi.object({
   
-  grievance_sub_type_name: Joi.string()
+  grievance_sub_type: Joi.string()
     .optional(),
 
-  grievance_type_name: Joi.number()
+  grievance_type: Joi.number()
     .optional(),
   
   is_active: Joi.boolean()

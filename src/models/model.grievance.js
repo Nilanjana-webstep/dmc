@@ -5,7 +5,7 @@ import GrievanceSubType from "./model.grievanceSubType.js";
 
 const Grievance = sequelize.define(
 
-    'grievance',
+    'grievances',
 
     {
         message : {
