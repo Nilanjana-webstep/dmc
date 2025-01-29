@@ -35,6 +35,8 @@ export const bookService = async (req,res,next)=>{
 }
 
 export const getAllBookedServiceOfParticularCustomer = async ( req,res,next)=>{
+    
+    const { id } = req.params;
     try {
         
         const allServices = await BookService.findAll({where:{customerId:id}});

@@ -1,19 +1,21 @@
 import app from './app.js';
 import sequelize from './config/db.js';
 import { ENV_VARIALBE } from './config/.envConfig.js';
+import schedule  from "node-schedule";
+import { expireNoticeJob } from './utils/utils.jobScheduler.js';
 
-const PORT = ENV_VARIALBE.SERVER_PORT || 5000
+const PORT = ENV_VARIALBE.SERVER_PORT || 5000;
 
-
-sequelize.sync().then(()=>{
+sequelize.sync().then(() => {
     console.log("database is connected successfully...");
-    app.listen(PORT,()=>{
+    app.listen(PORT, () => {
         console.log(`server is running at ${PORT} 🚀 `);
-    })
     
-}).catch((err)=>{
-    console.log("the database error is : ",err);
-    
+       (async()=>{
+            // await expireNoticeJob();
+       })();
+    });
+}).catch((err) => {
+    console.log("the database error is : ", err);
     console.log("database connection failed...❌");
-    
-})
+});

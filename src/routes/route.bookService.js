@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { 
     bookService,
+    getAllBookedService,
+    getAllBookedServiceOfParticularCustomer,
 } from "../controllers/controller.bookService.js";
 import { 
     serviceBookingValidation,
@@ -10,10 +12,9 @@ import {
 const bookServiceRoute = Router();
 
 bookServiceRoute.post('/',serviceBookingValidation,bookService);
-// grievanceRoute.get('/',getAllGrievance)
-// grievanceRoute.get('/customer-id/:id',getAllGrievanceByPartucularCustomerId)
-// grievanceRoute.put('/:id',grievanceUpdationValidation,updateGrievanceById)
-// grievanceRoute.delete('/:id',deleteGrievanceById)
+bookServiceRoute.get('/',getAllBookedService)
+bookServiceRoute.get('/customer-id/:id',getAllBookedServiceOfParticularCustomer)
+
 
 
 export default bookServiceRoute;

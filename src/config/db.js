@@ -6,6 +6,7 @@ const sequelize = new Sequelize(ENV_VARIALBE.DB_NAME, ENV_VARIALBE.DB_USER, ENV_
   host:ENV_VARIALBE.DB_HOST,
   dialect: 'mysql' ,
   logging: false,
+  timezone: '+05:30'
 });
 
 
