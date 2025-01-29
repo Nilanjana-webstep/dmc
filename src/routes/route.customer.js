@@ -8,7 +8,10 @@ import {
     createCustomerWithProperty,
     uploadCustomerWithPropertyFromCsv,
     getParticularCustomerByCustomerId,
-    exportCustomerIntoExcel
+    exportCustomerIntoExcel,
+    customerLogin,
+    otpVarification,
+    otpResend
 } from "../controllers/controller.customer.js";
 
 import { 
@@ -30,5 +33,8 @@ customerRoute.put('/:id',customerUpdationValidation,updateCustomerById)
 customerRoute.delete('/:customer_id',deleteCustomerById)
 customerRoute.get('/mobile-number/:mobile_number',getParticularCustomerByMobileNumber)
 customerRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadCustomerWithPropertyFromCsv);
+customerRoute.post('/login',customerLogin);
+customerRoute.post('/otp-varify',otpVarification);
+customerRoute.post('/otp-resend',otpResend);
 
 export default customerRoute;

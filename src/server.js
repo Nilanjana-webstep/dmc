@@ -1,7 +1,6 @@
 import app from './app.js';
 import sequelize from './config/db.js';
 import { ENV_VARIALBE } from './config/.envConfig.js';
-import schedule  from "node-schedule";
 import { expireNoticeJob } from './utils/utils.jobScheduler.js';
 
 const PORT = ENV_VARIALBE.SERVER_PORT || 5000;

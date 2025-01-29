@@ -11,6 +11,10 @@ import { CustomerPropertyCombinModel } from '../validations/validation.customerW
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
 import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
 import ExcelJS from 'exceljs';
+import Varification from '../models/model.varification.js';
+import { generateFourDigitOTP, varifyOtp } from '../utils/utils.otp.js';
+import { generateToken } from '../utils/utis.jwt.js';
+
 
 export const createCustomerWithProperty = async (req, res, next) => {
 
@@ -360,9 +364,8 @@ export const exportCustomerIntoExcel = async (req, res, next) => {
   
     try {
 
-    
     const data = await Customer.findAll({
-      attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'address', 'is_active', 'createdAt', 'updatedAt']
+          attributes: ['id', 'customer_id', 'full_name', 'mobile_number', 'email', 'date_of_birth', 'sex', 'address', 'is_active', 'createdAt', 'updatedAt']
     });
 
     const plainData = data.map(customer => customer.get({ plain: true }));
@@ -401,6 +404,127 @@ export const exportCustomerIntoExcel = async (req, res, next) => {
     res.status(500).send('Error exporting data');
   }
 };
+
+
+export const customerLogin = async ( req,res,next )=>{
+
+    const { mobile_number } = req.body;
+    
+    try {
+        
+        const customer = await Customer.findOne({where : { mobile_number}});
+
+        if ( !customer ) {
+            return res.status(401).json({
+                success : true,
+                message : "No customer is found for this number."
+            })
+        }
+
+        const otp = generateFourDigitOTP();
+
+        const varificationData = await Varification.create({mobile_number,otp});
+
+        //should sent otp to the mobile number
+
+        return res.status(200).json({
+            success : true,
+            message : "successfully sent otp."
+        })
+
+    } catch (error) {
+        
+        console.log("the error occur to send otp to login. : ",error);
+        
+    }
+}
+
+export const otpVarification = async ( req,res,next)=>{
+
+    console.log("got hit ");
+    
+    const { mobile_number , otp } = req.body;
+
+    try {
+        
+        const varificationData = await Varification.findByPk(mobile_number);
+
+        console.log("the expire in : ",varificationData.expire_in);
+
+        if( Date.now() > varificationData.expire_in ){
+
+            return res.status(401).json({
+                success : true,
+                message : "otp time out."
+            })
+            
+        }        
+
+        const varify = varifyOtp(varificationData.otp,otp);
+
+        if ( varify ){
+            await Varification.destroy({where : {mobile_number}});
+            const customerData = await Customer.findOne({where:{mobile_number}});
+            const token = generateToken(customerData.dataValues);
+            return res.status(200).json({
+                success : true,
+                message : 'successfully login.',
+                token : token
+            })
+        }else {
+            return res.status(400).json({
+                success : true,
+                message : 'wrong otp'
+            })
+        }
+
+
+    } catch (error) {
+        console.log("error during otp varification : ",error);
+        
+    }
+}
+
+
+export const otpResend = async ( req,res,next)=>{
+  
+    const { mobile_number  } = req.body;
+
+    try {
+        
+        const customer = await Customer.findOne({where : { mobile_number}});
+
+        if ( !customer ) {
+            return res.status(401).json({
+                success : true,
+                message : "No customer is found for this number."
+            })
+        }
+
+        const otp = generateFourDigitOTP();
+
+        const varificationData = await Varification.findByPk(mobile_number);
+
+        varificationData.otp = otp;
+
+        varificationData.expire_in = new Date(Date.now() + 5 * 60 * 1000);
+
+        //should sent otp to the mobile number
+
+        return res.status(200).json({
+            success : true,
+            message : "successfully sent otp."
+        })
+
+
+    } catch (error) {
+        console.log("error during otp varification : ",error);
+        
+    }
+}
+
+
+
 
 
 
