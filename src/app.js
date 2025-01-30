@@ -14,6 +14,7 @@ import grievanceSubTypeRoute from './routes/route.grievanceSubType.js';
 import grievanceRoute from './routes/route.grievance.js';
 import bookServiceRoute from './routes/route.bookService.js';
 import noticeBoardRoute from './routes/route.noticeBoard.js';
+import paymentRoute from './routes/route.payment.js';
 
 
 
@@ -36,7 +37,7 @@ app.use('/api/grievance-type',grievanceTypeRoute)
 app.use('/api/grievance-sub-type',grievanceSubTypeRoute)
 app.use('/api/grievance/',grievanceRoute);
 app.use('/api/notice-board/',noticeBoardRoute);
-
+app.use('/api/payment',paymentRoute);
 
 app.use(errorMiddleware);
 

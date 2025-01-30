@@ -437,7 +437,7 @@ export const customerLogin = async ( req,res,next )=>{
         console.log("the error occur to send otp to login. : ",error);
         
     }
-}
+};
 
 export const otpVarification = async ( req,res,next)=>{
 
@@ -483,7 +483,7 @@ export const otpVarification = async ( req,res,next)=>{
         console.log("error during otp varification : ",error);
         
     }
-}
+};
 
 
 export const otpResend = async ( req,res,next)=>{
@@ -521,7 +521,7 @@ export const otpResend = async ( req,res,next)=>{
         console.log("error during otp varification : ",error);
         
     }
-}
+};
 
 
 

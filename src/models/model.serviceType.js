@@ -10,6 +10,10 @@ const ServiceType = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    charge : {
+      type : DataTypes.INTEGER,
+      allowNull : false,
+    },
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

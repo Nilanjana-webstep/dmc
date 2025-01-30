@@ -4,7 +4,7 @@ import { deactivateExpiredNotices } from "../controllers/controller.noticeBoard.
 export const expireNoticeJob = async( )=>{
     try {
         
-        scheduleJob('*/5 * * * * *', async() => {
+        scheduleJob('* * 0 * * *', async() => {
             await deactivateExpiredNotices();
         });
         
@@ -13,3 +13,11 @@ export const expireNoticeJob = async( )=>{
         
     }
 } 
+
+
+export const billGenerationFirstDayOfMonth = async ()=>{
+
+    scheduleJob('* * * 1 * *',async ()=>{
+        // should send bill to all user.
+    })
+}

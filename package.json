@@ -15,6 +15,7 @@
     "@json2csv/node": "^7.0.6",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "csv-parser": "^3.1.0",
     "dotenv": "^16.4.7",
     "exceljs": "^4.4.0",
@@ -32,6 +33,7 @@
     "pdf-parse": "^1.1.1",
     "pdf2json": "^3.1.4",
     "pdfreader": "^3.0.7",
+    "razorpay": "^2.9.5",
     "sequelize": "^6.37.5",
     "svg-captcha": "^1.4.0"
   },

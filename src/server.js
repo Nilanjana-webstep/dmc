@@ -1,7 +1,7 @@
 import app from './app.js';
 import sequelize from './config/db.js';
 import { ENV_VARIALBE } from './config/.envConfig.js';
-import { expireNoticeJob } from './utils/utils.jobScheduler.js';
+import { billGenerationFirstDayOfMonth, expireNoticeJob } from './utils/utils.jobScheduler.js';
 
 const PORT = ENV_VARIALBE.SERVER_PORT || 5000;
 
@@ -11,7 +11,8 @@ sequelize.sync().then(() => {
         console.log(`server is running at ${PORT} 🚀 `);
     
        (async()=>{
-            // await expireNoticeJob();
+            await expireNoticeJob();
+            await billGenerationFirstDayOfMonth();
        })();
     });
 }).catch((err) => {
