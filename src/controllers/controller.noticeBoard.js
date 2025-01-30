@@ -86,25 +86,6 @@ export const deleteNotice = async ( req,res )=>{
 }
 
 
-export const deactivateExpiredNotices = async () => {
 
-  const currentDate = new Date();
-
-  try {
-    await NoticeBoard.update(
-      { is_active: false },
-      {
-        where: {
-          end_date: {
-            [Op.lt]: currentDate,
-          },
-        },
-      }
-    );
-    
-  } catch (error) {
-    console.error("Error deactivating expired notices:", error);
-  }
-};
 
 

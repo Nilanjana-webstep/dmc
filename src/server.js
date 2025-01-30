@@ -11,7 +11,6 @@ sequelize.sync().then(() => {
         console.log(`server is running at ${PORT} 🚀 `);
     
        (async()=>{
-            await expireNoticeJob();
             await billGenerationFirstDayOfMonth();
        })();
     });
