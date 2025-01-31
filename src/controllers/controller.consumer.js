@@ -1,15 +1,15 @@
 import Customer from "../models/model.customer.js";
-import Property from "../models/model.property.js";
-import PropertySubType from "../models/model.propertySubType.js";
-import PropertyType from "../models/model.propertyType.js";
+import Consumer from "../models/model.Consumer.js";
+import PropertySubType from "../models/model.PropertySubType.js";
+import PropertyType from "../models/model.PropertyType.js";
 import Ward from "../models/model.ward.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 
 
-export const getAllProperty = async (req, res, next) => {
+export const getAllConsumer = async (req, res, next) => {
     try {
-        const allProperties = await Property.findAll({
+        const allProperties = await Consumer.findAll({
             include: [
                 {
                     model : Customer,
@@ -20,11 +20,11 @@ export const getAllProperty = async (req, res, next) => {
                 },
                 {
                     model: PropertyType,
-                    attributes: ['property_type'] 
+                    attributes: ['Consumer_type'] 
                 },
                 {
                     model: PropertySubType,
-                    attributes: ['property_sub_type'] 
+                    attributes: ['Consumer_sub_type'] 
                 }
             ]
         });
@@ -40,10 +40,10 @@ export const getAllProperty = async (req, res, next) => {
 };
 
 
-export const getParticularPropertyByConsumerId = async (req, res, next) => {
+export const getParticularConsumerByConsumerId = async (req, res, next) => {
     const { consumer_id } = req.params;
     try {
-        const property = await Property.findByPk(consumer_id,
+        const Consumer = await Consumer.findByPk(consumer_id,
             {
                 include: [
                     {
@@ -55,44 +55,44 @@ export const getParticularPropertyByConsumerId = async (req, res, next) => {
                     },
                     {
                         model: PropertyType,
-                        attributes: ['property_type'] 
+                        attributes: ['Consumer_type'] 
                     },
                     {
                         model: PropertySubType,
-                        attributes: ['property_sub_type'] 
+                        attributes: ['Consumer_sub_type'] 
                     }
                 ]
             }
         );
 
-        if (!property) {
+        if (!Consumer) {
             return res.status(404).json({
                 success: false,
-                message: "No property found."
+                message: "No Consumer found."
             });
         }
         return res.status(200).json({
             success: true,
-            message: "Fetched property successfully.",
-            data: property
+            message: "Fetched Consumer successfully.",
+            data: Consumer
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch property.", 500));
+        return next(new CustomError("Cannot fetch Consumer.", 500));
     }
 };
 
 
-export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
+export const getAllConsumerByPartucularCustomerId = async (req, res, next) => {
     
     
     const { id } = req.params;
     
     
     try {
-        const allProperties = await Property.findAll({
+        const allProperties = await Consumer.findAll({
             where: { customerId: id },
-            attributes:{exclude:['wardId','propertyTypeId','propertySubTypeId']},
+            attributes:{exclude:['wardId','ConsumerTypeId','ConsumerSubTypeId']},
              
             include: [
               {
@@ -101,11 +101,11 @@ export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
               },
               {
                 model: PropertyType,
-                attributes: ['property_type']
+                attributes: ['Consumer_type']
               },
               {
                 model: PropertySubType,
-                attributes: ['property_sub_type']
+                attributes: ['Consumer_sub_type']
               }
             ],
             
@@ -114,76 +114,76 @@ export const getAllPropertyByPartucularCustomerId = async (req, res, next) => {
         if (allProperties.length == 0) {
             return res.status(404).json({
                 success: false,
-                message: "No property found."
+                message: "No Consumer found."
             });
         }
         return res.status(200).json({
             success: true,
-            message: "Fetched property successfully.",
+            message: "Fetched Consumer successfully.",
             data: allProperties
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch property.", 500));
+        return next(new CustomError("Cannot fetch Consumer.", 500));
     }
 };
 
 
-export const updatePropertyById = async (req, res, next) => {
+export const updateConsumerById = async (req, res, next) => {
     
     const { id } = req.params;
     
     try {
-        const property = await Property.findByPk(id);
+        const Consumer = await Consumer.findByPk(id);
 
-        if (!property) {
+        if (!Consumer) {
             return res.status(404).json({
                 success: false,
-                message: "No property found for this ID."
+                message: "No Consumer found for this ID."
             });
         }
 
-        const updatedProperty = updateDatabaseObject(req.body, property);
-        await updatedProperty.save();
+        const updatedConsumer = updateDatabaseObject(req.body, Consumer);
+        await updatedConsumer.save();
 
         return res.status(200).json({
             success: true,
-            message: "Property updated successfully.",
-            data: updatedProperty
+            message: "Consumer updated successfully.",
+            data: updatedConsumer
         });
 
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot update property.", 500));
+        return next(new CustomError("Cannot update Consumer.", 500));
     }
 };
 
 
-export const deletePropertyById = async (req, res, next) => {
+export const deleteConsumerById = async (req, res, next) => {
 
     const { id } = req.params;
 
     try {
-        const property = await Property.findByPk(id);
+        const Consumer = await Consumer.findByPk(id);
 
-        if (!property) {
+        if (!Consumer) {
             return res.status(404).json({
                 success: false,
-                message: "No property found for this ID."
+                message: "No Consumer found for this ID."
             });
         }
         
-        property.is_active = false;
+        Consumer.is_active = false;
 
-        await property.save();
+        await Consumer.save();
 
         return res.status(200).json({
             success: true,
-            message: "Property deleted successfully."
+            message: "Consumer deleted successfully."
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot delete property.", 500));
+        return next(new CustomError("Cannot delete Consumer.", 500));
     }
 };
 

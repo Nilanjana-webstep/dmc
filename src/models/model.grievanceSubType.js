@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import GrievanceType from './model.grievanceType.js';
 
 
 

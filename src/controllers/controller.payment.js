@@ -1,6 +1,6 @@
 import { razorpay } from "../config/razorpayConfig.js";
 import crypto from 'crypto';
-
+import Payment from "../models/model.payment.js";
 export const createPaymentOrder = async (req,res,next)=>{
 
     const { amount, currency, receipt } = req.body;

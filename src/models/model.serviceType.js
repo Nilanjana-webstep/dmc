@@ -5,13 +5,12 @@ import sequelize from '../config/db.js';
 const ServiceType = sequelize.define(
   'service_types',
   {
-   
     service_type : {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    charge : {
-      type : DataTypes.INTEGER,
+    service_charge : {
+      type : DataTypes.DECIMAL,
       allowNull : false,
     },
     is_active: {

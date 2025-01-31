@@ -12,10 +12,7 @@ export const createGrievance = async (req,res,next)=>{
 
         const filePath =  req.file?req.file.path:null;
 
-        
-
-        console.log('the file path is : ',filePath);
-        
+        // console.log('the file path is : ',filePath);
         
         const { grievance_type , grievance_sub_type } = req.body;
 

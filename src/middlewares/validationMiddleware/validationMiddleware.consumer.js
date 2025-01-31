@@ -1,14 +1,14 @@
 import CustomError from "../../utils/util.customError.js";
 import { makeClearMessage } from "../../utils/util.validation.js";
 import { 
-    PropertyCreationValidationModel,
-    PropertyUpdationValidationModel,
+    ConsumerCreationValidationModel,
+    ConsumerUpdationValidationModel,
 
- } from "../../validations/validation.propertyModel.js";
+ } from "../../validations/validation.ConsumerModel.js";
 
-export const propertyCreationValidation = (req,res,next)=>{
+export const ConsumerCreationValidation = (req,res,next)=>{
 
-    const  { error } =  PropertyCreationValidationModel.validate(req.body.property); 
+    const  { error } =  ConsumerCreationValidationModel.validate(req.body.Consumer); 
 
     if ( error ){
         
@@ -23,9 +23,9 @@ export const propertyCreationValidation = (req,res,next)=>{
 }
 
 
-export const propertyUpdationValidation = (req,res,next)=>{
+export const ConsumerUpdationValidation = (req,res,next)=>{
 
-    const  { error } =  PropertyUpdationValidationModel.validate(req.body);
+    const  { error } =  ConsumerUpdationValidationModel.validate(req.body);
 
     if ( error ){
         

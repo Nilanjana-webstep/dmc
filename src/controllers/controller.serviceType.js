@@ -6,11 +6,11 @@ import fs from 'fs';
 
 export const createServiceType = async (req, res, next) => {
     try {
-        const propertyType = await ServiceType.create(req.body);
+        const PropertyType = await ServiceType.create(req.body);
         return res.status(201).json({
             success: true,
             message: "service type created successfully.",
-            data: propertyType
+            data: PropertyType
         });
     } catch (error) {
         console.log("Error: ", error);
@@ -38,7 +38,7 @@ export const getAllServiceType = async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch all property types.", 500));
+        return next(new CustomError("Cannot fetch all Consumer types.", 500));
     }
 };
 

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export const CustomerPropertyCombinModel = Joi.object({
+export const CustomerConsumerCombinModel = Joi.object({
    full_name: Joi.string()
       .required(),
     
@@ -23,7 +23,7 @@ export const CustomerPropertyCombinModel = Joi.object({
     address : Joi.string()
       .required(),
   
-    property_no: Joi.string()
+    Consumer_no: Joi.string()
       .required(),
     
     street_1: Joi.string()
@@ -32,10 +32,10 @@ export const CustomerPropertyCombinModel = Joi.object({
     street_2: Joi.string()
       .optional(),
   
-    property_type : Joi.string()
+    Consumer_type : Joi.string()
       .required(),
   
-    property_sub_type : Joi.string()
+    Consumer_sub_type : Joi.string()
       .allow(null,'')
       .optional(),
   

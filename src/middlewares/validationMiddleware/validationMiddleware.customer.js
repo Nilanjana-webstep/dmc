@@ -6,17 +6,17 @@ import {
 } from "../../validations/validation.customerModel.js";
 
 import { 
-    PropertyCreationValidationModel,
-} from "../../validations/validation.propertyModel.js";
+    ConsumerCreationValidationModel,
+} from "../../validations/validation.ConsumerModel.js";
 
 
 
-export const customerCreationWithPropertyValidation = async(req,res,next)=>{
+export const customerCreationWithConsumerValidation = async(req,res,next)=>{
 
-    const {   property ,customer } = req.body;
+    const {   Consumer ,customer } = req.body;
 
-    if ( !customer || !property ){
-        return next( new CustomError("Please provide both customer and property",401));
+    if ( !customer || !Consumer ){
+        return next( new CustomError("Please provide both customer and Consumer",401));
     }
 
     if ( customer ){
@@ -32,9 +32,9 @@ export const customerCreationWithPropertyValidation = async(req,res,next)=>{
         }
     }
 
-    if ( property ){
+    if ( Consumer ){
 
-        const  { error } =  PropertyCreationValidationModel.validate(property);
+        const  { error } =  ConsumerCreationValidationModel.validate(Consumer);
     
         if ( error ){
             

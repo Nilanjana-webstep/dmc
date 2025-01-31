@@ -5,7 +5,7 @@ const Varification = sequelize.define(
     'varifications',
     {
         mobile_number: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             primaryKey: true,
         },
         otp: {

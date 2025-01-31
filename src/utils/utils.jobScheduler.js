@@ -1,5 +1,5 @@
 import { scheduleJob } from "node-schedule";
-import { deactivateExpiredNotices } from "../controllers/controller.noticeBoard.js";
+
 
 
 export const billGenerationFirstDayOfMonth = async ()=>{

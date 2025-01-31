@@ -1,25 +1,26 @@
 import Customer from '../models/model.customer.js';
-import Property from '../models/model.property.js';
+import Consumer from '../models/model.Consumer.js';
 import Ward from '../models/model.ward.js';
 import PropertyType from '../models/model.propertyType.js';
-import PropertySubType from '../models/model.propertySubType.js';
+import PropertySubType from '../models/model.PropertySubType.js';
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import sequelize from '../config/db.js';
 import { convertCsvToObject } from '../utils/utils.csv.js';
-import { CustomerPropertyCombinModel } from '../validations/validation.customerWithProperty.js';
+import { CustomerConsumerCombinModel } from '../validations/validation.customerWithConsumer.js';
 import { CustomerCreationValidationModel } from '../validations/validation.customerModel.js';
-import { PropertyCreationValidationModel } from '../validations/validation.propertyModel.js';
+import { ConsumerCreationValidationModel } from '../validations/validation.ConsumerModel.js';
 import ExcelJS from 'exceljs';
 import Varification from '../models/model.varification.js';
 import { generateFourDigitOTP, varifyOtp } from '../utils/utils.otp.js';
 import { generateToken } from '../utils/utis.jwt.js';
+import { statusCode } from '../config/constraint.js';
 
 
-export const createCustomerWithProperty = async (req, res, next) => {
+export const createCustomerWithConsumer = async (req, res, next) => {
 
-    const {   property ,customer } = req.body;
-    const { ward_no , property_type, property_sub_type} = property;
+    const {   consumer ,customer } = req.body;
+    const { ward_no , property_type, property_sub_type} = consumer;
 
     try {
         const result = await sequelize.transaction(async t => {
@@ -29,7 +30,7 @@ export const createCustomerWithProperty = async (req, res, next) => {
             const { mobile_number } = customer;
 
             if ( mobile_number.toString().length != 10 ){
-                return next(new CustomError("phone number should be 10 digit.",400));
+                return next(new CustomError("phone number should be 10 digit.",statusCode.BAD_REQUEST));
             }    
 
             const existCustomer = await Customer.findOne({where:{mobile_number:mobile_number}})
@@ -38,7 +39,6 @@ export const createCustomerWithProperty = async (req, res, next) => {
                 customer_id = existCustomer.dataValues.id;
             }else{
                 const customerData = await Customer.create(customer,{ transaction: t });
-                customerData.customer_id = (customer_id+100000).toString();
                 customer_id = customerData.dataValues.id;
                 await customerData.save({ transaction: t });
             }
@@ -53,16 +53,15 @@ export const createCustomerWithProperty = async (req, res, next) => {
 
             if ( property_sub_type ){
 
-                const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
-                property_sub_type_id = propertySubTypeData.dataValues.id;
+                const ConsumerSubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
+                property_sub_type_id = ConsumerSubTypeData.dataValues.id;
             }
 
-            const propertyData = await Property.create({...property,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id},{ transaction: t });
-            const property_id = propertyData.dataValues.id;
-            propertyData.consumer_id = (property_id+100000).toString();
-            await propertyData.save({ transaction: t });
+            const ConsumerData = await Consumer.create({...Consumer,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id},{ transaction: t });
+           
+            await ConsumerData.save({ transaction: t });
 
-            return res.status(201).json({
+            return res.status(statusCode.CREATED).json({
                 success: true,
                 message: "created successfully.",
             });
@@ -71,8 +70,8 @@ export const createCustomerWithProperty = async (req, res, next) => {
       
       } catch (error) {
 
-        console.log("Error: ", error);
-        return next(new CustomError("Customer is not created. Please try again.", 500));
+        console.log("Error in creating customer with Consumer : ", error);
+        next(error);
       }
 
 };
@@ -222,7 +221,7 @@ export const deleteCustomerById = async (req, res, next) => {
 
 const validateData = (data) => {
 
-    const { error } = CustomerPropertyCombinModel.validate(data);
+    const { error } = CustomerConsumerCombinModel.validate(data);
     if (error) return error;
 
     const { 
@@ -232,7 +231,7 @@ const validateData = (data) => {
         date_of_birth, 
         address,
         sex,
-        property_no, 
+        Consumer_no, 
         street_1, 
         street_2, 
         property_type, 
@@ -242,15 +241,15 @@ const validateData = (data) => {
     } = data;
 
     const customer = { full_name, mobile_number, email, date_of_birth,address,sex };
-    const property = { property_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode };
+    const Consumer = { Consumer_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode };
 
     console.log("customer is : ",customer);
     
     const customerError = CustomerCreationValidationModel.validate(customer).error;
     if (customerError) return customerError;
 
-    const propertyError = PropertyCreationValidationModel.validate(property).error;
-    if (propertyError) return propertyError;
+    const ConsumerError = ConsumerCreationValidationModel.validate(Consumer).error;
+    if (ConsumerError) return ConsumerError;
 
     if (mobile_number.toString().length !== 10) {
         return new CustomError("Invalid phone number length", 400);
@@ -260,7 +259,7 @@ const validateData = (data) => {
 };
 
 
-const processCustomerAndProperty = async (data, t) => {
+const processCustomerAndConsumer = async (data, t) => {
     const { 
         full_name, 
         mobile_number, 
@@ -268,7 +267,7 @@ const processCustomerAndProperty = async (data, t) => {
         date_of_birth, 
         address,
         sex,
-        property_no, 
+        Consumer_no, 
         street_1, 
         street_2, 
         property_type, 
@@ -278,7 +277,7 @@ const processCustomerAndProperty = async (data, t) => {
     } = data;
 
     const customer = { full_name, mobile_number, email, date_of_birth,address,sex };
-    const property = { property_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode };
+    const Consumer = { Consumer_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode };
 
     let customer_id = null;
 
@@ -296,28 +295,28 @@ const processCustomerAndProperty = async (data, t) => {
     const wardData = await Ward.findOne({ where: { ward_no } }, { transaction: t });
     const ward_id = wardData.dataValues.id;
 
-    const propertyTypeData = await PropertyType.findOne({ where: { property_type } }, { transaction: t });
-    const property_type_id = propertyTypeData.dataValues.id;
+    const ConsumerTypeData = await PropertyType.findOne({ where: { property_type } }, { transaction: t });
+    const Consumer_type_id = ConsumerTypeData.dataValues.id;
 
-    let property_sub_type_id = null;
+    let Consumer_sub_type_id = null;
 
     if ( property_sub_type ){
 
-        const propertySubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
-        property_sub_type_id = propertySubTypeData.dataValues.id;
+        const ConsumerSubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
+        Consumer_sub_type_id = ConsumerSubTypeData.dataValues.id;
     }
-    const propertyData = await Property.create({
-        property_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode,
-        customerId: customer_id, wardId: ward_id, propertyTypeId: property_type_id, propertySubTypeId: property_sub_type_id
+    const ConsumerData = await Consumer.create({
+        Consumer_no, street_1, street_2, property_type, property_sub_type, ward_no, pincode,
+        customerId: customer_id, wardId: ward_id, ConsumerTypeId: Consumer_type_id, ConsumerSubTypeId: Consumer_sub_type_id
     }, { transaction: t });
 
-    const property_id = propertyData.dataValues.id;
-    propertyData.consumer_id = (property_id + Date.now()).toString();
-    await propertyData.save({ transaction: t });
+    const Consumer_id = ConsumerData.dataValues.id;
+    ConsumerData.consumer_id = (Consumer_id + Date.now()).toString();
+    await ConsumerData.save({ transaction: t });
 };
 
 
-export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
+export const uploadCustomerWithConsumerFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(400).send('No file selected!');
@@ -341,7 +340,7 @@ export const uploadCustomerWithPropertyFromCsv = async (req, res, next) => {
             }
 
             await sequelize.transaction(async (t) => {
-                await processCustomerAndProperty(data, t);
+                await processCustomerAndConsumer(data, t);
             });
         }
 

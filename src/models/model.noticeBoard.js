@@ -3,7 +3,8 @@ import sequelize from "../config/db.js";
 
 const NoticeBoard = sequelize.define(
     'notice_boards',
-    {
+    {   
+    
         title : {
             type : DataTypes.STRING,
             allowNull : false,

@@ -82,7 +82,7 @@ export const updateGrievanceSubTypeById = async (req, res, next) => {
         if (!grievanceSubType) {
             return res.status(404).json({
                 success: false,
-                message: "No property sub-type found for this ID."
+                message: "No Consumer sub-type found for this ID."
             });
         }
         const updatedGrievanceSubType = updateDatabaseObject(req.body, grievanceSubType);

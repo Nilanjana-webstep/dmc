@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const PropertyCreationValidationModel = Joi.object({
+export const ConsumerCreationValidationModel = Joi.object({
   
   property_no: Joi.string()
     .required(),
@@ -31,7 +31,7 @@ export const PropertyCreationValidationModel = Joi.object({
 });
 
 
-export const PropertyUpdationValidationModel = Joi.object({
+export const ConsumerUpdationValidationModel = Joi.object({
   
   property_no: Joi.string()
     .optional(),

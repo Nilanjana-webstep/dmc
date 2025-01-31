@@ -4,6 +4,15 @@ export const PropertySubTypeCreationValidationModel = Joi.object({
   property_sub_type: Joi.string()
     .required(),
 
+  property_type_id : Joi.string()
+    .required(),
+  
+});
+
+export const PropertySubTypeCreationValidationModelForCsv = Joi.object({
+  property_sub_type: Joi.string()
+    .required(),
+
   property_type: Joi.string()
     .required(),
   

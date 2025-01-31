@@ -1,20 +1,22 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import Ward from "./model.ward.js";
 
 
 const NirmalBandhu = sequelize.define(
     'nirmal_bandhus',
-    {
+    {   
+        nirmal_bandhu_id : {
+            type : DataTypes.INTEGER,
+            primaryKey : true,
+            autoIncrement : true,
+        },
         full_name : {
             type : DataTypes.STRING,
             allowNull : true,
         },
-        nirmal_bandhu_id : {
-            type : DataTypes.STRING,
-            unique : true,
-        },
         mobile_number: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             unique : true,
         },
@@ -54,10 +56,6 @@ const NirmalBandhu = sequelize.define(
             type : DataTypes.INTEGER,
             allowNull : false,
         },
-        borough_no : {
-            type : DataTypes.INTEGER,
-            allowNull : false,
-        },
         status : {
             type : DataTypes.BOOLEAN,
             defaultValue : true,
@@ -70,5 +68,12 @@ const NirmalBandhu = sequelize.define(
     }
 )
 
+Ward.hasMany(NirmalBandhu);
+NirmalBandhu.belongsTo(Ward);
+
+
+if ( NirmalBandhu == sequelize.models.nirmal_bandhus){
+    sequelize.query("ALTER TABLE nirmal_bandhus AUTO_INCREMENT = 1000001;");
+}
 
 export default NirmalBandhu;

@@ -17,7 +17,6 @@ export const propertySubTypeCreationValidation = (req,res,next)=>{
     }
 
     next();
-
 }
 
 export const propertySubTypeUpdationValidation = (req,res,next)=>{
@@ -28,8 +27,7 @@ export const propertySubTypeUpdationValidation = (req,res,next)=>{
         
         const errorMessage = error.details[0].message;
         const message = makeClearMessage(errorMessage);
-        return next( new CustomError(message,400));
-                
+        return next( new CustomError(message,400)); 
     }
 
     next();

@@ -1,7 +1,6 @@
 import NoticeBoard from "../models/model.noticeBoard.js"
 import { updateDatabaseObject } from "../utils/util.database.js";
-import { Op } from "sequelize";
-import { currentISTDate } from "../config/constraint.js";
+
 
 
 export const createNotice = async ( req,res )=>{

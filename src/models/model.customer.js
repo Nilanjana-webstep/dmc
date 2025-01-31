@@ -1,24 +1,22 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
-import Property from './model.property.js';
-import Grievance from './model.grievance.js';
-import BookService from './model.bookService.js';
+
 
 const Customer = sequelize.define(
   'customers',
   { 
    
     customer_id : {
-      type: DataTypes.STRING,
-      allowNull : true,
-      unique : true,
+      type: DataTypes.INTEGER,
+      primaryKey:true,
+      autoIncrement : true,
     },
     full_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     mobile_number: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
       unique : true,
     },
@@ -29,10 +27,6 @@ const Customer = sequelize.define(
     gender: {
       type: DataTypes.ENUM('male', 'female', 'other'),
       allowNull: false,
-    },
-    address : {
-      type : DataTypes.STRING,
-      allowNull : false,
     },
     is_active: {
       type: DataTypes.BOOLEAN,
@@ -46,16 +40,9 @@ const Customer = sequelize.define(
   }  
 );
 
-
-Customer.hasMany(Property)
-Property.belongsTo(Customer)
-
-
-Customer.hasMany(Grievance);
-Grievance.belongsTo(Customer);
-
-Customer.hasMany(BookService);
-BookService.belongsTo(Customer);
+if ( Customer == sequelize.models.customers ){
+  sequelize.query("ALTER TABLE customers AUTO_INCREMENT = 1000001;");
+}
 
 export default Customer;
 

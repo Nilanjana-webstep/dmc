@@ -1,10 +1,14 @@
-import PropertySubType from "../models/model.propertySubType.js";
+import { statusCode } from "../config/constraint.js";
+import PropertySubType from "../models/model.PropertySubType.js";
 import PropertyType from "../models/model.propertyType.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
-import csv  from 'csv-parser';
-import fs from 'fs';
-import { PropertySubTypeCreationValidationModel } from "../validations/validation.propertySubTypeModel.js";
+import { convertCsvToObject } from "../utils/utils.csv.js";
+import {  
+    PropertySubTypeCreationValidationModelForCsv,
+} from "../validations/validation.propertySubTypeModel.js";
+
+
 
 export const createPropertySubType = async (req, res, next) => {
 
@@ -12,102 +16,78 @@ export const createPropertySubType = async (req, res, next) => {
 
     try {
         
-            const propertyType = await PropertyType.findByPk(property_type_id);
+            const PropertyType = await PropertyType.findByPk(property_type_id);
 
-            if ( !propertyType ){
-
-                return res.status(201).json({
-                    success: false,
-                    message: "please provide a valid property type Id.",
-                });
+            if ( !PropertyType ){
+                return next( new CustomError('No property type found.',statusCode.NOT_FOUND));
     
             }
 
-            const propertySubType = await PropertySubType.create({propertyTypeId:propertyType.id,...req.body});
+            const PropertySubType = await PropertySubType.create({propertyTypeId:property_type_id,...req.body});
         
-            return res.status(201).json({
+            return res.status(statusCode.CREATED).json({
                 success: true,
                 message: "Property sub-type created successfully.",
-                data: propertySubType
+                data: PropertySubType
             });
 
 
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Property sub-type is not created. Please try again.", 500));
+        console.log("Error in creating property sub type : ", error);
+        next ( error );
     }
 };
 
 export const getAllPropertySubType = async (req, res, next) => {
     try {
         const allPropertySubTypes = await PropertySubType.findAll();
-        return res.status(200).json({
+
+        if ( allPropertySubTypes.length < 1 ){
+            return next ( new CustomError("No property sub type Found.",statusCode.NOT_FOUND));
+        }
+        return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched all property sub-types successfully.",
             data: allPropertySubTypes
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch all property sub-types.", 500));
-    }
-};
-
-export const getParticularPropertySubTypeById = async (req, res, next) => {
-    const { property_sub_type } = req.params;
-    try {
-        const propertySubType = await PropertySubType.findByPk(property_sub_type);
-        if (!propertySubType) {
-            return res.status(404).json({
-                success: false,
-                message: "No property sub-type found."
-            });
-        }
-        return res.status(200).json({
-            success: true,
-            message: "Fetched property sub-type successfully.",
-            data: propertySubType
-        });
-    } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch property sub-type.", 500));
+        console.log("Error in getting all property sub type :  ", error);
+        next ( error);
     }
 };
 
 
 export const getAllPropertySubTypeOfParticularPropertyType = async (req, res, next) => {
 
-    const { property_type } = req.params;
+    const { id } = req.params;
     
     try {
-        const allSubProperties = await PropertySubType.findAll({where:{propertyTypeId : property_type}});
-        if (!allSubProperties) {
-            return res.status(404).json({
-                success: false,
-                message: "No Sub property  found."
-            });
+        const allSubProperties = await PropertySubType.findAll({where:{propertyTypeId : id}});
+        if ( allSubProperties.length < 1 ) {
+           return next ( new CustomError("No sub property found for this property type ",statusCode.NOT_FOUND));
         }
-        return res.status(200).json({
+        return res.status(statusCode.CREATED).json({
             success: true,
             message: "Fetched property sub-type successfully.",
             data: allSubProperties
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch property sub-type.", 500));
+        console.log("Error in all sub property type for particular property type : ", error);
+        next ( error);
     }
 };
 
 export const updatePropertySubTypeById = async (req, res, next) => {
-    const { property_sub_type } = req.params;
+
+    const { id } = req.params;
     try {
-        const propertySubType = await PropertySubType.findByPk(property_sub_type);
-        if (!propertySubType) {
-            return res.status(404).json({
-                success: false,
-                message: "No property sub-type found for this ID."
-            });
+
+        const PropertySubType = await PropertySubType.findByPk(id);
+
+        if (!PropertySubType) {
+           return next( new CustomError("No property sub type found .",statusCode.NOT_FOUND));
         }
-        const updatedPropertySubType = updateDatabaseObject(req.body, propertySubType);
+        const updatedPropertySubType = updateDatabaseObject(req.body, PropertySubType);
 
         await updatedPropertySubType.save();
 
@@ -117,20 +97,20 @@ export const updatePropertySubTypeById = async (req, res, next) => {
             data: updatedPropertySubType
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot update property sub-type.", 500));
+        console.log("Error in updating property sub type : ", error);
+        next(error);
     }
 };
 
-const validateData =  (data,propertyTypesSet) => {
+const validateData =  (data,PropertyTypeSet) => {
 
-    const { error } = PropertySubTypeCreationValidationModel.validate(data);
+    const { error } = PropertySubTypeCreationValidationModelForCsv.validate(data);
     if (error) return error;
 
     const { property_type } = data;
 
-    if ( !propertyTypesSet.has(property_type.trim())){
-        return  new CustomError("no grievance type found",401);
+    if ( !PropertyTypeSet.has(property_type.trim())){
+        return  new CustomError("no Property type found",401);
     }
 
     return null;
@@ -140,8 +120,8 @@ const processPropertySubType = async ( data )=>{
     try {
         
         const { property_type , property_sub_type } = data;
-        const propertyType = await GrievanceType.findOne({where:{property_type}});
-        await PropertySubType.create({propertyTypeId:propertyType.dataValues.id,property_sub_type});
+        const PropertyType = await PropertyType.findOne({where:{property_type}});
+        await PropertySubType.create({propertyTypeId:PropertyType.dataValues.id,property_sub_type});
 
     } catch (error) {
         
@@ -151,27 +131,19 @@ const processPropertySubType = async ( data )=>{
 export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
-            return res.status(400).send('No file selected!');
+            return next( new CustomError("not file selected.",statusCode.NOT_FOUND));
         }
 
-        const results = [];
-
-        await new Promise((resolve, reject) => {
-            fs.createReadStream(req.file.path)
-                .pipe(csv())
-                .on('data', (data) => results.push(data))
-                .on('end', resolve)
-                .on('error', reject);
-        });
+        const propertySubTypeJsonData = await convertCsvToObject(req.file,next);
 
         let propertyTypes = await PropertyType.findAll({
-            attributes : ['property_type']
+            attributes : ['Consumer_type']
         })
 
         const propertyTypesSet = new Set();
         
         propertyTypes.map((data)=>{
-            propertyTypesSet.add(data.dataValues.property_type.trim());
+            propertyTypesSet.add(data.dataValues.Consumer_type.trim());
         });
 
         const errorData = [];
@@ -197,11 +169,7 @@ export const uploadPropertySubTypeFromCsv = async (req, res, next) => {
 
         });
     } catch (error) {
-        console.error("Error uploading CSV:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to upload CSV",
-
-        });
+        console.error("Error uploading property sub type  CSV:", error);
+        next(error);
     }
 };
