@@ -16,28 +16,23 @@ import bookServiceRoute from './routes/route.bookService.js';
 import noticeBoardRoute from './routes/route.noticeBoard.js';
 import paymentRoute from './routes/route.payment.js';
 
-import { bill_create } from './controllers/controller.bill.js';
-
 
 const app = express();
 
+
+const corsOptions = {
+    origin: 'https://dmc.websteptech.co.uk',
+};
+  
+  
+app.use(cors(corsOptions));
 
 app.use(cors());
 app.use('/public',express.static('public'));
 app.use(express.json());
 app.use(morgan('dev'));
-app.use('/api/customer',customerRoute);
-app.use('/api/nirmal-bandhu',nirmalBandhuRoute);
-
-app.use('/api/book-service',bookServiceRoute);
-app.use('/api/consumer',consumerRoute);
 
 
-
-
-app.use('/api/grievance/',grievanceRoute);
-app.use('/api/notice-board/',noticeBoardRoute);
-app.use('/api/payment',paymentRoute);
 
 // ******** master table api's ************
 app.use('/api/ward',wardRoute);
@@ -46,6 +41,22 @@ app.use('/api/property-sub-type',propertySubTypeRoute);
 app.use('/api/service-type',serviceTypeRoute);
 app.use('/api/grievance-type',grievanceTypeRoute)
 app.use('/api/grievance-sub-type',grievanceSubTypeRoute)
+
+
+// ************* admin api's **************
+app.use('/api/notice-board/',noticeBoardRoute);
+app.use('/api/nirmal-bandhu',nirmalBandhuRoute);
+app.use('/api/customer',customerRoute);
+app.use('/api/consumer',consumerRoute);
+
+
+// ************* user api's ********************
+app.use('/api/book-service',bookServiceRoute);
+app.use('/api/grievance/',grievanceRoute);
+app.use('/api/payment',paymentRoute);
+
+
+
 
 app.use(errorMiddleware);
 

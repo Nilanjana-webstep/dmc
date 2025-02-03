@@ -28,15 +28,7 @@ const NirmalBandhu = sequelize.define(
             type: DataTypes.ENUM('male', 'female', 'other'),
             allowNull: false,
         },
-        street_1 : {
-            type : DataTypes.STRING,
-            allowNull : false,
-        },
-        street_2: {
-            type : DataTypes.STRING,
-            allowNull : true
-        },
-        landmark : {
+        address : {
             type : DataTypes.STRING,
             allowNull : false,
         },
@@ -44,7 +36,7 @@ const NirmalBandhu = sequelize.define(
             type : DataTypes.BIGINT,
             allowNull : false
         },
-        adhar_card : {
+        adhar_card_photo : {
             type : DataTypes.STRING,
             allowNull : false
         },
@@ -52,17 +44,14 @@ const NirmalBandhu = sequelize.define(
             type : DataTypes.DATEONLY,
             allowNull : false
         },
-        ward_no : {
-            type : DataTypes.INTEGER,
-            allowNull : false,
-        },
         status : {
             type : DataTypes.BOOLEAN,
             defaultValue : true,
         }
 
     },
-    {
+    {   
+        initialAutoIncrement: 1000000,
         freezeTableName: true,
         timestamps: true,
     }
@@ -72,8 +61,6 @@ Ward.hasMany(NirmalBandhu);
 NirmalBandhu.belongsTo(Ward);
 
 
-if ( NirmalBandhu == sequelize.models.nirmal_bandhus){
-    sequelize.query("ALTER TABLE nirmal_bandhus AUTO_INCREMENT = 1000001;");
-}
+
 
 export default NirmalBandhu;

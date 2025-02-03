@@ -20,6 +20,10 @@ const Consumer = sequelize.define(
     street_2: {
       type: DataTypes.STRING,
     },
+    property_no : {
+      type : DataTypes.STRING,
+      allowNull : false,
+    },
     pincode: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -34,7 +38,8 @@ const Consumer = sequelize.define(
     },
    
   },
-  {
+  { 
+    initialAutoIncrement: 1000001,
     freezeTableName: true,
     timestamps: true,
   },
@@ -44,18 +49,16 @@ const Consumer = sequelize.define(
 Customer.hasMany(Consumer, { foreignKey: 'customer_id' });
 Consumer.belongsTo(Customer, { foreignKey: 'customer_id' });
 
-Ward.hasMany(Consumer)
-Consumer.belongsTo(Ward)
+Ward.hasMany(Consumer);
+Consumer.belongsTo(Ward);
 
-PropertyType.hasMany(Consumer)
-Consumer.belongsTo(PropertyType)
+PropertyType.hasMany(Consumer);
+Consumer.belongsTo(PropertyType);
 
-PropertySubType.hasMany(Consumer)
-Consumer.belongsTo(PropertySubType)
+PropertySubType.hasMany(Consumer);
+Consumer.belongsTo(PropertySubType);
 
-if ( Consumer == sequelize.models.consumers){
-  sequelize.query("ALTER TABLE consumers AUTO_INCREMENT = 1000001;");
-}
+
 
 
 export default Consumer;

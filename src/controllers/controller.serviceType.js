@@ -6,6 +6,8 @@ import fs from 'fs';
 
 export const createServiceType = async (req, res, next) => {
     try {
+        console.log("req body is : ",req.body);
+        
         const PropertyType = await ServiceType.create(req.body);
         return res.status(201).json({
             success: true,

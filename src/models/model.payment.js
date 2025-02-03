@@ -25,6 +25,7 @@ const Payment = sequelize.define(
  
   },
   {
+    initialAutoIncrement: 1000001,
     freezeTableName: true,
     timestamps: true,
   }
@@ -32,12 +33,10 @@ const Payment = sequelize.define(
 
 
 
-// Customer.hasMany(Payment)
-// Payment.belongsTo(Customer);
+Customer.hasMany(Payment)
+Payment.belongsTo(Customer);
 
-// if ( Payment == sequelize.models.payments ){
-//   sequelize.query("ALTER TABLE payments AUTO_INCREMENT = 1000001;");
-// }
+
 
 
 

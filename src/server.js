@@ -5,7 +5,7 @@ import { billGenerationFirstDayOfMonth } from './utils/utils.jobScheduler.js';
 
 const PORT = ENV_VARIALBE.SERVER_PORT || 5000;
 
-sequelize.sync({force:true}).then(() => {
+sequelize.sync().then(() => {
     console.log("database is connected successfully...");
     app.listen(PORT, () => {
         console.log(`server is running at ${PORT} 🚀 `);

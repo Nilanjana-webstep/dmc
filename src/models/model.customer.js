@@ -28,6 +28,10 @@ const Customer = sequelize.define(
       type: DataTypes.ENUM('male', 'female', 'other'),
       allowNull: false,
     },
+    address : {
+      type : DataTypes.TEXT,
+      allowNull : false,
+    },
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -35,14 +39,13 @@ const Customer = sequelize.define(
    
   },
   {
+    initialAutoIncrement: 1000001,
     freezeTableName: true,
     timestamps: true,
   }  
 );
 
-if ( Customer == sequelize.models.customers ){
-  sequelize.query("ALTER TABLE customers AUTO_INCREMENT = 1000001;");
-}
+
 
 export default Customer;
 

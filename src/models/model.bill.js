@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import Consumer from "./model.Consumer.js";
+import Consumer from "./model.consumer.js";
+import Customer from "./model.customer.js";
 
 const Bill = sequelize.define(
   'bills',
@@ -28,21 +29,19 @@ const Bill = sequelize.define(
     }
   },
   {
+    initialAutoIncrement: 1000001,
     freezeTableName: true,
     timestamps: true,
   }
 );
 
 
-// Consumer.hasMany(Bill, { foreignKey: 'consumer_id' });
-// Bill.belongsTo(Consumer, { foreignKey: 'consumer_id' });
+Consumer.hasMany(Bill, { foreignKey: 'consumer_id' });
+Bill.belongsTo(Consumer, { foreignKey: 'consumer_id' });
 
+Customer.hasMany(Bill, { foreignKey: 'customer_id' });
+Bill.belongsTo(Customer, { foreignKey: 'customer_id' });
 
-
-
-// if ( Bill == sequelize.models.bills ){
-//   sequelize.query("ALTER TABLE bills AUTO_INCREMENT = 1000001;");
-// }
 
 
 

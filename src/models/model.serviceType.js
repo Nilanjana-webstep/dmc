@@ -19,7 +19,7 @@ const ServiceType = sequelize.define(
     },
   
   },
-  {
+  { 
     freezeTableName: true,
     timestamps: true,
   },
