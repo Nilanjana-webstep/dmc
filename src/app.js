@@ -15,13 +15,14 @@ import grievanceRoute from './routes/route.grievance.js';
 import bookServiceRoute from './routes/route.bookService.js';
 import noticeBoardRoute from './routes/route.noticeBoard.js';
 import paymentRoute from './routes/route.payment.js';
+import { ENV_VARIALBE } from './config/.envConfig.js';
 
 
 const app = express();
 
 
 const corsOptions = {
-    origin: 'https://dmc.websteptech.co.uk',
+    origin: ENV_VARIALBE.CLIENT_URL,
 };
   
   
