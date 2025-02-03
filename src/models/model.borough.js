@@ -1,12 +1,11 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
-import Borough from './model.borough.js';
 
 
-const Ward = sequelize.define(
-  'wards',
+const Borough = sequelize.define(
+  'boroughs',
   { 
-    ward : {
+    borough : {
       type: DataTypes.STRING,
     },
     is_active: {
@@ -21,8 +20,7 @@ const Ward = sequelize.define(
   },
 );
 
-Borough.hasMany(Ward);
-Ward.belongsTo(Borough);
 
 
-export default Ward;
+
+export default Borough;

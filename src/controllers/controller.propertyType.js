@@ -6,13 +6,23 @@ import { convertCsvToObject } from "../utils/utils.csv.js";
 
 
 export const createPropertyType = async (req, res, next) => {
+
+    const { property_type } = req.body;
+
     try {
-        const PropertyType = await PropertyType.create(req.body);
+
+        const existPropertyType = await PropertyType.findOne({where:{property_type}});
+
+        if ( existPropertyType ){
+            return next( new CustomError("Property Type already exist.",statusCode.CONFLICT));
+        }
+
+        const PropertyTypeData = await PropertyType.create(req.body);
         
         return res.status(statusCode.CREATED).json({
             success: true,
             message: "Property type created successfully.",
-            data: PropertyType
+            data: PropertyTypeData
         });
 
     } catch (error) {
@@ -48,21 +58,31 @@ export const getAllPropertyType = async (req, res, next) => {
 export const updatePropertyTypeById = async (req, res, next) => {
 
     const { id } = req.params;
-    try {
-        const PropertyType = await PropertyType.findByPk(id);
+    const { property_type } = req.body;
 
-        if (!PropertyType) {
+    try {
+        const PropertyTypeData = await PropertyType.findByPk(id);
+
+        if (!PropertyTypeData) {
            return next( new CustomError("No property found.",statusCode.NOT_FOUND));
         }
 
-        const updatedConsumerType = updateDatabaseObject(req.body, PropertyType);
+        if ( property_type ){
+            const existingPropertyType = await PropertyType.findOne({where:{property_type}});
 
-        await updatedConsumerType.save();
+            if ( existingPropertyType){
+                return next( new CustomError("Property type already exist.",statusCode.CONFLICT));
+            }
+        }
+
+        const updatedPropertyType = updateDatabaseObject(req.body, PropertyTypeData);
+
+        await updatedPropertyType.save();
 
         return res.status(statusCode.OK).json({
             success: true,
             message: "Consumer type updated successfully.",
-            data: updatedConsumerType
+            data: updatedPropertyType
         });
     } catch (error) {
 
@@ -78,7 +98,7 @@ export const uploadPropertyTypeFromCsv = async (req, res, next) => {
             return next("No file selected.",statusCode.BAD_REQUEST);
         }
 
-        const propertyType = convertCsvToObject(req.file,next);
+        const propertyType = await convertCsvToObject(req.file,next);
         
         await PropertyType.bulkCreate(propertyType);
 

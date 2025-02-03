@@ -16,10 +16,9 @@ import bookServiceRoute from './routes/route.bookService.js';
 import noticeBoardRoute from './routes/route.noticeBoard.js';
 import paymentRoute from './routes/route.payment.js';
 import { ENV_VARIALBE } from './config/.envConfig.js';
-
+import boroughRoute from './routes/route.borough.js';
 
 const app = express();
-
 
 const corsOptions = {
     origin: ENV_VARIALBE.CLIENT_URL,
@@ -27,7 +26,6 @@ const corsOptions = {
   
   
 app.use(cors(corsOptions));
-
 app.use(cors());
 app.use('/public',express.static('public'));
 app.use(express.json());
@@ -36,12 +34,13 @@ app.use(morgan('dev'));
 
 
 // ******** master table api's ************
+app.use('/api/borough',boroughRoute);
 app.use('/api/ward',wardRoute);
 app.use('/api/property-type',propertyTypeRoute);
 app.use('/api/property-sub-type',propertySubTypeRoute);
 app.use('/api/service-type',serviceTypeRoute);
-app.use('/api/grievance-type',grievanceTypeRoute)
-app.use('/api/grievance-sub-type',grievanceSubTypeRoute)
+app.use('/api/grievance-type',grievanceTypeRoute);
+app.use('/api/grievance-sub-type',grievanceSubTypeRoute);
 
 
 // ************* admin api's **************
