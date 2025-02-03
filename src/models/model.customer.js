@@ -5,7 +5,6 @@ import sequelize from '../config/db.js';
 const Customer = sequelize.define(
   'customers',
   { 
-   
     customer_id : {
       type: DataTypes.INTEGER,
       primaryKey:true,
@@ -16,7 +15,7 @@ const Customer = sequelize.define(
       allowNull: false,
     },
     mobile_number: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       unique : true,
     },

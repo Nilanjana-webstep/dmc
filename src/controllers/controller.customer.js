@@ -1,8 +1,8 @@
 import Customer from '../models/model.customer.js';
-import Consumer from '../models/model.Consumer.js';
+import Consumer from '../models/model.consumer.js';
 import Ward from '../models/model.ward.js';
 import PropertyType from '../models/model.propertyType.js';
-import PropertySubType from '../models/model.PropertySubType.js';
+import PropertySubType from '../models/model.propertySubType.js';
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import sequelize from '../config/db.js';
@@ -19,8 +19,8 @@ import { statusCode } from '../config/constraint.js';
 
 export const createCustomerWithConsumer = async (req, res, next) => {
 
-    const {   consumer ,customer } = req.body;
-    const { ward_no , property_type, property_sub_type} = consumer;
+    const {  consumer ,customer } = req.body;
+    const { ward_id , property_type_id, property_sub_type_id } = consumer;
 
     try {
         const result = await sequelize.transaction(async t => {
@@ -36,30 +36,35 @@ export const createCustomerWithConsumer = async (req, res, next) => {
             const existCustomer = await Customer.findOne({where:{mobile_number:mobile_number}})
 
             if( existCustomer){
-                customer_id = existCustomer.dataValues.id;
+                customer_id = existCustomer.dataValues.customer_id;
             }else{
                 const customerData = await Customer.create(customer,{ transaction: t });
-                customer_id = customerData.dataValues.id;
+                customer_id = customerData.dataValues.customer_id;
                 await customerData.save({ transaction: t });
             }
 
-            const wardData = await Ward.findOne({where:{ward_no}},{ transaction: t });
-            const ward_id = wardData.dataValues.id;
+            const wardData = await Ward.findByPk(ward_id,{ transaction: t });
 
-            const propertyTypeData = await PropertyType.findOne({where:{property_type}},{ transaction: t });
-            const property_type_id = propertyTypeData.dataValues.id;
-
-            let property_sub_type_id = null;
-
-            if ( property_sub_type ){
-
-                const ConsumerSubTypeData = await PropertySubType.findOne({where:{property_sub_type}},{ transaction: t });
-                property_sub_type_id = ConsumerSubTypeData.dataValues.id;
+            if (!wardData){
+                return next( new CustomError("Ward id is not valid.",statusCode.NOT_FOUND));
             }
 
-            const ConsumerData = await Consumer.create({...Consumer,customerId:customer_id,wardId:ward_id,propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id},{ transaction: t });
-           
-            await ConsumerData.save({ transaction: t });
+            const wardId = wardData.dataValues.id;
+
+            const propertyTypeData = await PropertyType.findByPk(property_type_id,{ transaction: t });
+            if (!propertyTypeData){
+                return next( new CustomError("Property type id is not valid.",statusCode.NOT_FOUND));
+            }
+            const propertyTypeId = propertyTypeData.dataValues.id;
+
+            const propertySubTypeData = await PropertySubType.findByPk(property_sub_type_id,{ transaction: t });
+            if (!propertySubTypeData){
+                return next( new CustomError("Property sub type id is not valid.",statusCode.NOT_FOUND));
+            }
+            const propertySubTypeId = propertySubTypeData.dataValues.id;
+            console.log("customer id is : ",customer_id);
+            
+            const consumerData = await Consumer.create({...consumer,customer_id,wardId,propertyTypeId,propertySubTypeId},{ transaction: t });
 
             return res.status(statusCode.CREATED).json({
                 success: true,
@@ -80,9 +85,44 @@ export const createCustomerWithConsumer = async (req, res, next) => {
 export const getAllCustomer = async (req, res, next) => {
     try {
 
-        const allCustomers = await Customer.findAll({
-             where : {is_active:true},
-        });
+        const sql = `SELECT 
+                            c.customer_id,
+                            c.full_name,
+                            c.mobile_number,
+                            c.date_of_birth,
+                            c.gender,
+                            c.address,
+                            con.consumer_id,
+                            con.street_1,
+                            con.street_2,
+                            con.property_no,
+                            con.pincode,
+                            con.billing_address,
+                            pt.property_type,
+                            pst.property_sub_type,
+                            w.ward
+                        FROM 
+                            customers c
+                        JOIN 
+                            consumers con ON c.customer_id = con.customer_id
+                        JOIN 
+                            property_types pt ON con.propertyTypeId = pt.id
+                        JOIN 
+                            property_sub_types pst ON con.propertySubTypeId = pst.id
+                        JOIN 
+                            wards w ON con.wardId = w.id
+                        WHERE 
+                            c.is_active = true
+                        AND 
+                            con.consumer_id = (
+                                SELECT MIN(consumer_id)
+                                FROM consumers
+                                WHERE customer_id = c.customer_id
+                            );
+            `
+
+
+        const [allCustomers] = await sequelize.query(sql);
 
        if ( allCustomers.length < 1 ){
             return res.status(200).json({
@@ -109,18 +149,16 @@ export const getParticularCustomerByCustomerId = async (req, res, next) => {
     const { customer_id } = req.params;
 
     try {
-        const customer = await Customer.findOne({
-            where: { customer_id },
-        });
+        const customer = await Customer.findByPk(customer_id);
 
         if (!customer) {
-            return res.status(404).json({
+            return res.status(statusCode.NOT_FOUND).json({
                 success: false,
                 message: "No customer found."
             });
         }
 
-        return res.status(200).json({
+        return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched customer successfully.",
             data: customer

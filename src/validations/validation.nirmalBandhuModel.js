@@ -10,7 +10,12 @@ export const NirmalBandhuCreationValidationModel = Joi.object({
     gender: Joi.string()
         .valid('male', 'female', 'other')
         .required(),
-    
+
+    mobile_number: Joi.string()
+        .pattern(/^[0-9]{10}$/)
+        .message("invalid phone number") 
+        .required(),
+
     street_1: Joi.string()
         .required(),
     
@@ -47,7 +52,12 @@ export const NirmalBandhuUpdationValidationModel = Joi.object({
     gender: Joi.string()
         .valid('male', 'female', 'other')
         .optional(),
-    
+
+    mobile_number: Joi.string()
+        .pattern(/^[0-9]{10}$/)
+        .message("invalid phone number") 
+        .optional(),
+
     street_1: Joi.string()
         .optional(),
     

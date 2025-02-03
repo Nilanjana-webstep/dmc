@@ -13,9 +13,9 @@ import {
 
 export const customerCreationWithConsumerValidation = async(req,res,next)=>{
 
-    const {   Consumer ,customer } = req.body;
+    const { consumer ,customer } = req.body;
 
-    if ( !customer || !Consumer ){
+    if ( !customer || !consumer ){
         return next( new CustomError("Please provide both customer and Consumer",401));
     }
 
@@ -32,9 +32,9 @@ export const customerCreationWithConsumerValidation = async(req,res,next)=>{
         }
     }
 
-    if ( Consumer ){
+    if ( consumer ){
 
-        const  { error } =  ConsumerCreationValidationModel.validate(Consumer);
+        const  { error } =  ConsumerCreationValidationModel.validate(consumer);
     
         if ( error ){
             
@@ -48,6 +48,8 @@ export const customerCreationWithConsumerValidation = async(req,res,next)=>{
     next();
 
 }
+
+
 
 
 export const customerCreationValidation = async(req,res,next)=>{

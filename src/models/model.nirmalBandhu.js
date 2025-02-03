@@ -16,7 +16,7 @@ const NirmalBandhu = sequelize.define(
             allowNull : true,
         },
         mobile_number: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
             unique : true,
         },

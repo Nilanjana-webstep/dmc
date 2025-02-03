@@ -5,7 +5,7 @@ import errorMiddleware from './middlewares/ErrorHandler.js';
 import consumerRoute from './routes/route.Consumer.js';
 import propertyTypeRoute from './routes/route.propertyType.js';
 import wardRoute from './routes/route.ward.js';
-import propertySubTypeRoute from './routes/route.PropertySubType.js';
+import propertySubTypeRoute from './routes/route.propertySubType.js';
 import customerRoute from './routes/route.customer.js';
 import serviceTypeRoute from './routes/route.serviceType.js';
 import nirmalBandhuRoute from './routes/route.nirmalBandhu.js';

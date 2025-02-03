@@ -14,14 +14,13 @@ export const ConsumerCreationValidationModel = Joi.object({
   billing_address : Joi.string()
     .required(),
 
-  property_type : Joi.string()
+  property_type_id : Joi.number()
     .required(),
 
-  property_sub_type : Joi.string()
-    .allow(null,'')
-    .optional(),
+  property_sub_type_id : Joi.number()
+    .required(),
 
-  ward_no : Joi.number()
+  ward_id : Joi.number()
     .required(),
   
   pincode: Joi.number()

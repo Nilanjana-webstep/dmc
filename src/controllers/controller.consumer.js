@@ -1,10 +1,11 @@
 import Customer from "../models/model.customer.js";
-import Consumer from "../models/model.Consumer.js";
-import PropertySubType from "../models/model.PropertySubType.js";
-import PropertyType from "../models/model.PropertyType.js";
+import Consumer from "../models/model.consumer.js";
+import PropertySubType from "../models/model.propertySubType.js";
+import PropertyType from "../models/model.propertyType.js";
 import Ward from "../models/model.ward.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
+import sequelize from "../config/db.js";
 
 
 export const getAllConsumer = async (req, res, next) => {
@@ -90,26 +91,32 @@ export const getAllConsumerByPartucularCustomerId = async (req, res, next) => {
     
     
     try {
-        const allProperties = await Consumer.findAll({
-            where: { customerId: id },
-            attributes:{exclude:['wardId','ConsumerTypeId','ConsumerSubTypeId']},
-             
-            include: [
-              {
-                model: Ward,
-                attributes: ['ward_no']
-              },
-              {
-                model: PropertyType,
-                attributes: ['Consumer_type']
-              },
-              {
-                model: PropertySubType,
-                attributes: ['Consumer_sub_type']
-              }
-            ],
-            
-          });
+          
+                        const sql = `
+                            SELECT 
+                                con.consumer_id,
+                                con.street_1,
+                                con.street_2,
+                                con.property_no,
+                                con.pincode,
+                                con.billing_address,
+                                w.ward,
+                                pt.property_type,
+                                pst.property_sub_type
+                            FROM
+                                consumers con
+                            JOIN
+                                property_types pt ON con.propertyTypeId = pt.id
+                            JOIN
+                                property_sub_types pst ON con.propertySubTypeId = pst.id
+                            JOIN
+                                wards w ON con.wardId = w.id
+                            WHERE
+                                con.customer_id = ${id}
+                        `;
+                  
+      
+        const [allProperties] = await sequelize.query(sql);
 
         if (allProperties.length == 0) {
             return res.status(404).json({

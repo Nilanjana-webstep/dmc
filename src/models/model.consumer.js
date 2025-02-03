@@ -1,9 +1,10 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 import Ward from './model.ward.js';
-import PropertySubType from './model.PropertySubType.js';
+import PropertySubType from './model.propertySubType.js';
 import Customer from './model.customer.js';
 import PropertyType from './model.propertyType.js';
+import Borough from './model.borough.js';
 
 const Consumer = sequelize.define(
   'consumers',
@@ -19,17 +20,18 @@ const Consumer = sequelize.define(
     },
     street_2: {
       type: DataTypes.STRING,
+      allowNull : true,
     },
     property_no : {
       type : DataTypes.STRING,
       allowNull : false,
     },
     pincode: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     billing_address : {
-      type : DataTypes.STRING,
+      type : DataTypes.TEXT,
       allowNull : false,
     },
     is_active: {
@@ -57,6 +59,7 @@ Consumer.belongsTo(PropertyType);
 
 PropertySubType.hasMany(Consumer);
 Consumer.belongsTo(PropertySubType);
+
 
 
 

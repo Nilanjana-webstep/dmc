@@ -5,8 +5,8 @@ export const CustomerCreationValidationModel = Joi.object({
   full_name: Joi.string()
     .required(),
   
-  mobile_number: Joi.number() 
-    .positive()
+  mobile_number: Joi.string()
+    .pattern(/^[0-9]{10}$/)
     .message("invalid phone number") 
     .required(),
   
