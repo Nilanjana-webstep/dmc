@@ -6,17 +6,24 @@ import fs from 'fs';
 
 export const createServiceType = async (req, res, next) => {
     try {
-        console.log("req body is : ",req.body);
+        const existServiceType = await ServiceType.findOne({where:{property_type}});
+
+        if ( existServiceType ){
+            return next( new CustomError("Service Type already exist.",statusCode.CONFLICT));
+        }
         
-        const PropertyType = await ServiceType.create(req.body);
+        const serviceType = await ServiceType.create(req.body);
+
         return res.status(201).json({
             success: true,
             message: "service type created successfully.",
-            data: PropertyType
+            data: serviceType
         });
+
     } catch (error) {
+
         console.log("Error: ", error);
-        return next(new CustomError("Service type is not created. Please try again.", 500));
+        return next(error);
     }
 };
 
@@ -47,6 +54,7 @@ export const getAllServiceType = async (req, res, next) => {
 
 export const updateServiceTypeById = async (req, res, next) => {
     const { id } = req.params;
+    const { service_type } = req.body;
     try {
         const serviceType = await ServiceType.findByPk(id);
         if (!serviceType) {

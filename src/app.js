@@ -17,6 +17,7 @@ import noticeBoardRoute from './routes/route.noticeBoard.js';
 import paymentRoute from './routes/route.payment.js';
 import { ENV_VARIALBE } from './config/.envConfig.js';
 import boroughRoute from './routes/route.borough.js';
+import billingProfileRoute from './routes/route.billingProfile.js';
 
 const app = express();
 
@@ -41,7 +42,7 @@ app.use('/api/property-sub-type',propertySubTypeRoute);
 app.use('/api/service-type',serviceTypeRoute);
 app.use('/api/grievance-type',grievanceTypeRoute);
 app.use('/api/grievance-sub-type',grievanceSubTypeRoute);
-
+app.use('/api/billing-profile',billingProfileRoute);
 
 // ************* admin api's **************
 app.use('/api/notice-board/',noticeBoardRoute);
