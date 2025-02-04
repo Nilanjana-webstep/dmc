@@ -21,17 +21,14 @@ export const createWard = async (req,res,next)=>{
         const existWard = await Ward.findOne({where : {ward:ward}});
 
         if ( existWard ){
-           return next( new CustomError("This ward  already exist",statusCode.CONFLICT));
+           return next( new CustomError("This ward name  already exist",statusCode.CONFLICT));
         }
 
-        console.log("the body is : ",req.body);
-        
-        const newWard = await Ward.create({...req.body,boroughId:borough_id});
+        await Ward.create({...req.body,boroughId:borough_id});
 
         return res.status(statusCode.CREATED).json({
             success : true,
             message : " ward created successfully.",
-            data : newWard
         })
 
     } catch (error) {
@@ -45,11 +42,8 @@ export const createWard = async (req,res,next)=>{
 export const getAllWard = async (req,res,next)=>{
 
     try {
-
-        const sql = "SELECT w.*, b.borough AS borough  FROM wards w JOIN boroughs b ON w.boroughId = b.id "
                 
-
-        const [ allWard  ] = await sequelize.query(sql);
+        const  allWard  = await Ward.findAll();
 
         if ( allWard.length < 1 ){
             return next( new CustomError("No ward found.",statusCode.NOT_FOUND));
@@ -57,7 +51,7 @@ export const getAllWard = async (req,res,next)=>{
 
         return res.status(statusCode.OK).json({
             success : true,
-            message : " fetched all wards successfully.",
+            message : "fetched all wards successfully.",
             data : allWard
         })
     } catch (error) {
@@ -75,40 +69,30 @@ export const updateWardById = async (req,res,next)=>{
 
     try {
 
-        if ( ward ){
-            const existingWard = await Ward.findOne({where:{ward:ward}});
-            if ( existingWard){
-                return res.status(statusCode.CONFLICT).json({
-                    success : false,
-                    message : "Ward already exist!",
-                })
-            }
-        }
-
         const wardData = await Ward.findByPk(id);
 
         if ( !wardData ){
-            return next( new CustomError('No ward found.',statusCode.NOT_FOUND));
+            return next( new CustomError('Ward with the given ID not found.',statusCode.NOT_FOUND));
         }
 
-        if ( borough_id ){
-
-            const borough = await Borough.findByPk(borough_id);
-            if ( !borough ){
-                return next ( new CustomError("No borough found for this borough Id.",statusCode.NOT_FOUND));
+        if ( ward != wardData.ward ){
+            const existingWard = await Ward.findOne({where:{ward:ward}});
+            if (existingWard){
+                return next( new CustomError('Ward name already exist.',statusCode.CONFLICT));
             }
         }
 
-        
+        const borough = await Borough.findByPk(borough_id);
 
-        const updatedWard = updateDatabaseObject(req.body,wardData);
+        if ( !borough ){
+            return next ( new CustomError("No borough found for this borough Id.",statusCode.NOT_FOUND));
+        }
 
-        await updatedWard.save();
+        await Ward.update(req.body,{where:{id:id}});
 
         return res.status(statusCode.OK).json({
             success : true,
             message : " update ward successfully.",
-            data : updatedWard
         })
        
     } catch (error) {
@@ -119,6 +103,30 @@ export const updateWardById = async (req,res,next)=>{
 }
 
 
+export const getAllWardForParticularBorough = async(req,res,next)=>{
+    
+    const { borough_id } = req.params;
+
+    try {
+
+        const allWards = await Ward.findAll({where:{boroughId:borough_id}});
+
+        if ( allWards.length < 1 ){
+            return next( new CustomError("No ward found for this borough.",statusCode.NOT_FOUND));
+        }   
+
+        return res.status(statusCode.OK).json({
+            success : true,
+            message : "All ward fetched successfull.",
+            data : allWards,
+        })
+    } catch (error) {
+        console.log('error to get all ward for particular borough : ',error);
+        next(error);
+        
+    }
+}
+
 export const uploadWardFromCsv = async (req, res, next) => {
     try {
 
@@ -128,13 +136,12 @@ export const uploadWardFromCsv = async (req, res, next) => {
 
         const wardData = await convertCsvToObject(req.file,next);
 
-        const createdWardData = await Ward.bulkCreate(wardData);
+        await Ward.bulkCreate(wardData);
 
 
         return res.status(statusCode.CREATED).json({
             success: true,
             message: "Uploaded CSV successfully",
-            data : createdWardData,
         });
     } catch (error) {
         console.error("Error uploading ward CSV:", error);

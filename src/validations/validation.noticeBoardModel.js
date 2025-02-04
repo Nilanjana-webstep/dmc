@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { currentISTDate } from '../config/constraint.js';
+
 
 export const NoticeBoardCreationValidationModel = Joi.object({
 
@@ -24,14 +24,14 @@ export const NoticeBoardCreationValidationModel = Joi.object({
 export const NoticeBoardUpdationValidationModel = Joi.object({
 
     title : Joi.string()
-        .optional(),
+        .required(),
 
     content : Joi.string()
-        .optional(),
+        .required(),
 
     start_date : Joi.date()
         .min('now')
-        .optional(),
+        .required(),
 
     end_date : Joi.date()
         .optional(),

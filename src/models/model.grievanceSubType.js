@@ -26,7 +26,8 @@ const GrievanceSubType = sequelize.define(
   
 );
 
-
+GrievanceType.hasMany(GrievanceSubType);
+GrievanceSubType.belongsTo(GrievanceType);
 
 
 export default GrievanceSubType;

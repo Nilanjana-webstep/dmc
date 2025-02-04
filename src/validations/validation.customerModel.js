@@ -28,24 +28,24 @@ export const CustomerCreationValidationModel = Joi.object({
 export const CustomerUpdationValidationModel = Joi.object({
   
   full_name: Joi.string()
-    .optional(),
+    .required(),
     
   email: Joi.string()
     .email()
-    .optional(),
+    .required(),
   
   date_of_birth: Joi.date()
-    .optional(),
+    .required(),
   
   sex: Joi.string()
     .valid('male', 'female', 'other')
-    .optional(),
+    .required(),
 
   address : Joi.string()
-    .optional(),
+    .required(),
 
   is_active : Joi.boolean()
-    .optional()
+    .required()
   
 
 });

@@ -15,27 +15,20 @@ export const PropertySubTypeCreationValidationModel = Joi.object({
 
 export const PropertySubTypeUpdationValidationModel = Joi.object({
   property_sub_type: Joi.string()
-    .optional(),
+    .required(),
 
   property_type_id : Joi.number()
-    .optional(),
+    .required(),
 
   charge : Joi.number()
-    .optional(),
+    .required(),
   
   is_active: Joi.boolean()
-    .optional()
+    .required()
 });
 
 
-export const PropertySubTypeCreationValidationModelForCsv = Joi.object({
-  property_sub_type: Joi.string()
-    .required(),
 
-  property_type: Joi.string()
-    .required(),
-  
-});
 
 
 

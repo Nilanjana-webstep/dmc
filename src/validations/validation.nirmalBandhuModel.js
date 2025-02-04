@@ -44,41 +44,41 @@ export const NirmalBandhuCreationValidationModel = Joi.object({
 
 export const NirmalBandhuUpdationValidationModel = Joi.object({
     full_name: Joi.string()
-        .optional(),
+        .required(),
     
     date_of_birth: Joi.date()
-        .optional(),
+        .required(),
     
     gender: Joi.string()
         .valid('male', 'female', 'other')
-        .optional(),
+        .required(),
 
     mobile_number: Joi.string()
         .pattern(/^[0-9]{10}$/)
         .message("invalid phone number") 
-        .optional(),
+        .required(),
 
     street_1: Joi.string()
-        .optional(),
+        .required(),
     
     street_2: Joi.string()
         .optional(),
     
     landmark: Joi.string()
-        .optional(),
+        .required(),
     
     adhar_no: Joi.number()
         .integer()
         .positive()
-        .optional(),
+        .required(),
 
     ward_no : Joi.number()
-        .optional(),
+        .required(),
 
     borough_no : Joi.number()
-        .optional(), 
+        .required(), 
     
     start_date: Joi.date()
-        .optional(),
+        .required(),
     
 });

@@ -32,12 +32,11 @@ export const CustomerConsumerCombinModel = Joi.object({
     street_2: Joi.string()
       .optional(),
   
-    Consumer_type : Joi.string()
+    property_type : Joi.string()
       .required(),
   
-    Consumer_sub_type : Joi.string()
-      .allow(null,'')
-      .optional(),
+    property_sub_type : Joi.string()
+       .required(),
   
     ward_no : Joi.number()
       .required(),

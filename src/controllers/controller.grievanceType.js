@@ -1,59 +1,72 @@
 import GrievanceType from "../models/model.grievanceType.js";
+import { statusCode } from "../config/constraint.js";
 import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import csv  from 'csv-parser';
-import fs from 'fs';
+import fs, { stat } from 'fs';
 
 export const createGrievanceType = async (req, res, next) => {
+
+    const { grievance_type } = req.body;
+
     try {
-        const grievanceType = await GrievanceType.create(req.body);
+        const existingGrievancType = await GrievanceType.findOne({where:{grievance_type}});
+        if ( existingGrievancType ){
+            return next( new CustomError('This grievance type is already exist.',statusCode.CONFLICT));
+        }
+        await GrievanceType.create(req.body);
         return res.status(201).json({
             success: true,
             message: "Grievance type created successfully.",
-            data: grievanceType
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Grievance type is not created. Please try again.", 500));
+        console.log("Error in creating grievance type : ", error);
+        next(error)
     }
 };
 
 export const getAllGrievanceType = async (req, res, next) => {
     try {
         const allGrievance = await GrievanceType.findAll();
-        return res.status(200).json({
+        if ( allGrievance.length < 1 ){
+            return next ( new CustomError('No grievance type is found.',statusCode.NOT_FOUND));
+        }
+        return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched all grievance types successfully.",
             data: allGrievance
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch all grievance types.", 500));
+        console.log("Error in getting all grievance type : ", error);
+        next(error);
     }
 };
 
 export const updateGrievanceTypeById = async (req, res, next) => {
     const { id } = req.params;
+    const { grievance_type } = req.body;
     try {
         const grievanceType = await GrievanceType.findByPk(id);
         if (!grievanceType) {
-            return res.status(404).json({
-                success: false,
-                message: "No grievance type found for this ID."
-            });
+            return next( new CustomError('No grievance type is found with this id',statusCode.NOT_FOUND));
         }
-        const updatedGrievanceType = updateDatabaseObject(req.body, grievanceType);
 
-        await updatedGrievanceType.save();
+        if ( grievance_type != grievanceType.grievance_type ){
+            const existingGrievancType = await GrievanceType.findOne({where:{grievance_type}});
+            if ( existingGrievancType ){
+                return next( new CustomError('This grievance type is already exist.',statusCode.CONFLICT));
+            }
+        }
+        
+        await GrievanceType.update(req.body,{where:{id}});
 
         return res.status(200).json({
             success: true,
             message: "grievance type updated successfully.",
-            data: updatedGrievanceType
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot update grievance type.", 500));
+        next(error);
     }
 };
 

@@ -14,12 +14,12 @@ export const WardCreationValidationModel = Joi.object({
 export const WardUpdationValidationModel = Joi.object({
 
   borough_id : Joi.number()
-    .optional(),
+    .required(),
 
   ward : Joi.string()
-    .optional(),
+    .required(),
 
   is_active : Joi.boolean()
-    .optional()
+    .required(),
   
 });

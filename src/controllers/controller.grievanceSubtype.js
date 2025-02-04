@@ -5,49 +5,55 @@ import { updateDatabaseObject } from "../utils/util.database.js";
 import csv  from 'csv-parser';
 import fs from 'fs';
 import { GrievanceSubTypeCreationValidationModel } from "../validations/validation.grievanceModel.js";
+import { statusCode } from "../config/constraint.js";
+
 
 export const createGrievanceSubType = async (req, res, next) => {
 
-    const { grievance_type } = req.body;
+    const { grievance_type_id,grievance_sub_type } = req.body;
 
     try {
-            const grievanceType = await GrievanceType.findOne({where:{grievance_type}});
+            const grievanceType = await GrievanceType.findByPk(grievance_type_id);
 
             if ( !grievanceType ){
-
-                return res.status(401).json({
-                    success: false,
-                    message: "please provide a valid grievance type name.",
-                });
-    
+                return next ( new CustomError('No grievance type found with this id',statusCode.NOT_FOUND));
             }
 
-            const grievanceSubType = await GrievanceSubType.create({grievanceTypeId:grievanceType.id,...req.body});
+            const existingGrievanceSubType = await GrievanceSubType.findOne({where:{grievance_sub_type}})
+
+            if ( existingGrievanceSubType ){
+                return next ( new CustomError('Grievance sub type name already exist.',statusCode.CONFLICT));
+            }
+
+            await GrievanceSubType.create({grievanceTypeId:grievance_type_id,...req.body});
         
             return res.status(201).json({
                 success: true,
                 message: "Grievance sub-type created successfully.",
-                data: grievanceSubType
             });
 
 
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Grievance sub-type is not created. Please try again.", 500));
+        console.log("Error in creating grievance sub type : ", error);
+        next(error);
     }
 };
 
 export const getAllGrievanceSubType = async (req, res, next) => {
     try {
         const allGrievanceSubTypes = await GrievanceSubType.findAll();
-        return res.status(200).json({
+
+        if ( allGrievanceSubTypes.length < 1 ){
+            return next( new CustomError("No grievance sub type found.",statusCode.NOT_FOUND));
+        }
+        return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched all grievance sub-types successfully.",
             data: allGrievanceSubTypes
         });
     } catch (error) {
         console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch all grievance sub-types.", 500));
+        next(error);
     }
 };
 
@@ -59,40 +65,46 @@ export const getAllGrievanceSubTypeOfParticularGrievanceType = async (req, res, 
     try {
         const allSubGrievanceTypes = await GrievanceSubType.findAll({where:{grievanceTypeId:grievance_type_id}});
         if (allSubGrievanceTypes.length < 1 ) {
-            return res.status(200).json({
-                success: true,
-                message: "No Sub grievance type found."
-            });
+           return next ( new CustomError('No grievance sub type found.',statusCode.NOT_FOUND));
         }
-        return res.status(200).json({
+        return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched grievance sub-type successfully.",
             data: allSubGrievanceTypes
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch grievance sub-type.", 500));
+        console.log("Error in fetching grievance sub type : ", error);
+        next(error);
     }
 };
 
 export const updateGrievanceSubTypeById = async (req, res, next) => {
     const { id } = req.params;
+    const { grievance_type_id,grievance_sub_type } = req.body;
     try {
         const grievanceSubType = await GrievanceSubType.findByPk(id);
         if (!grievanceSubType) {
-            return res.status(404).json({
-                success: false,
-                message: "No Consumer sub-type found for this ID."
-            });
+           return next ( new CustomError('No grievance sub type found with this id.',statusCode.NOT_FOUND));
         }
-        const updatedGrievanceSubType = updateDatabaseObject(req.body, grievanceSubType);
+        
+        const grievanceType = await GrievanceType.findByPk(grievance_type_id);
 
-        await updatedGrievanceSubType.save();
+        if ( !grievanceType ){
+            return next ( new CustomError('No grievance type found with this id',statusCode.NOT_FOUND));
+        }   
 
+        if ( grievanceSubType.grievance_sub_type != grievance_sub_type ){
+            const existingGrievanceSubType = await GrievanceSubType.findOne({where:{grievance_sub_type}})
+            if ( existingGrievanceSubType ){
+                return next ( new CustomError('Grievance sub type name already exist.',statusCode.CONFLICT));
+            }   
+        }
+         
+
+        await GrievanceSubType.update({...req.body,grievanceTypeId:grievance_type_id},{where:{id}})
         return res.status(200).json({
             success: true,
             message: "Grievance sub-type updated successfully.",
-            data: updatedGrievanceSubType
         });
     } catch (error) {
         console.log("Error: ", error);

@@ -10,9 +10,9 @@ export const BoroughCreationValidationModel = Joi.object({
 export const BoroughUpdationValidationModel = Joi.object({
 
   borough : Joi.string()
-    .optional(),
+    .required(),
 
   is_active : Joi.boolean()
-    .optional()
+    .required()
   
 });

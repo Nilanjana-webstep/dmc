@@ -6,6 +6,7 @@ import {
     BoroughUpdationValidationModel,
 } from "../../validations/validation.boroughModel.js";
 
+
 export const BoroughCreationValidation = (req,res,next)=>{
 
     const  { error } =  BoroughCreationValidationModel.validate(req.body);
@@ -18,7 +19,6 @@ export const BoroughCreationValidation = (req,res,next)=>{
     }
 
     next();
-
 }
 
 
@@ -34,5 +34,4 @@ export const BoroughUpdationValidation = (req,res,next)=>{
     }
 
     next();
-
 }

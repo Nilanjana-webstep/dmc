@@ -9,7 +9,7 @@ export const ConsumerCreationValidationModel = Joi.object({
     .required(),
   
   street_2: Joi.string()
-    .optional(),
+    .required(),
 
   billing_address : Joi.string()
     .required(),
@@ -33,31 +33,31 @@ export const ConsumerCreationValidationModel = Joi.object({
 export const ConsumerUpdationValidationModel = Joi.object({
   
   property_no: Joi.string()
-    .optional(),
+    .required(),
   
   street_1: Joi.string()
-    .optional(),
+    .required(),
   
   street_2: Joi.string()
-    .optional(),
+    .required(),
   
   billing_address : Joi.string()
-    .optional(),
+    .required(),
 
   property_type : Joi.string()
-    .optional(),
+    .required(),
 
   property_sub_type : Joi.string()
-    .optional(),
+    .required(),
 
   ward_no : Joi.string()
-    .optional(),
+    .required(),
   
   pincode: Joi.number()
     .positive()
-    .optional(),
+    .required(),
 
   is_active : Joi.boolean()
-    .optional()
+    .required()
  
 });

@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
-import GrievanceSubType from './model.grievanceSubType.js';
 
 
 const GrievanceType = sequelize.define(
@@ -24,7 +23,6 @@ const GrievanceType = sequelize.define(
 );
 
 
-GrievanceType.hasMany(GrievanceSubType);
-GrievanceSubType.belongsTo(GrievanceType);
+
 
 export default GrievanceType;

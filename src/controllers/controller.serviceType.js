@@ -3,6 +3,7 @@ import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 import csv  from 'csv-parser';
 import fs from 'fs';
+import { convertCsvToObject } from "../utils/utils.csv.js";
 
 export const createServiceType = async (req, res, next) => {
     try {
@@ -85,19 +86,9 @@ export const uploadServiceTypeFromCsv = async (req, res, next) => {
             return res.status(400).send('No file selected!');
         }
 
-        const results = [];
+       const serviceTypesJson = await convertCsvToObject(req.file);
 
-        await new Promise((resolve, reject) => {
-            fs.createReadStream(req.file.path)
-                .pipe(csv())
-                .on('data', (data) => results.push(data))
-                .on('end', resolve)
-                .on('error', reject);
-        });
-
-        
-
-        const serviceTypes = await ServiceType.bulkCreate(results);
+        const serviceTypes = await ServiceType.bulkCreate(serviceTypesJson);
 
         return res.json({
             success: true,

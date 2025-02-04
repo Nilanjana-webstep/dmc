@@ -12,12 +12,12 @@ export const ServiceTypeCreationValidationModel = Joi.object({
 export const ServiceTypeUpdationValidationModel = Joi.object({
 
   service_type: Joi.string()
-    .optional(),
+    .required(),
   
   service_charge : Joi.number()
-    .optional(),
+    .required(),
     
   is_active : Joi.boolean()
-    .optional()
+    .required()
   
 });

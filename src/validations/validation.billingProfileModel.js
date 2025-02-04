@@ -2,10 +2,12 @@ import Joi from 'joi';
 
 export const BillingProfileCreationValidationModel = Joi.object({
 
-billing_start_date : Joi.date()
+billing_start_date : Joi.number()
     .required(),
 
-billing_due_date : Joi.date()
+billing_due_date : Joi.number()
+    .greater(Joi.ref('billing_start_date'))
+    .message("due date should be greater than start date")
     .required(),
 
 property_type_id : Joi.number()
@@ -21,17 +23,17 @@ property_sub_type_id : Joi.number()
 
 export const BillingProfileUpdationValidationModel = Joi.object({
 
-billing_start_date : Joi.date()
-    .optional(),
+billing_start_date : Joi.number()
+    .required(),
 
-billing_due_date : Joi.date()
-    .optional(),
+billing_due_date : Joi.number()
+    .required(),
 
 property_type_id : Joi.number()
-    .optional(),
+    .required(),
 
 property_sub_type_id : Joi.number()
-    .optional()
+    .required()
   
 
 });

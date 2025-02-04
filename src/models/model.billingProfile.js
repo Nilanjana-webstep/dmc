@@ -9,11 +9,11 @@ const BillingProfile = sequelize.define(
   { 
    
     billing_start_date : {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.INTEGER,
       allowNull : false,
     },
     billing_due_date : {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.INTEGER,
       allowNull : false,
     },
     is_active: {

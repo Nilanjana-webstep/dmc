@@ -17,13 +17,12 @@ export const createPropertyType = async (req, res, next) => {
             return next( new CustomError("Property Type already exist.",statusCode.CONFLICT));
         }
 
-        const PropertyTypeData = await PropertyType.create(req.body);
+       await PropertyType.create(req.body);
         
-        return res.status(statusCode.CREATED).json({
+       return res.status(statusCode.CREATED).json({
             success: true,
             message: "Property type created successfully.",
-            data: PropertyTypeData
-        });
+       });
 
     } catch (error) {
         console.log("Error in creating property type : ", error);
@@ -49,7 +48,7 @@ export const getAllPropertyType = async (req, res, next) => {
         });
 
     } catch (error) {
-       console.log("Error: ", error);
+       console.log("Error in getting all property type: ", error);
        next(error);
     }
 };
@@ -64,25 +63,23 @@ export const updatePropertyTypeById = async (req, res, next) => {
         const PropertyTypeData = await PropertyType.findByPk(id);
 
         if (!PropertyTypeData) {
-           return next( new CustomError("No property found.",statusCode.NOT_FOUND));
+           return next( new CustomError("No property type found with the given Id.",statusCode.NOT_FOUND));
         }
+       
+        if ( property_type != PropertyTypeData.property_type ){
 
-        if ( property_type ){
             const existingPropertyType = await PropertyType.findOne({where:{property_type}});
 
             if ( existingPropertyType){
-                return next( new CustomError("Property type already exist.",statusCode.CONFLICT));
+                return next( new CustomError("Property type name already exist.",statusCode.CONFLICT));
             }
         }
 
-        const updatedPropertyType = updateDatabaseObject(req.body, PropertyTypeData);
-
-        await updatedPropertyType.save();
+        await PropertyType.update(req.body,{where:{id:id}});
 
         return res.status(statusCode.OK).json({
             success: true,
-            message: "Consumer type updated successfully.",
-            data: updatedPropertyType
+            message: "Property type updated successfully.",
         });
     } catch (error) {
 
