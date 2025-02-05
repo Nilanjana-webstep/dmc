@@ -2,7 +2,7 @@ import { Router } from "express";
 import { 
     createPropertySubType,
     getAllPropertySubType,
-    getAllPropertySubTypeOfParticularPropertyType,
+    getAllPropertySubTypeByPropertyType,
     updatePropertySubTypeById,
     uploadPropertySubTypeFromCsv,
 } from "../controllers/controller.PropertySubType.js";
@@ -19,7 +19,7 @@ const propertySubTypeRoute = Router();
 
 propertySubTypeRoute.post('/',propertySubTypeCreationValidation,createPropertySubType)
 propertySubTypeRoute.get('/',getAllPropertySubType)
-propertySubTypeRoute.get('/property-type/:id',getAllPropertySubTypeOfParticularPropertyType)
+propertySubTypeRoute.get('/by-property-type/:id',getAllPropertySubTypeByPropertyType)
 propertySubTypeRoute.put('/:id',propertySubTypeUpdationValidation,updatePropertySubTypeById)
 propertySubTypeRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadPropertySubTypeFromCsv);
 

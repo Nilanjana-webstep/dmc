@@ -18,7 +18,7 @@ const wardRoute = Router();
 
 wardRoute.post('/',WardCreationValidation,createWard);
 wardRoute.get('/',getAllWard);
-wardRoute.get('/borough/:borough_id',getAllWardForParticularBorough);
+wardRoute.get('/by-borough/:borough_id',getAllWardForParticularBorough);
 wardRoute.put('/:id',WardUpdationValidation,updateWardById);
 wardRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadWardFromCsv);
 

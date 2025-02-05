@@ -15,14 +15,6 @@ const Bill = sequelize.define(
       type : DataTypes.DATEONLY,
       allowNull : false,
     },
-    bill_amount : {
-      type : DataTypes.DECIMAL,
-      allowNull : false,
-    },
-    due_date : {
-      type : DataTypes.DATEONLY,
-      allowNull : false,
-    },
     paid_status : {
       type : DataTypes.BOOLEAN,
       defaultValue : false,

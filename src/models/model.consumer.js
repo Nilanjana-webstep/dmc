@@ -5,6 +5,7 @@ import PropertySubType from './model.propertySubType.js';
 import Customer from './model.customer.js';
 import PropertyType from './model.propertyType.js';
 import Borough from './model.borough.js';
+import BillingProfile from './model.billingProfile.js';
 
 const Consumer = sequelize.define(
   'consumers',
@@ -60,7 +61,8 @@ Consumer.belongsTo(PropertyType);
 PropertySubType.hasMany(Consumer);
 Consumer.belongsTo(PropertySubType);
 
-
+BillingProfile.hasMany(Consumer);
+Consumer.belongsTo(BillingProfile);
 
 
 

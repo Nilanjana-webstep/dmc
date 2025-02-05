@@ -1,33 +1,51 @@
+import { statusCode } from "../config/constraint.js";
 import BookService from "../models/model.bookService.js"
+import Borough from "../models/model.borough.js";
 import NirmalBandhu from "../models/model.nirmalBandhu.js";
 import ServiceType from "../models/model.serviceType.js";
 import Ward from "../models/model.ward.js";
+import CustomError from "../utils/util.customError.js";
 
 
 export const bookService = async (req,res,next)=>{
 
-    const { service_type, address, nirmal_bandhu_full_name,service_date_time,
-            nirmal_bandhu_mobile_number, service_description, ward_no } = req.body;
+    const { service_type_id , address, nirmal_bandhu_full_name,service_date_time,
+            nirmal_bandhu_mobile_number, service_description,borough_id, ward_id } = req.body;
+    
+    const customer_id = 1000002;
 
     try {
 
-        const serviceType = await ServiceType.findOne({where : {service_type:service_type}});
-        const nirmalBandhu = await NirmalBandhu.findOne({where : { full_name : nirmal_bandhu_full_name,mobile_number:nirmal_bandhu_mobile_number}});
-        const ward = await Ward.findOne({where : { ward_no : ward_no}});
-        const serviceTypeId = serviceType.dataValues.id;
-        const nirmalBandhuId = nirmalBandhu.dataValues.id;
-        const wardId = ward.dataValues.id;
-
-        const bookedService = await BookService.create({service_description,wardId,nirmalBandhuId,
-                                                            serviceTypeId,address,service_date_time
-                                                        });
-        if ( bookService ){
-            return res.status(200).json({
-                success : true,
-                message : "successfully booked service",
-                data : bookService,
-            })
+        const serviceType = await ServiceType.findByPk(service_type_id);
+        if ( !serviceType){
+            return next( new CustomError("No service type found with this Id.",statusCode.NOT_FOUND));
         }
+        const nirmalBandhu = await NirmalBandhu.findOne({where : { full_name : nirmal_bandhu_full_name,mobile_number:nirmal_bandhu_mobile_number}});
+        if ( !nirmalBandhu){
+            return next( new CustomError("No nirmal bandhu found with this mobile number.",statusCode.NOT_FOUND));
+        }
+        const ward = await Ward.findByPk(ward_id);
+        if ( !ward ){
+            return next( new CustomError("No ward found with this mobile number.",statusCode.NOT_FOUND));
+        }
+        const borough = await Borough.findByPk(borough_id);
+        if ( !borough ){
+            return next( new CustomError("No borough found with this mobile number.",statusCode.NOT_FOUND));
+        }
+        const serviceTypeId = service_type_id;
+        const nirmalBandhuId = nirmalBandhu.dataValues.id;
+        const wardId = ward_id;
+        const boroughId = borough_id;
+
+        await BookService.create({service_description,wardId,nirmalBandhuId,boroughId,
+                                    serviceTypeId,address,service_date_time,customer_id
+                                });
+        
+        return res.status(statusCode.CREATED).json({
+            success : true,
+            message : "successfully booked service",
+        })
+        
     } catch (error) {
         console.log("the error of booking service : ",error);
         

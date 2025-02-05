@@ -1,0 +1,17 @@
+grievance_type_id,grievance_sub_type
+1,missed collection
+1,late collection
+1,incorrect collection
+1,incomplete collection
+1,collection vehicle issues
+2,lack of segregation bins
+2,confusion regarding segregation
+2,contamination of waste streams
+3,illegal dumping
+3,open burning of waste
+3,issues with processing facilities
+4,street litter
+4,open drains and clogged sewers
+5,noise pollution from waste collection
+5,complaints regarding sanitation workers
+5,lack of public awareness

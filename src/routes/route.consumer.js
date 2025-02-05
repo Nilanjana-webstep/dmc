@@ -12,7 +12,6 @@ import {
 
 const ConsumerRoute = Router();
 
-
 ConsumerRoute.get('/',getAllConsumer)
 ConsumerRoute.get('/customer-id/:id',getAllConsumerByPartucularCustomerId)
 ConsumerRoute.get('/:consumer_id',getParticularConsumerByConsumerId)

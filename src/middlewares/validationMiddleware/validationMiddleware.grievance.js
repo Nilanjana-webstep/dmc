@@ -28,10 +28,6 @@ export const grievanceTypeCreationValidation = (req,res,next)=>{
 }
 export const grievanceCreationValidation = (req,res,next)=>{
 
-    console.log("the file is : ",req.file);
-    console.log("the file is : ",req.body);
-    
-
     const  { error } =  GrievanceCreationValidationModel.validate(req.body);
 
     if ( error ){

@@ -3,38 +3,43 @@ import { updateDatabaseObject } from "../utils/util.database.js";
 import CustomError from "../utils/util.customError.js";
 import GrievanceType from "../models/model.grievanceType.js";
 import GrievanceSubType from "../models/model.grievanceSubType.js";
+import { statusCode } from "../config/constraint.js";
 
 
 
 export const createGrievance = async (req,res,next)=>{
 
+    const customer_id = 1000001;
     try {
 
         const filePath =  req.file?req.file.path:null;
-
-        // console.log('the file path is : ',filePath);
         
-        const { grievance_type , grievance_sub_type } = req.body;
+        const { grievance_type_id , grievance_sub_type_id } = req.body;
 
-        const grievanceType = await GrievanceType.findOne({where:{grievance_type:grievance_type}});
-        const grievanceTypeId = grievanceType.dataValues.id;
-        const grievanceSubType = await GrievanceSubType.findOne({where:{grievance_sub_type:grievance_sub_type}});
-        const grievanceSubTypeId = grievanceSubType.dataValues.id;
+        const grievanceType = await GrievanceType.findByPk(grievance_type_id);
+        if ( !grievanceType ){
+            return next( new CustomError('No grievance type found with this id.',statusCode.NOT_FOUND));
+        } 
+        const grievanceTypeId = grievance_type_id;
+        const grievanceSubType = await GrievanceSubType.findByPk(grievance_sub_type_id);
+        if ( !grievanceSubType){
+            return next( new CustomError('No grievance sub type found with this id.',statusCode.NOT_FOUND));
+        }
+        const grievanceSubTypeId = grievance_sub_type_id;
+
         // customer id will be added 
-        const grievance = await Grievance.create({...req.body,grievanceTypeId,grievanceSubTypeId,grievance_photo:filePath});
+
+        const grievance = await Grievance.create({...req.body,grievanceTypeId,customer_id,grievanceSubTypeId,grievance_photo:filePath});
        
-        
-        return res.json({
+        return res.status(statusCode.CREATED).json({
             success : true,
             message : "successfully created grievance.",
             data : grievance
         })
-
-        
     } catch (error) {
+
         console.log("error creating grievance : ",error);
-        return next( new CustomError("Sorry not createing grievance",500))
-        
+        next(error);
     }
 }
 
@@ -54,25 +59,24 @@ export const getAllGrievance = async (req,res,next)=>{
 
         return res.status(200).json({
             success : true,
-            message : "All nirmal bandhu fetched  successfully.",
+            message : "All Grievance fetched  successfully.",
             data : allGrievance
         })
     } catch (error) {
         console.log("Error getting all grievance data :  ",error);
+        next(error);
         
     }
 }
 
 
-export const getAllGrievanceByPartucularCustomerId = async (req, res, next) => {
+export const getAllGrievanceByCustomerId = async (req, res, next) => {
     
-    
-    const { id } = req.params;
-    
+    const { customer_id } = req.params;
     
     try {
         const allGrievance = await Grievance.findAll({
-            where: { customerId: id },            
+            where: { customer_id},            
           });
 
         if (allGrievance.length == 0) {
@@ -111,7 +115,6 @@ export const updateGrievanceById = async (req,res,next)=>{
 
     } catch (error) {
         console.log("Error to update grievance : ",error);
-        
         
     }
 }

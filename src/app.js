@@ -18,6 +18,7 @@ import paymentRoute from './routes/route.payment.js';
 import { ENV_VARIALBE } from './config/.envConfig.js';
 import boroughRoute from './routes/route.borough.js';
 import billingProfileRoute from './routes/route.billingProfile.js';
+import billRoute from './routes/route.bill.js';
 
 const app = express();
 
@@ -45,10 +46,11 @@ app.use('/api/grievance-sub-type',grievanceSubTypeRoute);
 app.use('/api/billing-profile',billingProfileRoute);
 
 // ************* admin api's **************
-app.use('/api/notice-board/',noticeBoardRoute);
-app.use('/api/nirmal-bandhu',nirmalBandhuRoute);
 app.use('/api/customer',customerRoute);
 app.use('/api/consumer',consumerRoute);
+app.use('/api/notice-board',noticeBoardRoute);
+app.use('/api/nirmal-bandhu',nirmalBandhuRoute);
+app.use('/api/bill',billRoute);
 
 
 // ************* user api's ********************

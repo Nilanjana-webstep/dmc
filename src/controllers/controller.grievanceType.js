@@ -1,9 +1,7 @@
 import GrievanceType from "../models/model.grievanceType.js";
 import { statusCode } from "../config/constraint.js";
 import CustomError from "../utils/util.customError.js";
-import { updateDatabaseObject } from "../utils/util.database.js";
-import csv  from 'csv-parser';
-import fs, { stat } from 'fs';
+import { convertCsvToObject } from "../utils/utils.csv.js";
 
 export const createGrievanceType = async (req, res, next) => {
 
@@ -25,6 +23,7 @@ export const createGrievanceType = async (req, res, next) => {
     }
 };
 
+
 export const getAllGrievanceType = async (req, res, next) => {
     try {
         const allGrievance = await GrievanceType.findAll();
@@ -41,6 +40,7 @@ export const getAllGrievanceType = async (req, res, next) => {
         next(error);
     }
 };
+
 
 export const updateGrievanceTypeById = async (req, res, next) => {
     const { id } = req.params;
@@ -70,23 +70,16 @@ export const updateGrievanceTypeById = async (req, res, next) => {
     }
 };
 
+
 export const uploadGrievanceTypeFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(400).send('No file selected!');
         }
 
-        const results = [];
-
-        await new Promise((resolve, reject) => {
-            fs.createReadStream(req.file.path)
-                .pipe(csv())
-                .on('data', (data) => results.push(data))
-                .on('end', resolve)
-                .on('error', reject);
-        });
-
-        await GrievanceType.bulkCreate(results);
+        const grievanceTypeData = await convertCsvToObject(req.file);
+        
+        await GrievanceType.bulkCreate(grievanceTypeData);
 
         return res.json({
             success: true,

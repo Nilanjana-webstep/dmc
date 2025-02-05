@@ -1,4 +1,6 @@
+import { statusCode } from "../config/constraint.js";
 import NoticeBoard from "../models/model.noticeBoard.js"
+import CustomError from "../utils/util.customError.js";
 import { updateDatabaseObject } from "../utils/util.database.js";
 
 
@@ -6,17 +8,16 @@ import { updateDatabaseObject } from "../utils/util.database.js";
 export const createNotice = async ( req,res )=>{
     try {
         
-        const notice = await NoticeBoard.create(req.body);
+        await NoticeBoard.create(req.body);
         
-        return res.status(200).json({
+        return res.status(statusCode.CREATED).json({
             success : true,
             message : "notice successfully created.",
-            data : notice,
         })
 
     } catch (error) {
         console.log("the error of creating notice : ",error);
-        
+        nextDay(error);
     }
 }
 
@@ -28,11 +29,14 @@ export const updateNotice = async ( req,res )=>{
     try {
         
         const notice = await NoticeBoard.findByPk(id);
-        const updatedNotice = updateDatabaseObject(req.body,notice);
-        await updatedNotice.save();
+        if (!notice){
+            return next( new CustomError("No notice found with this id.",statusCode.NOT_FOUND));
+        }
+        await NoticeBoard.update(req.body,{where:{id}});
         
     } catch (error) {
         console.log("error updating notice : ",error);
+        next(error);
         
     }
 }
@@ -47,10 +51,7 @@ export const getActiveAllNotice = async ( req,res )=>{
         })
 
         if ( allActiveNotice.length < 1 ){
-            return res.status(200).json({
-                success : true,
-                message : "No active notice found.",
-            })
+           return next( new CustomError('No active notice found.',statusCode.NOT_FOUND));
         }
 
         return res.status(200).json({
@@ -60,6 +61,7 @@ export const getActiveAllNotice = async ( req,res )=>{
         })
     } catch (error) {
         console.log("error of getting all active notices : ",error);
+        next(error);
         
     }
 }

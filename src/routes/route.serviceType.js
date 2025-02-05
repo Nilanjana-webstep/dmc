@@ -1,12 +1,11 @@
 import { Router } from "express";
-
-
 import { 
     createServiceType,
     updateServiceTypeById,
     getAllServiceType,
     uploadServiceTypeFromCsv
 } from "../controllers/controller.serviceType.js";
+
 import { 
     serviceTypeCreationValidation,
     serviceTypeUpdationValidation,
@@ -15,7 +14,6 @@ import {
 import { uploadCsv } from "../middlewares/upload.js";
 
 const serviceTypeRoute = Router();
-
 
 serviceTypeRoute.post('/',serviceTypeCreationValidation,createServiceType)
 serviceTypeRoute.get('/',getAllServiceType)

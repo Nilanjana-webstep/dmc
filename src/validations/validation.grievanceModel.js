@@ -7,10 +7,10 @@ export const GrievanceCreationValidationModel = Joi.object({
     message : Joi.string()
         .required(),
 
-    grievance_type : Joi.string()
+    grievance_type_id : Joi.number()
         .required(),
 
-    grievance_sub_type : Joi.string()
+    grievance_sub_type_id : Joi.number()
         .required(),
 
     address : Joi.string()
@@ -23,10 +23,10 @@ export const GrievanceUpdationValidationModel = Joi.object({
     message : Joi.string()
         .required(),
 
-    grievance_type : Joi.string()
+    grievance_type_id : Joi.number()
         .required(),
 
-    grievance_sub_type : Joi.string()
+    grievance_sub_type_id : Joi.number()
         .required(),
 
     address : Joi.string()

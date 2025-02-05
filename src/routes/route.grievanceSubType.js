@@ -18,7 +18,7 @@ const grievanceSubTypeRoute = Router();
 
 grievanceSubTypeRoute.post('/',grievanceSubTypeCreationValidation,createGrievanceSubType)
 grievanceSubTypeRoute.get('/',getAllGrievanceSubType)
-grievanceSubTypeRoute.get('/grievance-type/:grievance_type_id',getAllGrievanceSubTypeOfParticularGrievanceType)
+grievanceSubTypeRoute.get('/by-grievance-type/:grievance_type_id',getAllGrievanceSubTypeOfParticularGrievanceType)
 grievanceSubTypeRoute.put('/:id',grievanceSubTypeUpdationValidation,updateGrievanceSubTypeById)
 grievanceSubTypeRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadGrievanceSubTypeFromCsv);
 

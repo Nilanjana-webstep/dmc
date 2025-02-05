@@ -15,7 +15,7 @@ const adharStorage = multer.diskStorage({
 
 const grievanceStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './public/upload/grievance/')
+      cb(null, './public/upload/grievancePhoto/')
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)

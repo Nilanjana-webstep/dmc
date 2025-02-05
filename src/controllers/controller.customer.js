@@ -15,12 +15,13 @@ import Varification from '../models/model.varification.js';
 import { generateFourDigitOTP, varifyOtp } from '../utils/utils.otp.js';
 import { generateToken } from '../utils/utis.jwt.js';
 import { statusCode } from '../config/constraint.js';
+import BillingProfile from '../models/model.billingProfile.js';
 
 
 export const createCustomerWithConsumer = async (req, res, next) => {
 
     const {  consumer ,customer } = req.body;
-    const { ward_id , property_type_id, property_sub_type_id } = consumer;
+    const { ward_id , property_type_id, property_sub_type_id, billing_profile_id } = consumer;
 
     try {
         const result = await sequelize.transaction(async t => {
@@ -62,9 +63,14 @@ export const createCustomerWithConsumer = async (req, res, next) => {
                 return next( new CustomError("Property sub type id is not valid.",statusCode.NOT_FOUND));
             }
             const propertySubTypeId = propertySubTypeData.dataValues.id;
-            console.log("customer id is : ",customer_id);
             
-            const consumerData = await Consumer.create({...consumer,customer_id,wardId,propertyTypeId,propertySubTypeId},{ transaction: t });
+            const billingProfile = await BillingProfile.findByPk(billing_profile_id,{ transaction: t });
+            if (!billingProfile){
+                return next( new CustomError("Billing profile id is not valid.",statusCode.NOT_FOUND));
+            }
+            const billingProfileId = billingProfile.dataValues.id;
+            
+            await Consumer.create({...consumer,customer_id,wardId,propertyTypeId,propertySubTypeId,billingProfileId},{ transaction: t });
 
             return res.status(statusCode.CREATED).json({
                 success: true,

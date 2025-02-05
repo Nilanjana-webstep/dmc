@@ -60,7 +60,7 @@ export const getAllPropertySubType = async (req, res, next) => {
 };
 
 
-export const getAllPropertySubTypeOfParticularPropertyType = async (req, res, next) => {
+export const getAllPropertySubTypeByPropertyType = async (req, res, next) => {
 
     const { id } = req.params;
     

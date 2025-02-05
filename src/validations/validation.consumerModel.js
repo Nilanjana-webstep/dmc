@@ -22,7 +22,10 @@ export const ConsumerCreationValidationModel = Joi.object({
 
   ward_id : Joi.number()
     .required(),
-  
+
+  billing_profile_id : Joi.number()
+    .required(),
+    
   pincode: Joi.number()
     .required(),
   
@@ -40,24 +43,23 @@ export const ConsumerUpdationValidationModel = Joi.object({
   
   street_2: Joi.string()
     .required(),
-  
+
   billing_address : Joi.string()
     .required(),
 
-  property_type : Joi.string()
+  property_type_id : Joi.number()
     .required(),
 
-  property_sub_type : Joi.string()
+  property_sub_type_id : Joi.number()
     .required(),
 
-  ward_no : Joi.string()
+  ward_id : Joi.number()
     .required(),
-  
+
+  billing_profile_id : Joi.number()
+    .required(),
+    
   pincode: Joi.number()
-    .positive()
     .required(),
-
-  is_active : Joi.boolean()
-    .required()
  
 });

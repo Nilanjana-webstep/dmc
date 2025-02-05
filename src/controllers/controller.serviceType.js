@@ -1,29 +1,29 @@
+import { statusCode } from "../config/constraint.js";
 import ServiceType from "../models/model.serviceType.js";
 import CustomError from "../utils/util.customError.js";
-import { updateDatabaseObject } from "../utils/util.database.js";
-import csv  from 'csv-parser';
-import fs from 'fs';
 import { convertCsvToObject } from "../utils/utils.csv.js";
 
 export const createServiceType = async (req, res, next) => {
+    
+    const { service_type } = req.body;
+
     try {
-        const existServiceType = await ServiceType.findOne({where:{property_type}});
+        const existServiceType = await ServiceType.findOne({where:{service_type}});
 
         if ( existServiceType ){
-            return next( new CustomError("Service Type already exist.",statusCode.CONFLICT));
+            return next( new CustomError("This Service Type already exist.",statusCode.CONFLICT));
         }
         
-        const serviceType = await ServiceType.create(req.body);
+        await ServiceType.create(req.body);
 
         return res.status(201).json({
             success: true,
-            message: "service type created successfully.",
-            data: serviceType
+            message: "Service type created successfully.",
         });
 
     } catch (error) {
 
-        console.log("Error: ", error);
+        console.log("Error in creating service type. : ", error);
         return next(error);
     }
 };
@@ -34,48 +34,46 @@ export const getAllServiceType = async (req, res, next) => {
         const allServiceType = await ServiceType.findAll();
 
         if ( allServiceType.length < 1 ){
-
-            return res.status(200).json({
-                success: true,
-                message: "No service found.",
-            });
+            return next ( new CustomError("No service type found.",statusCode.NOT_FOUND));
         }
 
-        return res.status(200).json({
+        return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched all service types successfully.",
             data: allServiceType
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot fetch all Consumer types.", 500));
+        console.log("Error in fetching all service type : ", error);
+        next(error);
     }
 };
 
 
 export const updateServiceTypeById = async (req, res, next) => {
+    
     const { id } = req.params;
     const { service_type } = req.body;
     try {
         const serviceType = await ServiceType.findByPk(id);
         if (!serviceType) {
-            return res.status(404).json({
-                success: false,
-                message: "No service type found for this ID."
-            });
+           return next(new CustomError("No service type found with this Id.",statusCode.NOT_FOUND));
         }
-        const updatedServiceType = updateDatabaseObject(req.body, serviceType);
+        if ( serviceType.service_type != service_type ){
+            const existingServiceType = await ServiceType.findOne({where:{service_type}});
+            if ( existingServiceType ){
+                return next ( new CustomError('Service type name already exist.',statusCode.CONFLICT));
+            }
+        }
+        
+        await ServiceType.update(req.body,{where:{id}});
 
-        await updatedServiceType.save();
-
-        return res.status(200).json({
+        return res.status(statusCode.CREATED).json({
             success: true,
             message: "Service type updated successfully.",
-            data: updatedServiceType
         });
     } catch (error) {
-        console.log("Error: ", error);
-        return next(new CustomError("Cannot update service type.", 500));
+        console.log("Error in updating service type : ", error);
+        next(error);
     }
 };
 
@@ -86,20 +84,17 @@ export const uploadServiceTypeFromCsv = async (req, res, next) => {
             return res.status(400).send('No file selected!');
         }
 
-       const serviceTypesJson = await convertCsvToObject(req.file);
+        const serviceTypesJson = await convertCsvToObject(req.file);
 
-        const serviceTypes = await ServiceType.bulkCreate(serviceTypesJson);
+        await ServiceType.bulkCreate(serviceTypesJson);
 
         return res.json({
             success: true,
             message: "Uploaded CSV successfully",
         });
     } catch (error) {
-        console.error("Error uploading CSV:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to upload CSV",
-        });
+        console.error("Error uploading service type CSV:", error);
+        next(error);
     }
 };
 

@@ -3,6 +3,8 @@ import sequelize from '../config/db.js';
 import ServiceType from './model.serviceType.js';
 import Ward from './model.ward.js';
 import NirmalBandhu from './model.nirmalBandhu.js';
+import Customer from './model.customer.js';
+import Borough from './model.borough.js';
 
 
 const BookService = sequelize.define(
@@ -37,12 +39,17 @@ const BookService = sequelize.define(
   }  
 );
 
+Customer.hasMany(BookService, { foreignKey: 'customer_id' });
+BookService.belongsTo(Customer, { foreignKey: 'customer_id' });
 
 ServiceType.hasMany(BookService)
 BookService.belongsTo(ServiceType)
 
 Ward.hasMany(BookService)
 BookService.belongsTo(Ward)
+
+Borough.hasMany(BookService)
+BookService.belongsTo(Borough)
 
 NirmalBandhu.hasMany(BookService)
 BookService.belongsTo(NirmalBandhu)

@@ -1,9 +1,11 @@
 import { statusCode } from "../config/constraint.js";
 import sequelize from "../config/db.js";
+import Bill from "../models/model.bill.js";
 import BillingProfile from "../models/model.billingProfile.js"
 import PropertySubType from "../models/model.propertySubType.js";
 import PropertyType from "../models/model.propertyType.js";
 import CustomError from "../utils/util.customError.js";
+import { convertCsvToObject } from "../utils/utils.csv.js";
 
 
 export const createBillingProfile = async(req,res,next)=>{
@@ -34,7 +36,6 @@ export const createBillingProfile = async(req,res,next)=>{
         next(error)
     }
 }
-
 
 
 export const getAllBillingProfile = async(req,res,next)=>{
@@ -91,6 +92,51 @@ export const editBillingProfile = async (req, res, next) => {
         });
     } catch (error) {
         console.log("Error in updating billing profile : ", error);
+        next(error);
+    }
+};
+
+
+export const getBillingProfilesByPropertyType = async ( req,res,next)=>{
+    
+    const { property_type_id , property_sub_type_id } = req.query;
+
+    try {
+
+        const billingProfiles = await BillingProfile.findAll({where:{propertyTypeId:property_type_id,propertySubTypeId:property_sub_type_id}});
+        if ( billingProfiles.length < 1 ){
+            return next( new CustomError("No billing profile Found.",statusCode.NOT_FOUND));
+        }
+        return res.status(statusCode.OK).json({
+            success : true,
+            message : 'successfully fetch all billings profile.',
+            data : billingProfiles
+        })
+    } catch (error) {
+        console.log("error in fetching billings profile by property type : ",error);
+        next(error);
+        
+    }
+}
+
+export const uploadBillingProfileFromCsv = async (req, res, next) => {
+    try {
+
+        if (!req.file) {
+            return next ( new CustomError('No file found.',statusCode.BAD_REQUEST));
+        }
+
+        const billingProfileData = await convertCsvToObject(req.file,next);
+
+        const createdBillingProfileData = await BillingProfile.bulkCreate(billingProfileData);
+
+
+        return res.status(statusCode.CREATED).json({
+            success: true,
+            message: "Uploaded CSV successfully",
+        });
+    } catch (error) {
+        console.error("Error uploading billing profile CSV:", error);
         next(error);
     }
 };
