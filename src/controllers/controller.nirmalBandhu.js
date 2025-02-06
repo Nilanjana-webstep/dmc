@@ -1,27 +1,54 @@
 import NirmalBandhu from "../models/model.nirmalBandhu.js";
-import { updateDatabaseObject } from "../utils/util.database.js";
 import CustomError from "../utils/util.customError.js";
-
+import { statusCode } from "../config/constraint.js";
+import Ward from "../models/model.ward.js";
+import Borough from "../models/model.borough.js";
+import sequelize from "../config/db.js";
+import fs from 'fs';
 
 
 export const createNirmalBandhu = async (req,res,next)=>{
 
+    const { mobile_number, ward_id, borough_id } = req.body;
+
     try {
-    
-        const nirmalBandhu = await NirmalBandhu.create({...req.body,adhar_card:req.file.path});
-        nirmalBandhu.nirmal_bandhu_id = 100000 + nirmalBandhu.id;
-        await nirmalBandhu.save();
+
+        const existingNirmalBandhu = await NirmalBandhu.findOne({where:{mobile_number}});
+
+        if ( existingNirmalBandhu ){
+            return next( new CustomError("This Nirmal Bandhu with this number already exist.",statusCode.CONFLICT));
+        }
+
+        const ward = await Ward.findByPk(ward_id);
+
+        if ( !ward ){
+            return next( new CustomError("No ward found.",statusCode.NOT_FOUND));
+        }
+
+        const wardId = ward_id;
+
+        const borough = await Borough.findByPk(borough_id);
+
+        if ( !borough ){
+            return next( new CustomError("No Borough found.",statusCode.NOT_FOUND));
+        }
+
+        const boroughId = borough_id;
+
+        if ( ward.boroughId != borough_id ){
+            return next( new CustomError( "Ward not found with this borough.",statusCode.NOT_FOUND));
+        }
+       
+        await NirmalBandhu.create({...req.body,wardId,boroughId,adhar_card_photo:req.file.path});
         
-        return res.json({
+        return res.status(statusCode.CREATED).json({
             success : true,
             message : "successfully created nirmal bandhu.",
-            data : nirmalBandhu
         })
 
-        
     } catch (error) {
         console.log("error creating nirmal bandhu : ",error);
-        return next( new CustomError("Sorry not createing Nirmal Bandhu",500))
+        next(error);
         
     }
 }
@@ -30,13 +57,20 @@ export const createNirmalBandhu = async (req,res,next)=>{
 export const getAllNirmalBandhu = async (req,res,next)=>{
     try {
         
-        const allNirmalBandhu = await NirmalBandhu.findAll();
+        const sql = ` SELECT nb.*, w.ward,b.borough
+                      FROM nirmal_bandhus nb 
+                      JOIN wards w on w.id = nb.wardId
+                      JOIN boroughs b on b.id = nb.boroughId
+                      ORDER BY createdAt DESC
+                    `
+        const [ allNirmalBandhu ] = await sequelize.query(sql);
 
         if ( allNirmalBandhu.length < 1 ){
 
             return res.json({
                 success : true,
-                message : "No Nirmal bandhu found."
+                message : "No Nirmal bandhu found.",
+                data:allNirmalBandhu
             })
         }
 
@@ -57,17 +91,17 @@ export const getParticularNirmalBandhuById = async (req,res,next)=>{
     const { id }  = req.params;
 
     try {
-        
-        const nirmalBandhu = await NirmalBandhu.findByPk(id);
+        const sql = ` SELECT nb.*,w.ward,b.borough
+                      FROM nirmal_bandhus nb 
+                      JOIN wards w on w.id = nb.wardId
+                      JOIN boroughs b on b.id = nb.boroughId
+                      WHERE nb.nirmal_bandhu_id = ${id};
+                    `
+        const [nirmalBandhu] = await sequelize.query(sql);
 
-        if ( !nirmalBandhu ){
-            
-            return res.json({
-                success : true,
-                message : "No Nirmal bandhu found."
-            })
+        if ( nirmalBandhu.length < 1 ){
+            return next( new CustomError('No Nirmal bandhu found.',statusCode.NOT_FOUND));
         }
-
 
         return res.json({
             success : true,
@@ -77,8 +111,8 @@ export const getParticularNirmalBandhuById = async (req,res,next)=>{
 
     } catch (error) {
         
-        console.log("Error getting nirmal bandhu : ",error);
-        
+        console.log("Error getting particular nirmal bandhu : ",error);
+        next(error);
     }
 }
 
@@ -86,22 +120,74 @@ export const getParticularNirmalBandhuById = async (req,res,next)=>{
 export const updateNirmalBandhuById = async (req,res,next)=>{
 
     const { id } = req.params;
+    const { mobile_number, ward_id, borough_id } = req.body;
+
+    console.log("req file is : ",req.file);
+
+
+    let updatedNirmalBandhuData = { ...req.body };
+
     try {
         
         const nirmalBandhu = await NirmalBandhu.findByPk(id);
 
-        const updatedNirmalBandhu = updateDatabaseObject(req.body,nirmalBandhu);
-        await updatedNirmalBandhu.save();
+        if ( !nirmalBandhu ){
+            return next( new CustomError("This Nirmal Bandhu with this id not found.",statusCode.NOT_FOUND));
+        }
 
-        return res.json({
+        if ( nirmalBandhu.mobile_number != mobile_number ){
+            const existingNirmalBandhu = await NirmalBandhu.findOne({where:{mobile_number}});
+            if ( existingNirmalBandhu ){
+                return next( new CustomError("This Nirmal Bandhu with this number already exist.",statusCode.CONFLICT));
+            }
+        }
+
+        const ward = await Ward.findByPk(ward_id);
+
+        if ( !ward ){
+            return next( new CustomError("No ward found.",statusCode.NOT_FOUND));
+        }
+
+        const wardId = ward_id;
+
+        const borough = await Borough.findByPk(borough_id);
+
+        if ( !borough ){
+            return next( new CustomError("No Borough found.",statusCode.NOT_FOUND));
+        }
+
+        const boroughId = borough_id;
+
+        if ( ward.boroughId != borough_id ){
+            return next( new CustomError( "Ward not found with this borough.",statusCode.NOT_FOUND));
+        }
+
+        updatedNirmalBandhuData = {...updatedNirmalBandhuData,wardId,boroughId};
+        if ( req.file){
+            if (nirmalBandhu.adhar_card_photo) {
+                fs.unlink(nirmalBandhu.adhar_card_photo, (err) => {
+                    if (err) {
+                        console.error(`Failed to delete old photo: ${err.message}`);
+                    } else {
+                        console.log('Old photo deleted successfully');
+                    }
+                });
+            }
+            updatedNirmalBandhuData = { ...updatedNirmalBandhuData,adhar_card_photo:req.file.path};
+            console.log("end update here.");
+            
+        }
+        
+        await NirmalBandhu.update(updatedNirmalBandhuData,{where:{nirmal_bandhu_id:id}});
+
+        return res.status(statusCode.OK).json({
             success : true,
             message : "successfully update nirmal bandhu.",
-            data : updatedNirmalBandhu
         })
 
     } catch (error) {
         console.log("Error to update nirmal bandhu : ",error);
-        
+        next(error);
         
     }
 }

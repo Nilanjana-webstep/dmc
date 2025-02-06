@@ -4,11 +4,11 @@ import CustomError from '../utils/util.customError.js';
 
 const adharStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './public/upload/adhar/')
+      cb(null, './public/upload/adharPhoto/')
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, file.fieldname + '-' + uniqueSuffix+'.pdf')
+      cb(null, file.fieldname + '-' + uniqueSuffix+'.jpg')
     }
 })
 
@@ -29,7 +29,7 @@ const fileFilter = (req, file, cb) => {
 
     const extName = path.extname(file.originalname); 
     
-    if (extName == '.pdf' || extName == '.jpg' ) {
+    if ( extName == '.jpg' ) {
         cb(null, true);
     } else {
         cb(new CustomError('Unsupported file type',401), false); 

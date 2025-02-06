@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import Ward from "./model.ward.js";
+import Borough from "./model.borough.js";
 
 
 const NirmalBandhu = sequelize.define(
@@ -28,12 +29,20 @@ const NirmalBandhu = sequelize.define(
             type: DataTypes.ENUM('male', 'female', 'other'),
             allowNull: false,
         },
-        address : {
+        street_1 : {
             type : DataTypes.STRING,
             allowNull : false,
         },
-        adhar_no : {
-            type : DataTypes.BIGINT,
+        street_2 : {
+            type : DataTypes.STRING,
+            allowNull : true,
+        },
+        landmark : {
+            type : DataTypes.STRING,
+            allowNull : false,
+        },
+        adhar_number : {
+            type : DataTypes.STRING,
             allowNull : false
         },
         adhar_card_photo : {
@@ -44,14 +53,14 @@ const NirmalBandhu = sequelize.define(
             type : DataTypes.DATEONLY,
             allowNull : false
         },
-        status : {
+        is_active : {
             type : DataTypes.BOOLEAN,
             defaultValue : true,
         }
 
     },
     {   
-        initialAutoIncrement: 1000000,
+        initialAutoIncrement: 1000001,
         freezeTableName: true,
         timestamps: true,
     }
@@ -59,6 +68,9 @@ const NirmalBandhu = sequelize.define(
 
 Ward.hasMany(NirmalBandhu);
 NirmalBandhu.belongsTo(Ward);
+
+Borough.hasMany(NirmalBandhu);
+NirmalBandhu.belongsTo(Borough);
 
 
 

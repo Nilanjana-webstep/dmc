@@ -17,12 +17,12 @@ import { uploadAdhar } from "../middlewares/upload.js";
 const nirmalBandhuRoute = Router();
 
 nirmalBandhuRoute.route('')
-    .post(uploadAdhar.single('adhar_card'),nirmalBandhuCreationValidation,createNirmalBandhu)
+    .post(uploadAdhar.single('adhar_card_photo'),nirmalBandhuCreationValidation,createNirmalBandhu)
     .get(getAllNirmalBandhu)
 
 nirmalBandhuRoute.route('/:id')
     .get(getParticularNirmalBandhuById)
-    .put(nirmalBandhuUpdationValidation,updateNirmalBandhuById)
+    .put(uploadAdhar.single('adhar_card_photo'),nirmalBandhuUpdationValidation,updateNirmalBandhuById)
     .delete(deleteNirmalBandhuById)
 
 

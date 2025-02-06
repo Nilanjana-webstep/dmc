@@ -25,18 +25,18 @@ export const NirmalBandhuCreationValidationModel = Joi.object({
     landmark: Joi.string()
         .required(),
 
-    ward_no : Joi.number()
+    ward_id : Joi.number()
         .required(),
 
-    borough_no : Joi.number()
+    borough_id : Joi.number()
         .required(),   
 
-    adhar_no: Joi.number()
-        .integer()
-        .positive()
+    adhar_number : Joi.string()
+        .pattern(/^[0-9]{12}$/)
+        .message("invalid adhar number") 
         .required(),
     
-    start_date: Joi.date()
+    start_date : Joi.date()
         .required(),
     
 });
@@ -67,18 +67,21 @@ export const NirmalBandhuUpdationValidationModel = Joi.object({
     landmark: Joi.string()
         .required(),
     
-    adhar_no: Joi.number()
-        .integer()
-        .positive()
+    adhar_number : Joi.string()
+        .pattern(/^[0-9]{12}$/)
+        .message("invalid adhar number") 
         .required(),
 
-    ward_no : Joi.number()
+    ward_id : Joi.number()
         .required(),
 
-    borough_no : Joi.number()
+    borough_id : Joi.number()
         .required(), 
     
     start_date: Joi.date()
+        .required(),
+    
+    is_active : Joi.boolean()
         .required(),
     
 });
