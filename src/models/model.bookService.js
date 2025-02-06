@@ -51,8 +51,8 @@ BookService.belongsTo(Ward)
 Borough.hasMany(BookService)
 BookService.belongsTo(Borough)
 
-NirmalBandhu.hasMany(BookService)
-BookService.belongsTo(NirmalBandhu)
+NirmalBandhu.hasMany(BookService,{foreignKey:'nirmal_bandhu_id'})
+BookService.belongsTo(NirmalBandhu,{foreignKey:'nirmal_bandhu_id'})
 
 
 export default BookService;

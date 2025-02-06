@@ -31,7 +31,7 @@ export const getAllBill = async (req, res, next) => {
   try {
     
     const sql = `
-          SELECT cu.customer_id, con.consumer_id, cu.full_name, pt.property_type, pst.property_sub_type,
+          SELECT cu.customer_id, con.consumer_id, cu.full_name,con.billing_address,con.street_1, pt.property_type, pst.property_sub_type,
                 b.bill_id, b.bill_month, 
                 DATE_FORMAT(CONCAT(YEAR(CURDATE()), '-', MONTH(CURDATE()), '-', bp.billing_due_date), '%Y-%m-%d') AS billing_due_date,
                 pst.charge

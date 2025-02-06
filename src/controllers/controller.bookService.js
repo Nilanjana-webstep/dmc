@@ -22,7 +22,7 @@ export const bookService = async (req,res,next)=>{
         }
         const nirmalBandhu = await NirmalBandhu.findOne({where : { full_name : nirmal_bandhu_full_name,mobile_number:nirmal_bandhu_mobile_number}});
         if ( !nirmalBandhu){
-            return next( new CustomError("No nirmal bandhu found with this mobile number.",statusCode.NOT_FOUND));
+            return next( new CustomError("No nirmal bandhu found with this mobile number and name.",statusCode.NOT_FOUND));
         }
         const ward = await Ward.findByPk(ward_id);
         if ( !ward ){
@@ -33,11 +33,11 @@ export const bookService = async (req,res,next)=>{
             return next( new CustomError("No borough found with this mobile number.",statusCode.NOT_FOUND));
         }
         const serviceTypeId = service_type_id;
-        const nirmalBandhuId = nirmalBandhu.dataValues.id;
+        const nirmal_bandhu_id = nirmalBandhu.dataValues.nirmal_bandhu_id;
         const wardId = ward_id;
         const boroughId = borough_id;
 
-        await BookService.create({service_description,wardId,nirmalBandhuId,boroughId,
+        await BookService.create({service_description,wardId,nirmal_bandhu_id,boroughId,
                                     serviceTypeId,address,service_date_time,customer_id
                                 });
         
@@ -81,6 +81,17 @@ export const getAllBookedServiceOfParticularCustomer = async ( req,res,next)=>{
 
 export const getAllBookedService = async ( req,res,next)=>{
     try {
+
+        // const sql = ` 
+        //             SELECT bs.*,c.full_name as customer_name,nb.full_name as nirmal_bandhu_full_name
+        //             FROM booked_services bs 
+        //             JOIN customers c on bs.customer_id = c.customer_id
+        //             JOIN nirmal_bandhus nb on nb.nirmal_bandhu_id = bs.nirmal_bandhu_id
+        //             JOIN wards w on w.id = bs.wardId
+        //             JOIN boroughs b on b.id = bs.boroughId
+        //             JOIN service_types st on st.id = bs.serviceTypeId
+
+        //             `
         
         const allServices = await BookService.findAll();
         

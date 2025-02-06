@@ -122,9 +122,6 @@ export const updateNirmalBandhuById = async (req,res,next)=>{
     const { id } = req.params;
     const { mobile_number, ward_id, borough_id } = req.body;
 
-    console.log("req file is : ",req.file);
-
-
     let updatedNirmalBandhuData = { ...req.body };
 
     try {
@@ -163,6 +160,7 @@ export const updateNirmalBandhuById = async (req,res,next)=>{
         }
 
         updatedNirmalBandhuData = {...updatedNirmalBandhuData,wardId,boroughId};
+
         if ( req.file){
             if (nirmalBandhu.adhar_card_photo) {
                 fs.unlink(nirmalBandhu.adhar_card_photo, (err) => {
@@ -174,7 +172,6 @@ export const updateNirmalBandhuById = async (req,res,next)=>{
                 });
             }
             updatedNirmalBandhuData = { ...updatedNirmalBandhuData,adhar_card_photo:req.file.path};
-            console.log("end update here.");
             
         }
         
@@ -188,7 +185,6 @@ export const updateNirmalBandhuById = async (req,res,next)=>{
     } catch (error) {
         console.log("Error to update nirmal bandhu : ",error);
         next(error);
-        
     }
 }
 
