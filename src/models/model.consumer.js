@@ -55,6 +55,9 @@ Consumer.belongsTo(Customer, { foreignKey: 'customer_id' });
 Ward.hasMany(Consumer);
 Consumer.belongsTo(Ward);
 
+Borough.hasMany(Consumer);
+Consumer.belongsTo(Borough);
+
 PropertyType.hasMany(Consumer);
 Consumer.belongsTo(PropertyType);
 

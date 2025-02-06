@@ -23,6 +23,9 @@ export const ConsumerCreationValidationModel = Joi.object({
   ward_id : Joi.number()
     .required(),
 
+  borough_id : Joi.number()
+    .required(),
+
   billing_profile_id : Joi.number()
     .required(),
     
@@ -54,6 +57,9 @@ export const ConsumerUpdationValidationModel = Joi.object({
     .required(),
 
   ward_id : Joi.number()
+    .required(),
+  
+  borough_id : Joi.number()
     .required(),
 
   billing_profile_id : Joi.number()

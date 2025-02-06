@@ -16,12 +16,13 @@ import { generateFourDigitOTP, varifyOtp } from '../utils/utils.otp.js';
 import { generateToken } from '../utils/utis.jwt.js';
 import { statusCode } from '../config/constraint.js';
 import BillingProfile from '../models/model.billingProfile.js';
+import Borough from '../models/model.borough.js';
 
 
 export const createCustomerWithConsumer = async (req, res, next) => {
 
     const {  consumer ,customer } = req.body;
-    const { ward_id , property_type_id, property_sub_type_id, billing_profile_id } = consumer;
+    const { ward_id ,borough_id, property_type_id, property_sub_type_id, billing_profile_id } = consumer;
 
     try {
         const result = await sequelize.transaction(async t => {
@@ -52,6 +53,14 @@ export const createCustomerWithConsumer = async (req, res, next) => {
 
             const wardId = wardData.dataValues.id;
 
+            const boroughData = await Borough.findByPk(borough_id,{ transaction: t });
+
+            if (!boroughData){
+                return next( new CustomError("Borough id is not valid.",statusCode.NOT_FOUND));
+            }
+
+            const boroughId = boroughData.dataValues.id;
+
             const propertyTypeData = await PropertyType.findByPk(property_type_id,{ transaction: t });
             if (!propertyTypeData){
                 return next( new CustomError("Property type id is not valid.",statusCode.NOT_FOUND));
@@ -70,7 +79,7 @@ export const createCustomerWithConsumer = async (req, res, next) => {
             }
             const billingProfileId = billingProfile.dataValues.id;
             
-            await Consumer.create({...consumer,customer_id,wardId,propertyTypeId,propertySubTypeId,billingProfileId},{ transaction: t });
+            await Consumer.create({...consumer,customer_id,wardId,boroughId,propertyTypeId,propertySubTypeId,billingProfileId},{ transaction: t });
 
             return res.status(statusCode.CREATED).json({
                 success: true,
@@ -155,7 +164,24 @@ export const getParticularCustomerByCustomerId = async (req, res, next) => {
     const { customer_id } = req.params;
 
     try {
+
         const customer = await Customer.findByPk(customer_id);
+
+        const sql = `
+                        SELECT c.*,w.ward,b.borough,pt.property_type,pst.property_sub_type
+                        FROM consumers c 
+                        JOIN property_types pt on pt.id = c.propertyTypeId
+                        JOIN property_sub_types pst on pst.id = c.propertySubTypeId
+                        JOIN wards w on w.id = c.wardId
+                        JOIN boroughs b on b.id = c.boroughId
+                        WHERE c.customer_id = ${customer_id}
+                    `
+        const [properties] = await sequelize.query(sql);
+
+        const data = {
+            customer,
+            properties 
+        }
 
         if (!customer) {
             return res.status(statusCode.NOT_FOUND).json({
@@ -167,11 +193,11 @@ export const getParticularCustomerByCustomerId = async (req, res, next) => {
         return res.status(statusCode.OK).json({
             success: true,
             message: "Fetched customer successfully.",
-            data: customer
+            data
         });
     } catch (error) {
-        console.log("Error:", error);
-        return next(new CustomError("Cannot fetch customer.", 500));
+        console.log("Error in getting particular customer  details:", error);
+        next(error);
     }
 };
 
