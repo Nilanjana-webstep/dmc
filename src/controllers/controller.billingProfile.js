@@ -1,6 +1,5 @@
 import { statusCode } from "../config/constraint.js";
 import sequelize from "../config/db.js";
-import Bill from "../models/model.bill.js";
 import BillingProfile from "../models/model.billingProfile.js"
 import PropertySubType from "../models/model.propertySubType.js";
 import PropertyType from "../models/model.propertyType.js";

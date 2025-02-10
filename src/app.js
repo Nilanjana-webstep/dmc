@@ -41,6 +41,7 @@ app.use('/api/ward',wardRoute);
 app.use('/api/property-type',propertyTypeRoute);
 app.use('/api/property-sub-type',propertySubTypeRoute);
 app.use('/api/service-type',serviceTypeRoute);
+app.use('/api/service-detail',serviceTypeRoute);
 app.use('/api/grievance-type',grievanceTypeRoute);
 app.use('/api/grievance-sub-type',grievanceSubTypeRoute);
 app.use('/api/billing-profile',billingProfileRoute);
