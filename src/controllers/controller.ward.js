@@ -45,9 +45,9 @@ export const getAllWard = async (req,res,next)=>{
                 
         const  allWard  = await Ward.findAll();
 
-        if ( allWard.length < 1 ){
-            return next( new CustomError("No ward found.",statusCode.NOT_FOUND));
-        }
+        // if ( allWard.length < 1 ){
+        //     return next( new CustomError("No ward found.",statusCode.NOT_FOUND));
+        // }
 
         return res.status(statusCode.OK).json({
             success : true,
@@ -111,9 +111,9 @@ export const getAllWardForParticularBorough = async(req,res,next)=>{
 
         const allWards = await Ward.findAll({where:{boroughId:borough_id}});
 
-        if ( allWards.length < 1 ){
-            return next( new CustomError("No ward found for this borough.",statusCode.NOT_FOUND));
-        }   
+        // if ( allWards.length < 1 ){
+        //     return next( new CustomError("No ward found for this borough.",statusCode.NOT_FOUND));
+        // }   
 
         return res.status(statusCode.OK).json({
             success : true,

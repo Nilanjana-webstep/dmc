@@ -18,3 +18,6 @@ bookServiceRoute.get('/customer-id/:id',getAllBookedServiceOfParticularCustomer)
 
 
 export default bookServiceRoute;
+
+
+

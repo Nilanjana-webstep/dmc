@@ -1,10 +1,9 @@
 import { scheduleJob } from "node-schedule";
 
 
+export const billGenerateJob = async ()=>{
 
-export const billGenerationFirstDayOfMonth = async ()=>{
-
-    scheduleJob('* * * 1 * *',async ()=>{
+    scheduleJob('0 5 * * *',async ()=>{
         // should send bill to all user.
     })
 }

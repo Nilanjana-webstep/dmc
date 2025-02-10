@@ -5,6 +5,11 @@ export const ConsumerCreationValidationModel = Joi.object({
   property_no: Joi.string()
     .required(),
   
+  property_size : Joi.number()
+    .positive()
+    .message('invalid property size.')
+    .required(),
+  
   street_1: Joi.string()
     .required(),
   
@@ -39,6 +44,11 @@ export const ConsumerCreationValidationModel = Joi.object({
 export const ConsumerUpdationValidationModel = Joi.object({
   
   property_no: Joi.string()
+    .required(),
+  
+  property_size : Joi.number()
+    .positive()
+    .message('invalid property size.')
     .required(),
   
   street_1: Joi.string()

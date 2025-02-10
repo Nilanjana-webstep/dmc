@@ -96,7 +96,6 @@ export const createCustomerWithConsumer = async (req, res, next) => {
 
 };
 
-
 export const getAllCustomer = async (req, res, next) => {
     try {
 
@@ -158,7 +157,6 @@ export const getAllCustomer = async (req, res, next) => {
     }
 };
 
-
 export const getParticularCustomerByCustomerId = async (req, res, next) => {
 
     const { customer_id } = req.params;
@@ -201,7 +199,6 @@ export const getParticularCustomerByCustomerId = async (req, res, next) => {
     }
 };
 
-
 export const getParticularCustomerByMobileNumber = async (req, res, next) => {
     
     const { mobile_number} = req.params;
@@ -228,7 +225,6 @@ export const getParticularCustomerByMobileNumber = async (req, res, next) => {
         return next(new CustomError("Cannot fetch customer.", 500));
     }
 };
-
 
 export const updateCustomerById = async (req, res, next) => {
 
@@ -259,7 +255,6 @@ export const updateCustomerById = async (req, res, next) => {
     }
 };
 
-
 export const deleteCustomerById = async (req, res, next) => {
 
     const { customer_id } = req.params;
@@ -287,7 +282,6 @@ export const deleteCustomerById = async (req, res, next) => {
         return next(new CustomError("Cannot delete customer.", 500));
     }
 };
-
 
 const validateData = (data) => {
 
@@ -327,7 +321,6 @@ const validateData = (data) => {
 
     return null;
 };
-
 
 const processCustomerAndConsumer = async (data, t) => {
     const { 
@@ -385,7 +378,6 @@ const processCustomerAndConsumer = async (data, t) => {
     await ConsumerData.save({ transaction: t });
 };
 
-
 export const uploadCustomerWithConsumerFromCsv = async (req, res, next) => {
     try {
         if (!req.file) {
@@ -428,7 +420,6 @@ export const uploadCustomerWithConsumerFromCsv = async (req, res, next) => {
     }
 };
 
-
 export const exportCustomerIntoExcel = async (req, res, next) => {
   
     try {
@@ -439,7 +430,6 @@ export const exportCustomerIntoExcel = async (req, res, next) => {
 
     const plainData = data.map(customer => customer.get({ plain: true }));
 
-    
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Customers');
 
@@ -474,7 +464,6 @@ export const exportCustomerIntoExcel = async (req, res, next) => {
   }
 };
 
-
 export const customerLogin = async ( req,res,next )=>{
 
     const { mobile_number } = req.body;
@@ -504,13 +493,11 @@ export const customerLogin = async ( req,res,next )=>{
     } catch (error) {
         
         console.log("the error occur to send otp to login. : ",error);
-        
+        next(error);
     }
 };
 
 export const otpVarification = async ( req,res,next)=>{
-
-    console.log("got hit ");
     
     const { mobile_number , otp } = req.body;
 
@@ -526,7 +513,6 @@ export const otpVarification = async ( req,res,next)=>{
                 success : true,
                 message : "otp time out."
             })
-            
         }        
 
         const varify = varifyOtp(varificationData.otp,otp);
@@ -547,28 +533,17 @@ export const otpVarification = async ( req,res,next)=>{
             })
         }
 
-
     } catch (error) {
         console.log("error during otp varification : ",error);
-        
+        next(error);
     }
 };
-
 
 export const otpResend = async ( req,res,next)=>{
   
     const { mobile_number  } = req.body;
 
     try {
-        
-        const customer = await Customer.findOne({where : { mobile_number}});
-
-        if ( !customer ) {
-            return res.status(401).json({
-                success : true,
-                message : "No customer is found for this number."
-            })
-        }
 
         const otp = generateFourDigitOTP();
 
@@ -588,6 +563,7 @@ export const otpResend = async ( req,res,next)=>{
 
     } catch (error) {
         console.log("error during otp varification : ",error);
+        next(error);
         
     }
 };

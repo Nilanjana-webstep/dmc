@@ -1,7 +1,6 @@
 import { statusCode } from "../config/constraint.js";
 import PropertyType from "../models/model.propertyType.js";
 import CustomError from "../utils/util.customError.js";
-import { updateDatabaseObject } from "../utils/util.database.js";
 import { convertCsvToObject } from "../utils/utils.csv.js";
 
 
@@ -36,10 +35,10 @@ export const getAllPropertyType = async (req, res, next) => {
 
         const allPropertyTypes = await PropertyType.findAll();
 
-        if ( allPropertyTypes.length < 1 ){
+        // if ( allPropertyTypes.length < 1 ){
 
-            return next ( new CustomError("No property Found.",statusCode.NOT_FOUND));
-        }
+        //     return next ( new CustomError("No property Found.",statusCode.NOT_FOUND));
+        // }
 
         return res.status(statusCode.OK).json({
             success: true,
@@ -91,8 +90,9 @@ export const updatePropertyTypeById = async (req, res, next) => {
 
 export const uploadPropertyTypeFromCsv = async (req, res, next) => {
     try {
+        
         if (!req.file) {
-            return next("No file selected.",statusCode.BAD_REQUEST);
+            return next( new CustomError("No file selected.",statusCode.BAD_REQUEST));
         }
 
         const propertyType = await convertCsvToObject(req.file,next);
@@ -105,7 +105,7 @@ export const uploadPropertyTypeFromCsv = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.error("Error uploading property type  CSV:", error);
+        console.log("Error uploading property type  CSV:", error);
         next(error);
     }
 };

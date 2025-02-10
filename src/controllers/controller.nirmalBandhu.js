@@ -64,7 +64,7 @@ export const getAllNirmalBandhu = async (req,res,next)=>{
                       ORDER BY createdAt DESC
                     `
         const [ allNirmalBandhu ] = await sequelize.query(sql);
-
+        
         if ( allNirmalBandhu.length < 1 ){
 
             return res.json({

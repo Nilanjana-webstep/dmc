@@ -15,9 +15,9 @@ import { uploadCsv } from "../middlewares/upload.js";
 
 const serviceTypeRoute = Router();
 
-serviceTypeRoute.post('/',serviceTypeCreationValidation,createServiceType)
-serviceTypeRoute.get('/',getAllServiceType)
-serviceTypeRoute.put('/:id',serviceTypeUpdationValidation,updateServiceTypeById)
+serviceTypeRoute.post('/',serviceTypeCreationValidation,createServiceType);
+serviceTypeRoute.get('/',getAllServiceType);
+serviceTypeRoute.put('/:id',serviceTypeUpdationValidation,updateServiceTypeById);
 serviceTypeRoute.post('/upload-csv',uploadCsv.single('csvFile'),uploadServiceTypeFromCsv);
 
 

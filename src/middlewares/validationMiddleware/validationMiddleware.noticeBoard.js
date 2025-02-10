@@ -31,6 +31,5 @@ export const noticeBoardUpdationValidation = (req,res,next)=>{
         const message = makeClearMessage(errorMessage);
         return next( new CustomError(message,400));         
     }
-
     next();
 }

@@ -9,7 +9,7 @@ export const createPaymentOrder = async (req,res,next)=>{
       const order =  razorpay.orders.create({
         amount: amount, 
         currency: currency,
-        payment_capture: 1 ,
+        payment_capture: 1,
         receipt
       });
 

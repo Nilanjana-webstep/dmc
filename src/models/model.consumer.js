@@ -27,6 +27,10 @@ const Consumer = sequelize.define(
       type : DataTypes.STRING,
       allowNull : false,
     },
+    property_size : {
+      type : DataTypes.INTEGER,
+      allowNull : false,
+    },
     pincode: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -33,8 +33,8 @@ const Payment = sequelize.define(
 
 
 
-Customer.hasMany(Payment)
-Payment.belongsTo(Customer);
+Customer.hasMany(Payment,{foreignKey:'customer_id'})
+Payment.belongsTo(Customer,{foreignKey:'customer_id'});
 
 
 

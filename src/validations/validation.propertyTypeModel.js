@@ -16,3 +16,4 @@ export const PropertyTypeUpdationValidationModel = Joi.object({
     .required()
   
 });
+

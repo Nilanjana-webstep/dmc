@@ -4,10 +4,11 @@ import { ENV_VARIALBE } from './.envConfig.js';
 
 const sequelize = new Sequelize(ENV_VARIALBE.DB_NAME, ENV_VARIALBE.DB_USER, ENV_VARIALBE.DB_PASSWORD, {
   host:ENV_VARIALBE.DB_HOST,
-  dialect: 'mysql' ,
+  dialect: 'mysql',
   logging: false,
   timezone: '+05:30'
 });
 
 
 export default sequelize;
+

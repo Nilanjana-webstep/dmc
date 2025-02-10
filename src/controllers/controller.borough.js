@@ -37,13 +37,13 @@ export const getAllBorough = async (req,res,next)=>{
 
         const allBorough = await Borough.findAll({where:{is_active : true}});
 
-        if ( allBorough.length < 1 ){
-            return next( new CustomError("No borough found.",statusCode.NOT_FOUND));
-        }
+        // if ( allBorough.length < 1 ){
+        //     return next( new CustomError("No borough found.",statusCode.NOT_FOUND));
+        // }
 
         return res.status(statusCode.OK).json({
             success : true,
-            message : " fetched all borough successfully.",
+            message : " fetched boroughs successfully.",
             data : allBorough
         })
     } catch (error) {

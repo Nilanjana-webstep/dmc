@@ -33,9 +33,9 @@ export const getAllServiceType = async (req, res, next) => {
     try {
         const allServiceType = await ServiceType.findAll();
 
-        if ( allServiceType.length < 1 ){
-            return next ( new CustomError("No service type found.",statusCode.NOT_FOUND));
-        }
+        // if ( allServiceType.length < 1 ){
+        //     return next ( new CustomError("No service type found.",statusCode.NOT_FOUND));
+        // }
 
         return res.status(statusCode.OK).json({
             success: true,
