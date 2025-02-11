@@ -92,7 +92,6 @@ export const getServiceDetailsByServiceTypes = async ( req,res,next)=>{
 export const getAllServiceDetails = async ( req,res,next)=>{
     try {
 
-       
         const allServiceDetails = await ServiceDetail.findAll();
 
         if ( allServiceDetails.length < 1 ){
